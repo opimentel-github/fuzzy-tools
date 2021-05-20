@@ -26,10 +26,13 @@ def get_random_item(l:list):
 	return l[random.randint(0, len(l)-1)]
 
 def get_random_key(d:dict):
-	return get_random_item(list(d.keys()))
+	keys = list(d.keys())
+	return get_random_item(keys)
 
-def get_random_subsampled_list(l:list, n):
-	return [get_random_item(l) for _ in range(n)]
+def get_bootstrap(l:list, n):
+	# with replacement
+	# faster than numpy.choice
+	return [get_random_item(l) for _ in range(0, n)]
 
 def merge_lists(*args):
 	merged = list(itertools.chain(*args))
