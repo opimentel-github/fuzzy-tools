@@ -5,6 +5,7 @@ from . import C_
 import numpy as np
 from ..strings import xstr
 import math
+from copy import copy
 
 ###################################################################################################################################################
 
@@ -15,14 +16,17 @@ def get_max_xerrors(xerrors):
 		#print(max_xerror, xerror)
 		assert isinstance(xerror, XError), f'type={type(v)}'
 
+		#print(xerror, max_xerror)
 		#if xerror.get_top()>=max_xerror.get_bottom():
 		#if xerror.mean>=max_xerror.get_bottom():
-		if xerror.mean>=max_xerror.mean:
-		#if xerror>=max_xerror:
+		#print(xerror)
+		#if xerror.mean>=max_xerror.mean:
+		if xerror>=max_xerror:
 			max_xerrors += [xerror]
-	return [True if v in max_xerrors else False for v in xerrors]
-
-'''def get_max_xerrors(xerrors):
+	#print(xerrors[0] in max_xerrors)
+	return [True if xe in max_xerrors else False for xe in xerrors]
+'''
+def get_max_xerrors(xerrors):
 	max_xerrors = []
 	rank = sorted(xerrors.copy())[::-1]
 	last_v = rank[0]
@@ -39,7 +43,7 @@ def get_max_xerrors(xerrors):
 ###################################################################################################################################################
 
 class XError():
-	def __init__(self, x,
+	def __init__(self, _x,
 		dim:int=0,
 		error_scale=1,
 		n_decimals=C_.N_DECIMALS,
@@ -47,42 +51,49 @@ class XError():
 		repr_pm=True,
 		initial_percentiles=[1,5,10,90,95,99],
 		):
-		self.is_dummy = x is None or len(x)==0
-		if self.is_dummy:
-			self.x = np.array([])
-		else:
-			self.x = np.array(x).copy()
-
+		self._x = _x
 		self.dim = dim
 		self.error_scale = error_scale
 		self.n_decimals = n_decimals
 		self.mode = mode
 		self.repr_pm = repr_pm
-		self.initial_percentiles = initial_percentiles.copy()
+		self.initial_percentiles = initial_percentiles
 		self.reset()
 
 	def reset(self):
-		self.percentiles = []
-		### calculate statistics
-		if not self.is_dummy:
+		is_dummy = self._x is None or len(self._x)==0
+		self.x = np.array([]) if is_dummy else np.array(self._x).copy()
+		self.shape = self.x.shape
+		self.compute_statistics()
+
+	def compute_statistics(self):
+		#print('compute_statistics')
+		if not self.is_dummy():
+			self.percentiles = []
 			self.mean = self.get_mean()
 			self.median = self.get_median()
 			self.std = self.get_std()
-			self.serror = self.get_serror()
+			self.serror = self.get_standar_error()
 			
 			for p in self.initial_percentiles:
-				_ = self.get_percentile(p)
+				self.get_percentile(p)
 
-			self.dsymbols = {
-				'std':C_.STD_LATEXCHAR,
-				'serror':C_.SERROR_LATEXCHAR,
-			}
+	def is_dummy(self):
+		return len(self.x)==0
 
-	def item(self):
-		assert not self.is_dummy
-		assert len(self.x.shape)==1
-		assert len(self.x)==1
-		return self.x[0]
+	def size(self):
+		return self.shape
+
+	def is_1d(self):
+		return len(self.shape)==1
+
+	def item(self, idx):
+		if self.is_dummy():
+			return None
+		elif self.is_1d():
+			return self.x[idx]
+		else:
+			return np.take(self.x, [idx], axis=self.dim)
 
 	def get_percentile(self, p:int):
 		assert isinstance(p, int)
@@ -109,7 +120,7 @@ class XError():
 		self.repr_pm = repr_pm
 		return self
 
-	def get_serror(self):
+	def get_standar_error(self):
 		'''
 		Standar Error = sqrt(sum((x-x_mean)**2)/(N-1)) / sqrt(N)
 		'''
@@ -118,17 +129,11 @@ class XError():
 		else:
 			return self.get_std()
 
-	def get_symbol(self, attr):
-		return f'{self.error_scale}{self.dsymbols[attr]}'
-
 	def __len__(self):
-		return 0 if self.is_dummy else self.x.shape[self.dim]
-
-	def get_shape(self):
-		return x.shape
+		return self.x.shape[self.dim]
 
 	def __repr__(self):
-		if self.is_dummy:
+		if self.is_dummy():
 			return f'{xstr(None)}'
 		else:
 			txt = f'{xstr(self.mean, self.n_decimals)}'
@@ -136,31 +141,40 @@ class XError():
 			return txt
 
 	def get_top(self):
-		return -np.inf if self.is_dummy else self.mean+self.std
+		return None if self.is_dummy() else self.mean+self.std
 
 	def get_bottom(self):
-		return np.inf if self.is_dummy else self.mean-self.std
+		return None if self.is_dummy() else self.mean-self.std
 
 	def get_range(self):
-		return self.get_top()-self.get_bottom()
+		return None if self.is_dummy() else self.get_top()-self.get_bottom()
 
-	def __gt__(self, other):
-		# is self > other?
-		if other==0:
-			return self.mean>0
-		elif other is None:
-			return self.mean>0
-		elif other.is_dummy:
+	#def __eq__(self, other): # self == other
+	#	return self.x==other.x
+
+	def __ge__(self, other): # self >= other
+		if other is None or other.is_dummy():
 			return True
-		elif self.is_dummy:
+		elif self is None or self.is_dummy():
 			return False
 		else:
-			return self.mean > other.mean
+			#return self.get_bottom()>=other.get_top()
+			return self.mean>=other.mean
 
-	def copy(self,
-		x=None,
-		):
-		xe = XError(self.x.copy() if x is None else x,
+	def __gt__(self, other): # self > other
+		if other is None or other.is_dummy():
+			return True
+		elif self is None or self.is_dummy():
+			return False
+		else:
+			#return self.get_bottom()>other.get_top()
+			return self.mean>other.mean
+
+	def copy(self):
+		return copy(self)
+
+	def __copy__(self):
+		xe = XError(self.x.copy(),
 			self.dim,
 			self.error_scale,
 			self.n_decimals,
@@ -170,39 +184,49 @@ class XError():
 
 	def __add__(self, other):
 		if isinstance(other, float) or isinstance(other, int):
-			xe = self.copy(self.x.copy()+other)
+			#xe = self.copy(self.x.copy()+other)
+			xe = copy(self)
+			xe._x = self.x+other
+			xe.reset()
 			return xe
+
 		elif isinstance(self, float) or isinstance(self, int):
-			xe = other.copy(other.x.copy()+self)
+			xe = copy(other)
+			xe._x = other.x+self
+			xe.reset()
 			return xe
-		elif other is None:
-			return self
-		elif other.is_dummy:
-			return self
-		elif self.is_dummy:
-			return other
+
+		elif other is None or other.is_dummy():
+			return copy(self)
+
+		elif self is None or self.is_dummy():
+			return copy(other)
+
 		else:
-			xe = XError(np.concatenate([self.x, other.x], axis=self.dim),
-				self.dim,
-				self.error_scale,
-				self.n_decimals,
-				self.mode,
-				)
+			xe = copy(self)
+			xe._x = np.concatenate([self.x, other.x], axis=self.dim)
+			xe.reset()
 			return xe
 
 	def __radd__(self, other):
 		return self+other
 
 	def __truediv__(self, other):
-		self.x = self.x/other
-		return self
+		assert isinstance(other, float) or isinstance(other, int)
+		xe = copy(self)
+		xe._x = xe._x/other
+		xe.reset()
+		return xe
 
 	def __mul__(self, other):
-		self.x = self.x*other
-		return self
+		assert isinstance(other, float) or isinstance(other, int)
+		xe = copy(self)
+		xe._x = xe._x*other
+		xe.reset()
+		return xe
 
 	def __rmul__(self, other):
-		return self.__mul__(other)
+		return self*other
 
 	def sum(self):
 		return self.x.sum(axis=self.dim)
