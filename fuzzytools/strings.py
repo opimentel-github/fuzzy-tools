@@ -107,16 +107,10 @@ def _format_float(x,
 	):
 	if np.isnan(x):
 		return C_.NAN_CHAR
-	abs_x = abs(x)
-	if remove_zero and abs_x<1:
-		s = '' if x>=0 else '-'
-		#print('abs_x',abs_x)
-		#txt = format(abs_x, f',.{n_decimals}f')[1:] # removes 0
-		txt = str(abs_x)[1:2+n_decimals] # removes 0
-		#print('txt',txt)
-		return s+txt
-	else:
-		return format(x, f',.{n_decimals}f')
+	txt = format(x, f',.{n_decimals}f')
+	if remove_zero and abs(x)<1:
+		txt = txt.replace('0.', '.')
+	return txt
 
 def _format_int(x):
 	if np.isnan(x):
