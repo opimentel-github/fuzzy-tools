@@ -9,39 +9,6 @@ from copy import copy
 
 ###################################################################################################################################################
 
-def get_max_xerrors(xerrors):
-	max_xerrors = []
-	max_xerror = max(xerrors)
-	for xerror in xerrors:
-		#print(max_xerror, xerror)
-		assert isinstance(xerror, XError), f'type={type(v)}'
-
-		#print(xerror, max_xerror)
-		#if xerror.get_top()>=max_xerror.get_bottom():
-		#if xerror.mean>=max_xerror.get_bottom():
-		#print(xerror)
-		#if xerror.mean>=max_xerror.mean:
-		if xerror>=max_xerror:
-			max_xerrors += [xerror]
-	#print(xerrors[0] in max_xerrors)
-	return [True if xe in max_xerrors else False for xe in xerrors]
-'''
-def get_max_xerrors(xerrors):
-	max_xerrors = []
-	rank = sorted(xerrors.copy())[::-1]
-	last_v = rank[0]
-	for k in range(0, len(rank)):
-		v = rank[k]
-		assert isinstance(v, XError), f'type={type(v)}'
-		if v.get_top()>last_v.get_bottom():
-			max_xerrors += [v]
-			last_v = v
-		else:
-			break
-	return [True if v in max_xerrors else False for v in xerrors]'''
-
-###################################################################################################################################################
-
 class XError():
 	def __init__(self, _x,
 		dim:int=0,

@@ -7,19 +7,8 @@ import pandas as pd
 import numpy as np
 from .. import strings as strings
 from . import utils as utils
-from ..datascience.xerror import XError, get_max_xerrors
+from ..lists import get_max_elements
 from ..dataframes import DFBuilder
-
-###################################################################################################################################################
-
-def get_bar_latex(model_attributes:int, results:int):
-	'''
-	Return a latex table align format string.
-	Ej: lcc|ccccc
-	The bar is used to separate the model attributes from the results
-	'''
-	bar = 'l'+'c'*(model_attributes-1)+'|'+'c'*(results)
-	return bar
 
 ###################################################################################################################################################
 
@@ -72,21 +61,21 @@ class SubLatexTable():
 			for k,row in enumerate(self.info_df.iterrows()):
 				index = indexs[k]
 				values = row[1].values
-				max_xerrors = get_max_xerrors(values)
-				bold_df.append(index, {c:max_xerrors[kc] for kc,c in enumerate(columns)})
+				max_values = get_max_elements(values)
+				bold_df.append(index, {c:max_values[kc] for kc,c in enumerate(columns)})
 			bold_df = bold_df()
 
 		elif self.bold_axis=='columns':
-			max_xerrors_d = {}
+			max_values_d = {}
 			for c in columns:
 				values = self.info_df[c].values
-				max_xerrors = get_max_xerrors(values)
-				max_xerrors_d[c] = max_xerrors
+				max_values = get_max_elements(values)
+				max_values_d[c] = max_values
 
 			bold_df = DFBuilder()
 			for k,row in enumerate(self.info_df.iterrows()):
 				index = indexs[k]
-				bold_df.append(index, {c:max_xerrors_d[c][k] for kc,c in enumerate(columns)})
+				bold_df.append(index, {c:max_values_d[c][k] for kc,c in enumerate(columns)})
 			bold_df = bold_df()
 
 		else:
@@ -129,7 +118,10 @@ class SubLatexTable():
 			#print('values',values)
 			sub_txt = ''
 			for kv,v in enumerate(values):
-				v_str = strings.xstr(v) if any([isinstance(v, int), isinstance(v, float)]) else str(v)
+				if any([isinstance(v, int), isinstance(v, float)]):
+					v_str = strings.xstr(v)
+				else:
+					v_str = str(v)
 				model_attrs = len(values)-len(self.results_columns)
 				kvv = kv-model_attrs
 				#print(kvv,v, v_str)

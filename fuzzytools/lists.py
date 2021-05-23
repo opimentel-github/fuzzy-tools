@@ -8,6 +8,16 @@ import random
 
 ###################################################################################################################################################
 
+def get_max_elements(elements):
+	for e in elements:
+		assert type(e)==type(elements[0]), 'all objects must be of the same class'
+	max_elements = []
+	max_e = max(elements)
+	for e in elements:
+		if e>=max_e:
+			max_elements += [e]
+	return [True if e in max_elements else False for e in elements]
+
 def get_list_chunks(l, chuncks_size):
 	chuncks = []
 	index = 0
