@@ -4,6 +4,7 @@ from . import C_
 
 import numpy as np
 import random
+from copy import copy
 
 ###################################################################################################################################################
 
@@ -43,13 +44,12 @@ def dropout_extreme_percentiles(x, p,
 		valid_indexs = np.where(x<np.percentile(x, 100-p))
 	else:
 		raise Exception(f'no mode {mode}')
-	new_x = x.copy()[valid_indexs]
+	new_x = copy(x)[valid_indexs]
 	return new_x, valid_indexs
 
 def get_sigma_clipping_indexing(x, dist_mean, dist_sigma, sigma_m:float,
 	apply_lower_bound:bool=True,
 	):
-	x = np.array(x)
 	valid_indexs = np.ones(len(x)).astype(bool)
 	valid_indexs &= x < dist_mean+dist_sigma*sigma_m # is valid if is in range
 	if apply_lower_bound:
