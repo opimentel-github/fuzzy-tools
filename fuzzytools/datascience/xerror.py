@@ -6,12 +6,15 @@ import numpy as np
 from ..strings import xstr
 import math
 from copy import copy
+from scipy import stats
 
 ###################################################################################################################################################
 
+#class NDXError():
+
 class XError():
 	def __init__(self, _x,
-		dim:int=0,
+		dim:int=0, # fixme
 		error_scale=1,
 		n_decimals=C_.N_DECIMALS,
 		mode='mean/std',
@@ -107,26 +110,16 @@ class XError():
 			txt += f'{C_.PM_CHAR}{xstr(self.std, self.n_decimals)}' if self.repr_pm else ''
 			return txt
 
-	def get_top(self):
-		return None if self.is_dummy() else self.mean+self.std
-
-	def get_bottom(self):
-		return None if self.is_dummy() else self.mean-self.std
-
-	def get_range(self):
-		return None if self.is_dummy() else self.get_top()-self.get_bottom()
-
-	#def __eq__(self, other): # self == other
-	#	return self.x==other.x
-
 	def __ge__(self, other): # self >= other
 		if other is None or other.is_dummy():
 			return True
 		elif self is None or self.is_dummy():
 			return False
 		else:
-			#return self.get_bottom()>=other.get_top()
-			return self.mean>=other.mean
+			return self>other or self==other
+
+	def __eq__(self, other): # self == other
+		return np.allclose(self.mean, other.mean)
 
 	def __gt__(self, other): # self > other
 		if other is None or other.is_dummy():
@@ -134,8 +127,21 @@ class XError():
 		elif self is None or self.is_dummy():
 			return False
 		else:
-			#return self.get_bottom()>other.get_top()
-			return self.mean>other.mean
+			return self.gt_ttest(other)
+
+	def gt_ttest(self, other,
+		return_pvalue=False,
+		pvalue_th=0.05,
+		):
+		a = self.x if len(self)>1 else np.repeat(self.x, 2, axis=self.dim)
+		b = other.x if len(other)>1 else np.repeat(other.x, 2, axis=self.dim)
+		tvalue, pvalue = stats.ttest_ind(a, b, axis=self.dim)
+		is_greater = self.mean>other.mean and pvalue<pvalue_th
+		#print(f'{str(self)}>{str(other)}={is_greater} (p={pvalue})')
+		if return_pvalue:
+			return is_greater, pvalue
+		else:
+			return is_greater
 
 	def copy(self):
 		return copy(self)
