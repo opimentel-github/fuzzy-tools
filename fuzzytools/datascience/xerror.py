@@ -138,12 +138,12 @@ class XError():
 		pvalue_th=0.05,
 		verbose=0,
 		):
-		a = self.x if len(self)>1 else np.repeat(self.x, 2, axis=self.dim)
-		b = other.x if len(other)>1 else np.repeat(other.x, 2, axis=self.dim)
-		tvalue, pvalue = stats.ttest_ind(a, b, axis=self.dim)
+		assert len(self)>1
+		assert len(other)>1
+		tvalue, pvalue = stats.ttest_ind(self.x, other.x, axis=self.dim)
 		is_greater = self.mean>other.mean and pvalue<pvalue_th
 		if verbose:
-			print(f'{str(self)}>{str(other)}={is_greater} (p={pvalue})')
+			print(f'{str(self)}>{str(other)}={is_greater} (pvalue={pvalue}, th={pvalue_th})')
 		return is_greater
 
 	def copy(self):
