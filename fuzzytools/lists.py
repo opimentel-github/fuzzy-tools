@@ -13,6 +13,7 @@ def get_max_elements(elements):
 		assert type(e)==type(elements[0]), 'all objects must be of the same class'
 	max_elements = []
 	max_e = max(elements)
+	#print(max_e, elements)
 	for e in elements:
 		if e>=max_e:
 			max_elements += [e]

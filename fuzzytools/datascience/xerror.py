@@ -119,7 +119,12 @@ class XError():
 			return self>other or self==other
 
 	def __eq__(self, other): # self == other
-		return np.allclose(self.mean, other.mean)
+		if other is None or other.is_dummy():
+			return self is None or self.is_dummy()
+		elif self is None or self.is_dummy():
+			return other is None or other.is_dummy()
+		else:
+			return np.allclose(self.mean, other.mean)
 
 	def __gt__(self, other): # self > other
 		if other is None or other.is_dummy():
@@ -127,21 +132,19 @@ class XError():
 		elif self is None or self.is_dummy():
 			return False
 		else:
-			return self.gt_ttest(other)
+			return self.mean>other.mean
 
 	def gt_ttest(self, other,
-		return_pvalue=False,
 		pvalue_th=0.05,
+		verbose=0,
 		):
 		a = self.x if len(self)>1 else np.repeat(self.x, 2, axis=self.dim)
 		b = other.x if len(other)>1 else np.repeat(other.x, 2, axis=self.dim)
 		tvalue, pvalue = stats.ttest_ind(a, b, axis=self.dim)
 		is_greater = self.mean>other.mean and pvalue<pvalue_th
-		#print(f'{str(self)}>{str(other)}={is_greater} (p={pvalue})')
-		if return_pvalue:
-			return is_greater, pvalue
-		else:
-			return is_greater
+		if verbose:
+			print(f'{str(self)}>{str(other)}={is_greater} (p={pvalue})')
+		return is_greater
 
 	def copy(self):
 		return copy(self)
