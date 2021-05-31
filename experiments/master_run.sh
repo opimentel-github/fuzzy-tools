@@ -1,6 +1,6 @@
 #!/bin/bash
 SECONDS=0
-for mid in {1000..1003} # [a,b]
+for mid in {1000..1002} # [a,b]
 do
 	for kf in {0..4} # [a,b]
 	do

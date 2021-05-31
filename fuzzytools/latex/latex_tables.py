@@ -34,6 +34,7 @@ class SubLatexTable():
 		key_key_separator:str=C_.KEY_KEY_SEP_CHAR,
 		key_value_separator:str=C_.KEY_VALUE_SEP_CHAR,
 		hline_k=None,
+		bold_function=get_max_elements,
 		):
 		self.info_df = info_df.copy()
 		self.bold_axis = bold_axis
@@ -61,16 +62,16 @@ class SubLatexTable():
 			for k,row in enumerate(self.info_df.iterrows()):
 				index = indexs[k]
 				values = row[1].values
-				max_values = get_max_elements(values)
-				bold_df.append(index, {c:max_values[kc] for kc,c in enumerate(columns)})
+				bold_values = bold_function(values)
+				bold_df.append(index, {c:bold_values[kc] for kc,c in enumerate(columns)})
 			bold_df = bold_df()
 
 		elif self.bold_axis=='columns':
 			max_values_d = {}
 			for c in columns:
 				values = self.info_df[c].values
-				max_values = get_max_elements(values)
-				max_values_d[c] = max_values
+				bold_values = bold_function(values)
+				max_values_d[c] = bold_values
 
 			bold_df = DFBuilder()
 			for k,row in enumerate(self.info_df.iterrows()):
@@ -178,6 +179,7 @@ class LatexTable():
 		centered:bool=True,
 		custom_tabular_align:str=None, # 'ccc|llll'
 		hline_k=None,
+		bold_function=get_max_elements,
 		):
 		self.info_dfs = info_dfs
 		if not isinstance(info_dfs, list):
@@ -191,6 +193,7 @@ class LatexTable():
 			key_key_separator,
 			key_value_separator,
 			hline_k,
+			bold_function,
 			) for info_df in self.info_dfs]
 
 		### checks

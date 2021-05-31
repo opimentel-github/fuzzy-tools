@@ -8,9 +8,11 @@ import random
 
 ###################################################################################################################################################
 
+def check_same_class(elements):
+	return all([type(e)==type(elements[0]) for e in elements])
+
 def get_max_elements(elements):
-	for e in elements:
-		assert type(e)==type(elements[0]), 'all objects must be of the same class'
+	assert check_same_class(elements), 'all objects must be of the same class'
 	max_elements = []
 	max_e = max(elements)
 	#print(max_e, elements)
@@ -18,6 +20,16 @@ def get_max_elements(elements):
 		if e>=max_e:
 			max_elements += [e]
 	return [True if e in max_elements else False for e in elements]
+
+def get_min_elements(elements):
+	assert check_same_class(elements), 'all objects must be of the same class'
+	min_elements = []
+	min_e = min(elements)
+	#print(min_e, elements)
+	for e in elements:
+		if e<=min_e:
+			min_elements += [e]
+	return [True if e in min_elements else False for e in elements]
 
 def get_list_chunks(l, chuncks_size):
 	chuncks = []
@@ -34,8 +46,8 @@ def flat_list(list_of_lists:List[list]):
 	return sum(list_of_lists, [])
 
 def get_random_item(l:list):
-	r = random.randint(0, len(l)-1) if len(l)>1 else 0
-	return l[r]
+	idx = random.randint(0, len(l)-1) if len(l)>1 else 0
+	return l[idx]
 
 def get_random_key(d:dict):
 	keys = list(d.keys())
