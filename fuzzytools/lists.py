@@ -34,7 +34,8 @@ def flat_list(list_of_lists:List[list]):
 	return sum(list_of_lists, [])
 
 def get_random_item(l:list):
-	return l[random.randint(0, len(l)-1)]
+	r = random.randint(0, len(l)-1) if len(l)>1 else 0
+	return l[r]
 
 def get_random_key(d:dict):
 	keys = list(d.keys())

@@ -4,6 +4,7 @@ from . import C_
 
 import pickle
 import os
+import time 
 from . import strings
 from . import prints
 from nested_dict import nested_dict
@@ -278,6 +279,26 @@ def print_all_filedirs(filedir:str='.'):
 		subindent = ' ' * 4 * (level + 1)+'- '
 		for f in files:
 			print(f'{subindent}{f}')
+
+###################################################################################################################################################
+
+def getmtime(filedir):
+	return time.ctime(os.path.getmtime(filedir))
+
+def getctime(filedir):
+	return time.ctime(os.path.getmtime(filedir))
+
+def get_newest_filedir(filedirs,
+	mode='m',
+	):
+	if mode=='c':
+		dates = [getctime(f) for f in filedirs]
+	elif mode=='m':
+		dates = [getmtime(f) for f in filedirs]
+	max_date = max(dates)
+	#print(filedirs,dates,max_date)
+	filedir = filedirs[dates.index(max_date)]
+	return filedir
 
 ###################################################################################################################################################
 
