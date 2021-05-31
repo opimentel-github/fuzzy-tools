@@ -43,6 +43,7 @@ class SubLatexTable():
 		self.key_key_separator = key_key_separator
 		self.key_value_separator = key_value_separator
 		self.hline_k = hline_k
+		self.bold_function = bold_function
 		self.reset()
 
 	def reset(self):
@@ -62,7 +63,7 @@ class SubLatexTable():
 			for k,row in enumerate(self.info_df.iterrows()):
 				index = indexs[k]
 				values = row[1].values
-				bold_values = bold_function(values)
+				bold_values = self.bold_function(values)
 				bold_df.append(index, {c:bold_values[kc] for kc,c in enumerate(columns)})
 			bold_df = bold_df()
 
@@ -70,7 +71,7 @@ class SubLatexTable():
 			max_values_d = {}
 			for c in columns:
 				values = self.info_df[c].values
-				bold_values = bold_function(values)
+				bold_values = self.bold_function(values)
 				max_values_d[c] = bold_values
 
 			bold_df = DFBuilder()
@@ -213,9 +214,13 @@ class LatexTable():
 		self.centered = centered
 		self.custom_tabular_align = custom_tabular_align
 		self.hline_k = hline_k
+		self.bold_function = bold_function
 
 		self.rule_ab = rule_ab
 		self.split_index_names = split_index_names
+
+	def reset(self):
+		pass
 
 	def get_init_txt(self):
 		txt = ''
