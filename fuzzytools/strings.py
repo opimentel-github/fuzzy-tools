@@ -6,6 +6,7 @@ import os
 from termcolor import colored
 import numpy as np
 import random
+from copy import copy, deepcopy
 
 ###################################################################################################################################################
 
@@ -71,10 +72,9 @@ def string_replacement(string:str, replace_dict:dict):
 	new_string (str): the new string
 	'''
 	assert isinstance(replace_dict, dict)
-	new_string = string
+	new_string = copy(string)
 	for key in replace_dict:
 		new_string = new_string.replace(key,replace_dict[key])
-
 	return new_string
 
 def query_strings_in_string(query_strings:list, string:str,

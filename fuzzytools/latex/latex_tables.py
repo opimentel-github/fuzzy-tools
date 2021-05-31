@@ -35,6 +35,7 @@ class SubLatexTable():
 		key_value_separator:str=C_.KEY_VALUE_SEP_CHAR,
 		hline_k=None,
 		bold_function=get_max_elements,
+		repr_replace_dict={},
 		):
 		self.info_df = info_df.copy()
 		self.bold_axis = bold_axis
@@ -44,6 +45,7 @@ class SubLatexTable():
 		self.key_value_separator = key_value_separator
 		self.hline_k = hline_k
 		self.bold_function = bold_function
+		self.repr_replace_dict = repr_replace_dict
 		self.reset()
 
 	def reset(self):
@@ -144,6 +146,8 @@ class SubLatexTable():
 				#if kk>0 and kk<len(self.row_colors)-1:
 				#	if kk%self.hline_k==0:
 				#		txt += utils.get_hline()+'\n'
+
+		txt = strings.string_replacement(txt, self.repr_replace_dict)
 		return txt
 
 ###################################################################################################################################################
@@ -181,6 +185,7 @@ class LatexTable():
 		custom_tabular_align:str=None, # 'ccc|llll'
 		hline_k=None,
 		bold_function=get_max_elements,
+		repr_replace_dict={},
 		):
 		self.info_dfs = info_dfs
 		if not isinstance(info_dfs, list):
@@ -195,6 +200,7 @@ class LatexTable():
 			key_value_separator,
 			hline_k,
 			bold_function,
+			repr_replace_dict,
 			) for info_df in self.info_dfs]
 
 		### checks
@@ -215,6 +221,7 @@ class LatexTable():
 		self.custom_tabular_align = custom_tabular_align
 		self.hline_k = hline_k
 		self.bold_function = bold_function
+		self.repr_replace_dict = repr_replace_dict
 
 		self.rule_ab = rule_ab
 		self.split_index_names = split_index_names
