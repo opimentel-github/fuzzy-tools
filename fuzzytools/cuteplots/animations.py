@@ -60,6 +60,8 @@ class PlotAnimation():
 			'pixelformat':'yuv444p', # yuvj444p yuv444p
 			'macro_block_size':1, # risking incompatibility
 		}
+		img_sizes = [img.size for img in imgs]
+		assert all([img_size==img_sizes[0] for img_size in img_sizes]), img_sizes
 		imageio.mimsave(save_filedir, imgs, **mimsave_kwargs)
 
 		save_filename = '.'.join(save_filedir.split('.')[:-1])
