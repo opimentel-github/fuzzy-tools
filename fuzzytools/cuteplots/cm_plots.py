@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from ..datascience.xerror import XError
 from ..strings import xstr
+from copy import copy, deepcopy
+import matplotlib as mpl
 
 ###################################################################################################################################################
 
@@ -105,12 +107,24 @@ def plot_custom_confusion_matrix(cms:np.ndarray, class_names:list,
 	cms_xe = XError(cm_norm*100, 0)
 	fig, ax = plt.subplots(1, 1, figsize=figsize, dpi=C_.PLOT_DPI) if fig is None else (fig, ax)
 	ax.set(xticks=np.arange(len(plot_classes)), yticks=np.arange(len(plot_classes)))
-	im = ax.imshow(cms_xe.median, interpolation='nearest', cmap=cmap)
-	cbar = ax.figure.colorbar(im, ax=ax)
-	#cbar.ax.set_ylabel('percent %')
-	ticks = cbar.get_ticks()
-	cbar.set_ticks(ticks)
-	cbar.set_ticklabels([f'{t:.0f}%' for t in ticks])
+	img = ax.imshow(cms_xe.median, interpolation='nearest', cmap=cmap)
+	#bar_img = copy(img)
+	#bar_img[0] = 100
+	if uses_percent:
+		boundaries = np.linspace(0, 100, 100//5+1)
+		print(boundaries)
+		norm = mpl.colors.Normalize(vmin=0, vmax=100)
+		#fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap), cax=ax, label='Some Units')
+		cbar = ax.figure.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax)
+		#cbar = ax.figure.colorbar(img, ax=ax, boundaries=boundaries)
+		#cbar.ax.set_ylabel('percent %')
+		ticks = cbar.get_ticks()
+		#ticks = np.linspace(0, 100, 20)
+		print(ticks)
+		cbar.set_ticks(ticks)
+		cbar.set_ticklabels([f'{t:.0f}%' for t in ticks])
+	else:
+		assert 0
 
 	ax.set(xlabel='prediction')
 	ax.set(ylabel='true label')
