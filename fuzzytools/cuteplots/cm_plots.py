@@ -112,7 +112,7 @@ def plot_custom_confusion_matrix(cms:np.ndarray, class_names:list,
 	#bar_img[0] = 100
 	if uses_percent:
 		boundaries = np.linspace(0, 100, 100//5+1)
-		print(boundaries)
+		#print(boundaries)
 		norm = mpl.colors.Normalize(vmin=0, vmax=100)
 		#fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap), cax=ax, label='Some Units')
 		cbar = ax.figure.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax)
@@ -120,7 +120,7 @@ def plot_custom_confusion_matrix(cms:np.ndarray, class_names:list,
 		#cbar.ax.set_ylabel('percent %')
 		ticks = cbar.get_ticks()
 		#ticks = np.linspace(0, 100, 20)
-		print(ticks)
+		#print(ticks)
 		cbar.set_ticks(ticks)
 		cbar.set_ticklabels([f'{t:.0f}%' for t in ticks])
 	else:
