@@ -37,9 +37,9 @@ def get_dict_from_string(string:str,
 def get_string_from_dict(d:str,
 	key_key_separator:str=C_.KEY_KEY_SEP_CHAR,
 	key_value_separator:str=C_.KEY_VALUE_SEP_CHAR,
-	keep_none_values=False,
+	keeps_none=True,
 	):
-	ret = key_key_separator.join([f'{key}{key_value_separator}{d[key]}' for key in d.keys() if keep_none_values or not d[key] is None])
+	ret = key_key_separator.join([f'{key}{key_value_separator}{d[key]}' for key in d.keys() if keeps_none or not d[key] is None])
 	return ret
 
 def get_bar(

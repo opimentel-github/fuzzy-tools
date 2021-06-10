@@ -4,7 +4,7 @@ from . import C_
 
 import numpy as np
 import random
-from copy import copy
+from copy import copy, deepcopy
 
 ###################################################################################################################################################
 

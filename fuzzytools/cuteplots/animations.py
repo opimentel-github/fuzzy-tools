@@ -55,11 +55,19 @@ class PlotAnimation():
 		fext = save_filedir.split('.')[-1]
 		mimsave_kwargs = {
 			'fps':fps,
-			'quality':10,
-			#'codec':'mjpeg', # libx264 mjpeg
-			'pixelformat':'yuv444p', # yuvj444p yuv444p
-			'macro_block_size':1, # risking incompatibility
-		}
+			}
+		if fext=='mp4':
+			mimsave_kwargs.update({
+				'quality':10,
+				#'codec':'mjpeg', # libx264 mjpeg
+				'pixelformat':'yuv444p', # yuvj444p yuv444p
+				'macro_block_size':1, # risking incompatibility
+				})
+		elif fext=='gif':
+			mimsave_kwargs.update({
+				'fps':fps,
+				#'codec':'mjpeg', # libx264 mjpeg
+				})
 		img_sizes = [img.size for img in imgs]
 		assert all([img_size==img_sizes[0] for img_size in img_sizes]), img_sizes
 		imageio.mimsave(save_filedir, imgs, **mimsave_kwargs)

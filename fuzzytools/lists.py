@@ -31,13 +31,13 @@ def get_min_elements(elements):
 			min_elements += [e]
 	return [True if e in min_elements else False for e in elements]
 
-def get_list_chunks(l, chuncks_size):
-	chuncks = []
+def split_list_in_batches(l, batch_size):
+	batches = []
 	index = 0
 	while index<len(l):
-		chuncks.append(l[index:index+chuncks_size])
-		index += chuncks_size
-	return chuncks
+		batches.append(l[index:index+batch_size])
+		index += batch_size
+	return batches
 	
 def list_product(*args):
 	return list(itertools.product(*args)) # just a wrap
@@ -46,7 +46,8 @@ def flat_list(list_of_lists:List[list]):
 	return sum(list_of_lists, [])
 
 def get_random_item(l:list):
-	idx = random.randint(0, len(l)-1) if len(l)>1 else 0
+	assert len(l)>0
+	idx = 0 if len(l)==1 else random.randint(0, len(l)-1)
 	return l[idx]
 
 def get_random_key(d:dict):
