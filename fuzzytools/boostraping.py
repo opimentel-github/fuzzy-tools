@@ -23,10 +23,13 @@ class BalancedCyclicBoostraping():
 		self.uses_counter = uses_counter
 		self.reset()
 
+	def __len__(self):
+		return len(self.l_objs)
+
 	def reset(self):
 		self.reset_counter()
 		self.class_names, counts = np.unique(self.l_classes, return_counts=True)
-		self.n = min(counts) if self.n is None else self.n
+		self.n = max(counts) if self.n is None else self.n
 		self.l_objs_dict = {}
 		for c in self.class_names:
 			self.l_objs_dict[c] = [obj for obj,_c in zip(self.l_objs, self.l_classes) if _c==c]
