@@ -17,6 +17,8 @@ def get_joblib_config(
 	n_process=N_PROCESS,
 	m=M,
 	):
+	if backend is None:
+		return 1
 	cpus = os.cpu_count()
 	if backend in ['loky', 'multiprocessing']:
 		n_jobs = cpus if n_process is None else n_process
