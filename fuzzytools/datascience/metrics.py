@@ -155,9 +155,13 @@ class BinBatchCM():
 			}
 		return d
 
-	def get_aucroc(self):
+	def get_aucroc(self,
+		drop_intermediate=False,
+		):
 		p, y_target = self._get_bin_p()
-		return skmetrics.roc_auc_score(self.y_target, p)
+		return skmetrics.roc_auc_score(self.y_target, p,
+			drop_intermediate=drop_intermediate,
+			)
 
 ###################################################################################################################################################
 
