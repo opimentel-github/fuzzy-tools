@@ -140,7 +140,7 @@ class BinBatchCM():
 			}
 		return d
 
-	def get_prauc(self):
+	def get_aucpr(self):
 		p, y_target = self._get_bin_p()
 		return skmetrics.average_precision_score(y_target, p, pos_label=1)
 
@@ -155,7 +155,7 @@ class BinBatchCM():
 			}
 		return d
 
-	def get_rocauc(self):
+	def get_aucroc(self):
 		p, y_target = self._get_bin_p()
 		return skmetrics.roc_auc_score(self.y_target, p)
 
@@ -168,9 +168,9 @@ def get_multiclass_metrics(_y_pred_p, _y_target, class_names,
 		'f1score',
 		'accuracy',
 		'prc',
-		'prauc',
+		'aucpr',
 		'rocc',
-		'rocauc',
+		'aucroc',
 		'xentropy',
 		],
 	target_is_onehot:bool=False,
