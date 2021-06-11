@@ -12,6 +12,7 @@ EPS = C_.EPS
 
 # https://stackoverflow.com/questions/53977031/precision-score-does-not-match-with-metrics-formula
 # https://machinelearningmastery.com/roc-curves-and-precision-recall-curves-for-classification-in-python/#:~:text=ROC%20Curves%20and%20AUC%20in%20Python,-We%20can%20plot&text=The%20function%20takes%20both%20the,for%20each%20threshold%20and%20thresholds.
+# https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_curve.html#sklearn.metrics.roc_curve
 
 ###################################################################################################################################################
 
@@ -155,13 +156,9 @@ class BinBatchCM():
 			}
 		return d
 
-	def get_aucroc(self,
-		drop_intermediate=False,
-		):
+	def get_aucroc(self):
 		p, y_target = self._get_bin_p()
-		return skmetrics.roc_auc_score(self.y_target, p,
-			drop_intermediate=drop_intermediate,
-			)
+		return skmetrics.roc_auc_score(self.y_target, p)
 
 ###################################################################################################################################################
 
