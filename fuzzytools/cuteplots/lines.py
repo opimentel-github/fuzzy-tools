@@ -31,9 +31,9 @@ def fill_beetween(ax, xs, ys,
 	median_args=[],
 	median_kwargs={},
 	):
-	x_min = min([x.min() for x in xs])
-	x_max = max([x.max() for x in xs])
-	new_x = np.linspace(x_min, x_max, interp_n)
+	new_x = np.concatenate([x for x in xs], axis=0)
+	new_x = np.sort(new_x)
+	# print(new_x)
 	new_ys = []
 	for x,y in zip(xs, ys):
 		assert x.shape==y.shape
