@@ -2,12 +2,8 @@ from __future__ import print_function
 from __future__ import division
 from . import C_
 
-from ..datascience import statistics as fstats
-from . import colors as cc
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 import numpy as np
-import math
 from copy import copy, deepcopy
 import scipy.stats as stats
 
