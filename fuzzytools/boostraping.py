@@ -16,6 +16,7 @@ class BalancedCyclicBoostraping():
 		uses_counter=False,
 		):
 		assert len(l_objs)==len(l_classes)
+		
 		self.l_objs = l_objs
 		self.l_classes = l_classes
 		self.n = n
@@ -27,6 +28,8 @@ class BalancedCyclicBoostraping():
 		return len(self.l_objs)
 
 	def reset(self):
+		if len(self)==0:
+			return
 		self.reset_counter()
 		self.class_names, counts = np.unique(self.l_classes, return_counts=True)
 		self.n = max(counts) if self.n is None else self.n
@@ -34,6 +37,7 @@ class BalancedCyclicBoostraping():
 		for c in self.class_names:
 			self.l_objs_dict[c] = [obj for obj,_c in zip(self.l_objs, self.l_classes) if _c==c]
 		self.reset_cycles()
+		return
 	
 	def reset_counter(self):
 		self.counter = {obj:0 for obj in self.l_objs}
