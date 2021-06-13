@@ -11,7 +11,7 @@ import numpy as np
 
 class BalancedCyclicBoostraping():
 	def __init__(self, l_objs, l_classes,
-		k_n=1,
+		k_n=.5,
 		uses_shuffle=True,
 		uses_counter=False,
 		):
