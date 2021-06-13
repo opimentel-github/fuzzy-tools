@@ -11,15 +11,16 @@ import numpy as np
 
 class BalancedCyclicBoostraping():
 	def __init__(self, l_objs, l_classes,
-		n=None,
+		k_n=1,
 		uses_shuffle=True,
 		uses_counter=False,
 		):
 		assert len(l_objs)==len(l_classes)
+		assert k_n>=0 and k_n<=1
 		
 		self.l_objs = l_objs
 		self.l_classes = l_classes
-		self.n = n
+		self.k_n = k_n
 		self.uses_shuffle = uses_shuffle
 		self.uses_counter = uses_counter
 		self.reset()
@@ -32,7 +33,7 @@ class BalancedCyclicBoostraping():
 			return
 		self.reset_counter()
 		self.class_names, counts = np.unique(self.l_classes, return_counts=True)
-		self.n = max(counts) if self.n is None else self.n
+		self.n = max(counts)*self.k_n
 		self.l_objs_dict = {}
 		for c in self.class_names:
 			self.l_objs_dict[c] = [obj for obj,_c in zip(self.l_objs, self.l_classes) if _c==c]
