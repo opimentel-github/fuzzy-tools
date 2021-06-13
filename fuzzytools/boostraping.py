@@ -11,7 +11,7 @@ import numpy as np
 
 class BalancedCyclicBoostraping():
 	def __init__(self, l_objs, l_classes,
-		k_n=.5,
+		k_n=1,
 		uses_shuffle=True,
 		uses_counter=False,
 		):
@@ -27,6 +27,10 @@ class BalancedCyclicBoostraping():
 
 	def __len__(self):
 		return len(self.l_objs)
+
+	def __repr__(self):
+		txt = f'BalancedCyclicBoostraping(k_n={self.k_n}, n={self.n})'
+		return txt
 
 	def reset(self):
 		if len(self)==0:
