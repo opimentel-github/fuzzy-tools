@@ -1,4 +1,4 @@
-# flaming-choripan
+# fuzzy-tools
 
 <img src="img.png" width="400">
 

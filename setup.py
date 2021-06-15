@@ -3,28 +3,38 @@ import setuptools
 with open('README.md', 'r') as fh:
 	long_description = fh.read()
 
-with open('requirements.txt') as f:
-    required = f.read().splitlines()
-
 setuptools.setup(
-	name='fuzzy-tools',
-	version='0.0.1',
-	author='Óscar Pimentel Fuentes',
-	author_email='oscarlo.pimentel@gmail.com',
+	name='fuzzytools',
+	version='0.2',
 	description='Library with basic and general python methods',
-	long_description=long_description,
-    long_description_content_type='text/markdown',
-    #url="https://github.com/pypa/sampleproject",
-    packages=setuptools.find_packages(),
-    #packages=['fuzzytools'],
-	#license='MIT licence',
-    classifiers=[
-        'Programming Language :: Python :: 3',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
-    ],
-	#keywords='times series features, light curves',
-	#include_package_data=True,
+	url='https://github.com/opimentel-github/fuzzy-tools',
 	python_requires='>=3.7',
-	install_requires=required,
+	install_requires=[
+		'joblib',
+		'numpy',
+		'matplotlib',
+		'scikit-learn',
+		'scipy',
+		'termcolor',
+		'tqdm',
+		'pandas',
+		'nested-dict',
+		'numba',
+		'Pillow',
+		'imageio',
+		'imageio-ffmpeg',
+		],
+	keywords='experimental',
+	author='Oscar Pimentel Fuentes',
+	author_email='oscarlo.pimentel@gmail.com',
+	#include_package_data=True,
+	packages=setuptools.find_packages(),
+	long_description=long_description,
+	long_description_content_type='text/markdown',
+	license='MIT licence',
+	classifiers=[
+		'Programming Language :: Python :: 3',
+		'License :: OSI Approved :: MIT License',
+		'Operating System :: OS Independent',
+		],
 )
