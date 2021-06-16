@@ -9,13 +9,19 @@ from . import strings
 from . import ipynb
 from .times import get_date_hour
 
+BAR_FORMAT = '{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}, {rate_fmt}{postfix}]'
+#'bar_format':'{l_bar}{bar}| {n_fmt}/{total_fmt} [{rate_fmt}{postfix}]',
+#'bar_format':'{l_bar}{bar}{r_bar}',
+#'bar_format':'{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}{postfix}]',
+BAR_OUTPUT = sys.stderr # sys.stdout, sys.stderr
+
 ###################################################################################################################################################
 
 class ProgressBarMulti():
 	def __init__(self, total:int, m:int,
 		width:int=40,
 		fmt=C_.BAR_FULL_MODE,
-		output=sys.stdout, # sys.stdout, sys.stderr
+		output=BAR_OUTPUT,
 		):
 		self.bar_names = [k for k in range(m)]
 		self.bar = ProgressBarMultiColor(total, self.bar_names,
@@ -42,7 +48,7 @@ class ProgressBarMultiColor():
 		bar_colors:list=None,
 		width:int=40,
 		fmt=C_.BAR_FULL_MODE,
-		output=sys.stdout, # sys.stdout, sys.stderr
+		output=BAR_OUTPUT,
 		):
 		self.in_ipynb = ipynb.in_ipynb()
 		self.bar_names = bar_names.copy()
@@ -87,47 +93,58 @@ class ProgressBar():
 	def __init__(self, total:int,
 		width:int=40,
 		fmt=C_.BAR_FULL_MODE,
-		output=sys.stdout, # sys.stdout, sys.stderr
+		output=BAR_OUTPUT,
 		position:int=0,
 		dynamic_ncols:bool=True,
-		#'bar_format':'{l_bar}{bar}{r_bar}',
-		#'bar_format':'{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}{postfix}]',
-		bar_format='{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}, {rate_fmt}{postfix}]',
-		#'bar_format':'{l_bar}{bar}| {n_fmt}/{total_fmt} [{rate_fmt}{postfix}]',
+		bar_format=BAR_FORMAT,
 		append_time=False,
+		dummy=False,
 		):
-		self.bar_kwargs = {
-			'bar_format':bar_format,
-			'postfix':'',
-			'total':total,
-			'file':output,
-			'position':position,
-			'leave':True,
-			'dynamic_ncols':dynamic_ncols,
-			}
+		self.total = total
+		self.width = width
+		self.fmt = fmt
+		self.output = output
+		self.position = position
+		self.dynamic_ncols = dynamic_ncols
+		self.bar_format = bar_format
 		self.append_time = append_time
+		self.dummy = dummy
 		self.reset()
 
 	def reset(self):
-		self._done = False
+		if self.not_dummy():
+			self._done = False
+			self.bar_kwargs = {
+				'bar_format':self.bar_format,
+				'postfix':'',
+				'total':self.total,
+				'file':self.output,
+				'position':self.position,
+				'leave':True,
+				'dynamic_ncols':self.dynamic_ncols,
+				}
+
+	def not_dummy(self):
+		return not self.dummy
 
 	def __call__(self,
 		txt:str='???',
 		update:bool=True,
 		):
 		assert isinstance(txt, str)
-		if not hasattr(self, '_bar'):
-			self._bar = tqdm(**self.bar_kwargs)
+		if self.not_dummy():
+			if not hasattr(self, '_bar'):
+				self._bar = tqdm(**self.bar_kwargs)
 
-		if self.append_time:
-			date, hour = get_date_hour()
-			txt += f'[{hour}]'
-		
-		self._bar.set_postfix_str(txt)
-		#d.set_description(d)
-		if update:
-			self._bar.update(1)
-		return
+			if self.append_time:
+				date, hour = get_date_hour()
+				txt += f'[{hour}]'
+			
+			self._bar.set_postfix_str(txt)
+			#d.set_description(d)
+			if update:
+				self._bar.update()
+			return
 
 	def __repr__(self):
 		return str(self._bar)
@@ -139,9 +156,10 @@ class ProgressBar():
 			return None
 
 	def done(self):
-		if not self._done and hasattr(self, '_bar'):
-			self._bar.close()
-		return
+		if self.not_dummy():
+			if not self._done and hasattr(self, '_bar'):
+				self._bar.close()
+			return
 
 	def close(self):
 		self.done()
