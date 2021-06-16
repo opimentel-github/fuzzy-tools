@@ -13,13 +13,14 @@ BAR_FORMAT = '{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}, {rate_fmt}{postfix}]
 #'bar_format':'{l_bar}{bar}| {n_fmt}/{total_fmt} [{rate_fmt}{postfix}]',
 #'bar_format':'{l_bar}{bar}{r_bar}',
 #'bar_format':'{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}{postfix}]',
-BAR_OUTPUT = sys.stderr # sys.stdout, sys.stderr
+BAR_OUTPUT = sys.stderr # sys.stderr sys.stdout
+WIDTH = 30
 
 ###################################################################################################################################################
 
 class ProgressBarMulti():
 	def __init__(self, total:int, m:int,
-		width:int=40,
+		width:int=WIDTH,
 		fmt=C_.BAR_FULL_MODE,
 		output=BAR_OUTPUT,
 		):
@@ -46,7 +47,7 @@ class ProgressBarMulti():
 class ProgressBarMultiColor():
 	def __init__(self, total:int, bar_names:list,
 		bar_colors:list=None,
-		width:int=40,
+		width:int=WIDTH,
 		fmt=C_.BAR_FULL_MODE,
 		output=BAR_OUTPUT,
 		):
@@ -91,12 +92,13 @@ class ProgressBarMultiColor():
 
 class ProgressBar():
 	def __init__(self, total:int,
-		width:int=40,
+		width:int=WIDTH,
 		fmt=C_.BAR_FULL_MODE,
 		output=BAR_OUTPUT,
 		position:int=0,
-		dynamic_ncols:bool=True,
+		dynamic_ncols=False,
 		bar_format=BAR_FORMAT,
+		mininterval=1.,
 		append_time=False,
 		dummy=False,
 		):
@@ -107,6 +109,7 @@ class ProgressBar():
 		self.position = position
 		self.dynamic_ncols = dynamic_ncols
 		self.bar_format = bar_format
+		self.mininterval=mininterval
 		self.append_time = append_time
 		self.dummy = dummy
 		self.reset()
@@ -122,6 +125,7 @@ class ProgressBar():
 				'position':self.position,
 				'leave':True,
 				'dynamic_ncols':self.dynamic_ncols,
+				'mininterval':self.mininterval,
 				}
 
 	def not_dummy(self):
