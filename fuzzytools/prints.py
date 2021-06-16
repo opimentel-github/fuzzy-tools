@@ -23,9 +23,11 @@ class ShowPrints():
 	def __exit__(self, exc_type, exc_val, exc_tb):
 		pass
 
+###################################################################################################################################################
+
 def print_bar(
-	char:str=C_.MIDDLE_LINE_CHAR,
-	N:int=C_.BAR_SIZE,
+	char=C_.MIDDLE_LINE_CHAR,
+	N=C_.BAR_SIZE,
 	):
 	print(strings.get_bar(char, N))
 
