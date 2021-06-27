@@ -7,7 +7,7 @@ import argparse
 from fuzzytools.prints import print_big_bar
 
 parser = argparse.ArgumentParser(prefix_chars='--')
-parser.add_argument('--n',  type=int, default=100)
+parser.add_argument('--n',  type=int, default=37000)
 #main_args = parser.parse_args([])
 main_args = parser.parse_args()
 print_big_bar()
