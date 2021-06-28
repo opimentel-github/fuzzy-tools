@@ -11,7 +11,7 @@ EXTENDED_PERCENT = 0.1
 
 def get_xlim(_x_values,
 	x_extended_percent=EXTENDED_PERCENT,
-	)
+	):
 	x_values = np.concatenate(_x_values, axis=0) if isinstance(_x_values, list) else copy(_x_values)
 	assert len(_xy_values.shape)==1
 
