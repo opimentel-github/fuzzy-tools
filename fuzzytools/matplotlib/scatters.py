@@ -5,17 +5,20 @@ from . import C_
 import matplotlib.pyplot as plt
 from copy import copy, deepcopy
 import numpy as np
+from .datascience import labels as ds_labels
 
 ###################################################################################################################################################
 
-def scatter(ax, x, y_true, class_names, scatter_kwargs,
+def scatter(ax, x, _y_true, class_names, scatter_kwargs,
 	sort_by_count=True,
 	add_class_label=True,
 	):
+	### checks
 	assert len(x.shape)==2
 	assert x.shape[-1]==2
-	assert len(x)==len(y_true)
-	
+	assert len(x)==len(_y_true)
+
+	_, _, y_true = ds_labels.format_labels(None, _y_true, class_names)
 	y_uniques, counts = np.unique(y_true, return_counts=True)
 	plot_order = np.argsort(counts)[::-1] if sort_by_count else list(range(0, len(y_uniques)))
 	assert len(y_uniques)==len(class_names)

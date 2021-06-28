@@ -6,6 +6,7 @@ from sklearn import metrics as skmetrics
 import numpy as np
 import math
 from nested_dict import nested_dict
+from . import labels as ds_labels
 from copy import copy, deepcopy
 
 EPS = C_.EPS
@@ -15,12 +16,6 @@ EPS = C_.EPS
 # https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_curve.html#sklearn.metrics.roc_curve
 
 ###################################################################################################################################################
-
-def _check_prob(y_pred_p, class_names):
-	assert len(y_pred_p.shape)==2
-	assert y_pred_p.shape[-1]==len(class_names)
-	assert np.all(y_pred_p>=0) and np.all(y_pred_p<=1)
-	#assert np.all((1-np.sum(y_pred_p, axis=-1))**2<=EPS)
 
 def get_cm(_y_pred, _y_true, class_names,
 	pred_is_onehot:bool=False,
@@ -174,18 +169,15 @@ def get_multiclass_metrics(_y_pred_p, _y_true, class_names,
 		'aucroc',
 		'xentropy',
 		],
-	target_is_onehot:bool=False,
+	check_distribution=False,
 	):
 	### checks
-	y_pred_p = copy(_y_pred_p)
-	y_true = copy(_y_true)
-	_check_prob(y_pred_p, class_names)
 	assert len(class_names)>2
-	assert len(y_pred_p)==len(y_true)
+	y_pred_p, y_pred, y_true = ds_labels.format_labels(_y_pred_p, _y_true, class_names,
+		check_distribution=check_distribution,
+		)
 
 	### compute for each binary cm case
-	y_true = y_true.argmax(axis=-1) if target_is_onehot else y_true
-	y_pred = y_pred_p.argmax(axis=-1) # predicted is the max prob by default!
 	metrics_cdict = nested_dict()
 	for kc,c in enumerate(class_names):
 		y_true_c = ((y_true==kc)).astype(int)
