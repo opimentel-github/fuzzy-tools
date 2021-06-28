@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 ###################################################################################################################################################
 
-class PlotAnimation():
+class PlotAnimator():
 	def __init__(self,
 		video_duration=10,
 		is_dummy:bool=False,
@@ -37,6 +37,9 @@ class PlotAnimation():
 
 	def __len__(self):
 		return len(self.frames)
+
+	def not_dummy(self):
+		return not self.is_dummy
 
 	def get_fps(self):
 		return len(self)/self.video_duration
@@ -90,29 +93,17 @@ class PlotAnimation():
 	def append(self, fig,
 		uses_close_fig=True,
 		):
-		if not self.is_dummy:
+		if self.not_dummy():
 			img = _fig2img(fig, uses_close_fig)
 			self.frames.append(img)
 			return
-			'''
-			canvas = FigureCanvas(fig)
-			#canvas.draw() # ugly
-			#canvas.draw_idle()
-			canvas.print_figure(self.temp_filedir)
-			img = np.fromstring(canvas.tostring_rgb(), dtype='uint8')
-			new_shape = canvas.get_width_height()[::-1] + (3,)
-			#print(new_shape)
-			img = img.reshape(new_shape)
-			self.frames.append(img)
-			#plt.close(fig)
-			'''
 		return
 
 	def save(self, save_filedir:str,
 		reverse:bool=False,
 		clean_buffer:bool=True,
 		):
-		if not self.is_dummy:
+		if self.not_dummy():
 			if reverse:
 				self.reverse_frames()
 

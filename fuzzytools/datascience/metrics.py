@@ -22,7 +22,7 @@ def _check_prob(y_pred_p, class_names):
 	assert np.all(y_pred_p>=0) and np.all(y_pred_p<=1)
 	#assert np.all((1-np.sum(y_pred_p, axis=-1))**2<=EPS)
 
-def get_cm(_y_pred, _y_target, class_names,
+def get_cm(_y_pred, _y_true, class_names,
 	pred_is_onehot:bool=False,
 	target_is_onehot:bool=False,
 	):
@@ -35,20 +35,20 @@ def get_cm(_y_pred, _y_target, class_names,
 		assert y_pred.shape[-1]==len(class_names)
 		y_pred = y_pred.argmax(axis=-1)
 
-	y_target = _y_target.copy()
+	y_true = _y_true.copy()
 	if target_is_onehot:
-		assert len(y_target.shape)==2
-		assert y_target.shape[-1]==len(class_names)
-		y_target = y_target.argmax(axis=-1)
+		assert len(y_true.shape)==2
+		assert y_true.shape[-1]==len(class_names)
+		y_true = y_true.argmax(axis=-1)
 
-	assert y_pred.shape==y_target.shape
-	cm = skmetrics.confusion_matrix(y_target, y_pred)
+	assert y_pred.shape==y_true.shape
+	cm = skmetrics.confusion_matrix(y_true, y_pred)
 	return cm
 
 ###################################################################################################################################################
 
 class BinBatchCM():
-	def __init__(self, y_pred, y_target, class_names,
+	def __init__(self, y_pred, y_true, class_names,
 		pos_probability=[],
 		pos_label=1,
 		):
@@ -56,16 +56,16 @@ class BinBatchCM():
 		assert pos_label in [0, 1]
 
 		self.y_pred = copy(y_pred)
-		self.y_target = copy(y_target)
+		self.y_true = copy(y_true)
 		self.class_names = class_names
 		self.pos_probability = copy(pos_probability)
 		self.pos_label = pos_label
 		self.reset()
 
 	def reset(self):
-		self.bin_cm = get_cm(self.y_pred, self.y_target, self.class_names)
+		self.bin_cm = get_cm(self.y_pred, self.y_true, self.class_names)
 		#print('y_pred',self.y_pred)
-		#print('y_target',self.y_target)
+		#print('y_true',self.y_true)
 		#print('bin_cm',self.bin_cm)
 		assert len(self.bin_cm.shape)==2
 		assert self.bin_cm.shape[0]==2
@@ -121,18 +121,18 @@ class BinBatchCM():
 
 	def _get_bin_p(self):
 		p = self.pos_probability
-		y_target = self.y_target==self.pos_label
-		assert np.sum(y_target)<len(y_target), 'needs samples from both classes'
-		# print(p, y_target)
-		return p, y_target
+		y_true = self.y_true==self.pos_label
+		assert np.sum(y_true)<len(y_true), 'needs samples from both classes'
+		# print(p, y_true)
+		return p, y_true
 
 	def get_xentropy(self):
-		p, y_target = self._get_bin_p()
+		p, y_true = self._get_bin_p()
 		return np.mean(-1*np.log(p+EPS))
 
 	def get_prc(self):
-		p, y_target = self._get_bin_p()
-		precision, recall, thresholds = skmetrics.precision_recall_curve(y_target, p)
+		p, y_true = self._get_bin_p()
+		precision, recall, thresholds = skmetrics.precision_recall_curve(y_true, p)
 		d = {
 			'recall':recall,
 			'precision':precision,
@@ -142,12 +142,12 @@ class BinBatchCM():
 		return d
 
 	def get_aucpr(self):
-		p, y_target = self._get_bin_p()
-		return skmetrics.average_precision_score(y_target, p, pos_label=1)
+		p, y_true = self._get_bin_p()
+		return skmetrics.average_precision_score(y_true, p, pos_label=1)
 
 	def get_rocc(self):
-		p, y_target = self._get_bin_p()
-		fpr, tpr, thresholds = skmetrics.roc_curve(y_target, p)
+		p, y_true = self._get_bin_p()
+		fpr, tpr, thresholds = skmetrics.roc_curve(y_true, p)
 		d = {
 			'fpr':fpr,
 			'tpr':tpr,
@@ -157,12 +157,12 @@ class BinBatchCM():
 		return d
 
 	def get_aucroc(self):
-		p, y_target = self._get_bin_p()
-		return skmetrics.roc_auc_score(self.y_target, p)
+		p, y_true = self._get_bin_p()
+		return skmetrics.roc_auc_score(self.y_true, p)
 
 ###################################################################################################################################################
 
-def get_multiclass_metrics(_y_pred_p, _y_target, class_names,
+def get_multiclass_metrics(_y_pred_p, _y_true, class_names,
 	metrics=[
 		'precision',
 		'recall',
@@ -178,27 +178,27 @@ def get_multiclass_metrics(_y_pred_p, _y_target, class_names,
 	):
 	### checks
 	y_pred_p = copy(_y_pred_p)
-	y_target = copy(_y_target)
+	y_true = copy(_y_true)
 	_check_prob(y_pred_p, class_names)
 	assert len(class_names)>2
-	assert len(y_pred_p)==len(y_target)
+	assert len(y_pred_p)==len(y_true)
 
 	### compute for each binary cm case
-	y_target = y_target.argmax(axis=-1) if target_is_onehot else y_target
+	y_true = y_true.argmax(axis=-1) if target_is_onehot else y_true
 	y_pred = y_pred_p.argmax(axis=-1) # predicted is the max prob by default!
 	metrics_cdict = nested_dict()
 	for kc,c in enumerate(class_names):
-		y_target_c = ((y_target==kc)).astype(int)
+		y_true_c = ((y_true==kc)).astype(int)
 		y_pred_c = ((y_pred==kc)).astype(int)
 		pos_probability_c = y_pred_p[:,kc]
-		bin_bach_cm = BinBatchCM(y_pred_c, y_target_c, [f'non-{c}', f'c'], pos_probability=pos_probability_c, pos_label=1)
+		bin_bach_cm = BinBatchCM(y_pred_c, y_true_c, [f'non-{c}', f'c'], pos_probability=pos_probability_c, pos_label=1)
 		for m in metrics:
 			metrics_cdict[c][m] = getattr(bin_bach_cm, f'get_{m}')()
 	metrics_cdict = metrics_cdict.to_dict()
 
 	### get cm
 	y_pred = y_pred_p.argmax(axis=-1)
-	cm = get_cm(y_pred, y_target, class_names)
+	cm = get_cm(y_pred, y_true, class_names)
 
 	### compute averages results
 	support = {c:cm[kc].sum() for kc,c in enumerate(class_names)}
