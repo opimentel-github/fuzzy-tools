@@ -14,7 +14,7 @@ def get_xlim(_x_values,
 	x_extended_percent=EXTENDED_PERCENT,
 	):
 	x_values = np.concatenate(_x_values, axis=0) if isinstance(_x_values, list) else copy(_x_values)
-	assert len(_xy_values.shape)==1
+	assert len(x_values.shape)==1
 
 	x_min, x_max = x_values.min(), x_values.max()
 	dx = x_max-x_min
@@ -27,8 +27,8 @@ def get_lims(_xy_values,
 	y_extended_percent=EXTENDED_PERCENT,
 	):
 	xy_values = np.concatenate(_xy_values, axis=0) if isinstance(_xy_values, list) else copy(_xy_values)
-	assert len(_xy_values.shape)==2
-	assert _xy_values.shape[-1]==2
+	assert len(xy_values.shape)==2
+	assert xy_values.shape[-1]==2
 
 	xlim = get_xlim(xy_values[:,0],
 		x_extended_percent,
