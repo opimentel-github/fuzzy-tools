@@ -5,7 +5,7 @@ from . import C_
 import matplotlib.pyplot as plt
 from copy import copy, deepcopy
 import numpy as np
-from .datascience import labels as ds_labels
+from ..datascience import labels as ds_labels
 
 ###################################################################################################################################################
 
