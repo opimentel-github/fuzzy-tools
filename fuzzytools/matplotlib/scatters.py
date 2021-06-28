@@ -4,6 +4,7 @@ from . import C_
 
 import matplotlib.pyplot as plt
 from copy import copy, deepcopy
+import numpy as np
 
 ###################################################################################################################################################
 
