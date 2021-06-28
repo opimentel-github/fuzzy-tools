@@ -4,6 +4,7 @@ from . import C_
 
 import matplotlib.pyplot as plt
 import numpy as np
+from copy import copy, deepcopy
 
 EXTENDED_PERCENT = 0.1
 
