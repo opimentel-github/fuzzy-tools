@@ -8,7 +8,25 @@ import numpy as np
 import random
 from copy import copy, deepcopy
 
+ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
+
+# https://stackoverflow.com/questions/2267362/how-to-convert-an-integer-to-a-string-in-any-base
+
 ###################################################################################################################################################
+
+def string_count(s,
+	length=None,
+	):
+	base = ALPHABET
+	base_first = base[0]
+	length = len(base) if length is None else length
+	res = ""
+	b = len(base)
+	while s:
+		res+=base[s%b]
+		s//= b
+	txt = res[::-1] or base_first
+	return base_first*(length-len(txt))+txt
 
 def delete_string_chars(s, chars):
 	return ''.join([c for c in s if not c in chars])

@@ -181,7 +181,8 @@ class LatexTable():
 		delete_redundant_model_keys:bool=True,
 		caption:str='???',
 		label:str='???',
-		centered:bool=True,
+		resizebox=True,
+		centered:bool=False,
 		custom_tabular_align:str=None, # 'ccc|llll'
 		hline_k=None,
 		bold_function=get_max_elements,
@@ -217,6 +218,7 @@ class LatexTable():
 		self.delete_redundant_model_keys = delete_redundant_model_keys
 		self.caption = caption
 		self.label = label
+		self.resizebox = resizebox
 		self.centered = centered
 		self.custom_tabular_align = custom_tabular_align
 		self.hline_k = hline_k
@@ -234,11 +236,12 @@ class LatexTable():
 		txt += f'{utils.get_slash()}def{utils.get_slash()}srule'+'{'+utils.get_rule(*self.rule_ab)+'}\n'
 		txt += utils.get_slash()+'begin{table*}\n' if self.centered else utils.get_slash()+'begin{table}[H]\n'
 		txt += utils.get_slash()+'centering'+'\n'
-		txt += utils.get_slash()+'caption{'+self.caption+'}'+'\n'
+		txt += utils.get_slash()+'caption{'+'\n'+self.caption+'\n'+'}'+'\n'
 		txt += utils.get_slash()+'label{'+self.label+'}'+utils.get_slash()+'vspace{.1cm}'+'\n'
+		txt += '\\resizebox{1\\textwidth}{!}{'+'\n' if self.resizebox else ''
 		tabular_align = utils.get_bar_latex(self.new_model_attrs, self.results_columns) if self.custom_tabular_align is None else self.custom_tabular_align
-		txt += utils.get_slash()+'begin{tabular}{'+tabular_align+'}'
-		return txt
+		txt += utils.get_slash()+'begin{tabular}{'+tabular_align+'}'+'\n'
+		return txt[:-1]
 
 	def get_top_txt(self):
 		txt = utils.get_hline()+'\n'
@@ -254,7 +257,7 @@ class LatexTable():
 			txt += utils.get_hline()+'\n'
 			#txt += '\n'
 
-		txt += self.get_end_txt()
+		txt += self.get_end_txt()+'\n'
 		txt = txt.replace(C_.PM_CHAR, f'${utils.get_slash()}pm$')
 		txt = txt.replace(C_.NAN_CHAR, '$-$')
 		txt = txt.replace('%', utils.get_slash()+'%')
@@ -265,5 +268,6 @@ class LatexTable():
 	def get_end_txt(self):
 		txt = ''
 		txt += '\\end{tabular}'+'\n'
+		txt += '}'+'\n' if self.resizebox else ''
 		txt += '\\end{table*}'+'\n' if self.centered else '\\end{table}'+'\n'
-		return txt
+		return txt[:-1]
