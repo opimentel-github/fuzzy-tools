@@ -34,18 +34,19 @@ class AxisLims(object):
 		self.axis_d = {k:[] for k in self.axis_clip_values.keys()}
 		pass
 
-	def append(self, axis_name, axis_value:tuple):
-		self.axis_d[axis_name] += [axis_value]
+	def append(self, axis_name, axis_values:tuple):
+		self.axis_d[axis_name] += [axis_values]
 
 	def get_axis_lim(self, axis_name):
 		axis_extended_percent = self.axis_extended_percent[axis_name]
 		axis_clip_values = self.axis_clip_values[axis_name]
 
 		axis_lim = get_xlim(self.axis_d[axis_name], axis_extended_percent)
-		axis_lim = np.clip(axis_lim, axis_clip_values[0], axis_clip_values[1])
+		if not (axis_clip_values[0] is None and axis_clip_values[1] is None):
+			axis_lim = np.clip(axis_lim, axis_clip_values[0], axis_clip_values[1])
 		return axis_lim
 
-	def set_axis_lims(self, ax):
+	def set_ax_axis_lims(self, ax):
 		for k in self.axis_d.keys():
 			getattr(ax, f'set_{k}lim')(self.get_axis_lim(k))
 		return ax
