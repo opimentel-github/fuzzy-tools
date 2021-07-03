@@ -475,10 +475,11 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 				key_value_separator,
 				fext,
 				)
+			assert len(_files)>0, f'no files for kf={_kf}'
 			all_kf_files[_kf] = _files
 			all_kf_files_ids[_kf] = [f'{_kf}{kf_str}{_fid}' for _fid in _files_ids]
 
-		print(all_kf_files); print(all_kf_files_ids)
+		# print(all_kf_files); print(all_kf_files_ids)
 		if disbalanced_kf_mode=='error':
 			for _kf in kfs:
 				assert len(all_kf_files[_kf])==[kfs[0]], f'not equal size of kf files in all kf values {[len(all_kf_files[_kf]) for _kf in kfs]}'
@@ -500,8 +501,7 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 		else:
 			raise Exception(f'invalid disbalanced_kf_mode={disbalanced_kf_mode}')
 
-
-		print(all_kf_files); print(all_kf_files_ids)
+		# print(all_kf_files); print(all_kf_files_ids)
 		files = []
 		files_ids = []
 		for _kf in kfs:
