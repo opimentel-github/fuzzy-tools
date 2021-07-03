@@ -17,9 +17,11 @@ ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 def string_count(s,
 	length=None,
 	):
+	assert s>=0
 	base = ALPHABET
 	base_first = base[0]
 	length = len(base) if length is None else length
+	assert s<len(base)**length
 	res = ""
 	b = len(base)
 	while s:

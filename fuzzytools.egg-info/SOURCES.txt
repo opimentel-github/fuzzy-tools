@@ -1,4 +1,6 @@
+MANIFEST.in
 README.md
+requirements.txt
 setup.cfg
 setup.py
 fuzzytools/C_.py
@@ -25,16 +27,17 @@ fuzzytools.egg-info/dependency_links.txt
 fuzzytools.egg-info/requires.txt
 fuzzytools.egg-info/top_level.txt
 fuzzytools/cuteplots/__init__.py
-fuzzytools/cuteplots/animations.py
+fuzzytools/cuteplots/animators.py
 fuzzytools/cuteplots/bars.py
 fuzzytools/cuteplots/cm_plots.py
 fuzzytools/cuteplots/colors.py
-fuzzytools/cuteplots/lines.py
 fuzzytools/cuteplots/plots.py
 fuzzytools/cuteplots/utils.py
 fuzzytools/datascience/__init__.py
+fuzzytools/datascience/dim_reductors.py
 fuzzytools/datascience/distributions.py
 fuzzytools/datascience/grid_search.py
+fuzzytools/datascience/labels.py
 fuzzytools/datascience/metrics.py
 fuzzytools/datascience/ranks.py
 fuzzytools/datascience/statistics.py
@@ -42,3 +45,7 @@ fuzzytools/datascience/xerror.py
 fuzzytools/latex/__init__.py
 fuzzytools/latex/latex_tables.py
 fuzzytools/latex/utils.py
+fuzzytools/matplotlib/__init__.py
+fuzzytools/matplotlib/lims.py
+fuzzytools/matplotlib/lines.py
+fuzzytools/matplotlib/scatters.py

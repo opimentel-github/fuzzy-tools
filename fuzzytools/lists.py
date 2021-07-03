@@ -8,6 +8,16 @@ import random
 
 ###################################################################################################################################################
 
+def _check(l:list):
+	assert isinstance(l, list)
+	assert len(l)>0
+
+def _check_not_empy(l:list):
+	_check(l)
+	assert len(l)>0
+
+###################################################################################################################################################
+
 def check_same_class(elements):
 	return all([type(e)==type(elements[0]) for e in elements])
 
@@ -45,18 +55,24 @@ def list_product(*args):
 def flat_list(list_of_lists:List[list]):
 	return sum(list_of_lists, [])
 
-def get_random_item(l:list):
-	assert len(l)>0
+def get_random_item(l):
+	_check_not_empy(l)
 	idx = 0 if len(l)==1 else random.randint(0, len(l)-1)
 	return l[idx]
 
 def get_random_key(d:dict):
 	keys = list(d.keys())
-	return get_random_item(keys)
+	key = get_random_item(keys)
+	return key
 
-def get_bootstrap(l:list, n):
-	# with replacement
-	# faster than numpy.choice
+def get_bootstrap(l:list, n,
+	random_state=None,
+	):
+	'''
+	with replacement
+	faster than numpy.choice
+	'''
+	random.seed(random_state)
 	return [get_random_item(l) for _ in range(0, n)]
 
 def merge_lists(*args):

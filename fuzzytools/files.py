@@ -7,9 +7,12 @@ import os
 import time 
 from . import strings
 from . import prints
+from . import lists
 from nested_dict import nested_dict
 from .times import get_date_hour
 from shutil import copyfile
+
+KFOLF_CHAR = '@'
 
 ###################################################################################################################################################
 
@@ -412,6 +415,8 @@ def gather_files_by_id(rootdir,
 			fext,
 			)
 		files_ids = [f.cfilename for f in files]
+		return files, files_ids
+
 	else:
 		filedirs = get_filedirs(rootdir, fext=fext)
 		files = []
@@ -423,11 +428,16 @@ def gather_files_by_id(rootdir,
 				)
 			files += [PFile(filedir)]
 			files_ids += [filedict[id_key]]
-	return files, files_ids
+		return files, files_ids
 
 def get_kfold_rootdirs_dict(rootdir,
-	kf_str=C_.KFOLF_CHAR,
+	kf_str=KFOLF_CHAR,
 	):
+	'''
+	{
+	[kf_set][kf] = rootdir
+	}
+	'''
 	rootdirs = get_roodirs(rootdir)
 	kfold_rootdirs_dict = nested_dict()
 	for rd in rootdirs:
@@ -435,13 +445,14 @@ def get_kfold_rootdirs_dict(rootdir,
 		kfold_rootdirs_dict[kf_set][kf] = rd
 	return kfold_rootdirs_dict.to_dict()
 
-def gather_files_by_kfold(rootdir, kf, kf_set,
+def gather_files_by_kfold(rootdir, _kf, kf_set,
 	id_key=None,
 	key_key_separator:str=C_.KEY_KEY_SEP_CHAR,
 	key_value_separator:str=C_.KEY_VALUE_SEP_CHAR,
 	fext:str=None,
-	kf_str=C_.KFOLF_CHAR,
-	create_dir=False,
+	kf_str=KFOLF_CHAR,
+	disbalanced_kf_mode='error', # error ignore oversampling
+	random_state=None,
 	):
 	'''
 	format must be .../kf@kf_set/files
@@ -449,11 +460,13 @@ def gather_files_by_kfold(rootdir, kf, kf_set,
 	kfold_rootdirs_dict = get_kfold_rootdirs_dict(rootdir,
 		kf_str,
 	)
-	#print('kfold_rootdirs_dict',kfold_rootdirs_dict)
-	if kf=='.': # gather all!
+
+	### gather files from all kf values
+	kf = str(_kf)
+	if kf=='.':
+		all_kf_files = {}
+		all_kf_files_ids = {}
 		kfs = list(kfold_rootdirs_dict[kf_set].keys())
-		files = []
-		files_ids = []
 		for _kf in kfs:
 			kfrd = kfold_rootdirs_dict[kf_set][_kf]
 			_files, _files_ids = gather_files_by_id(kfrd,
@@ -462,17 +475,46 @@ def gather_files_by_kfold(rootdir, kf, kf_set,
 				key_value_separator,
 				fext,
 				)
-			files += _files
-			files_ids += [f'{_kf}{kf_str}{_fid}' for _fid in _files_ids]
-			if create_dir:
-				for f in files:
-					assert 0
+			all_kf_files[_kf] = _files
+			all_kf_files_ids[_kf] = [f'{_kf}{kf_str}{_fid}' for _fid in _files_ids]
 
+		print(all_kf_files); print(all_kf_files_ids)
+		if disbalanced_kf_mode=='error':
+			for _kf in kfs:
+				assert len(all_kf_files[_kf])==[kfs[0]], f'not equal size of kf files in all kf values {[len(all_kf_files[_kf]) for _kf in kfs]}'
+
+		elif disbalanced_kf_mode=='ignore':
+			pass
+
+		elif disbalanced_kf_mode=='oversampling':
+			max_len = max([len(all_kf_files[_kf]) for _kf in kfs])
+			for _kf in kfs:
+				_len = len(all_kf_files[_kf])
+				k_repeat = max_len-_len
+				idxs = list(range(0, _len))
+				new_idxs = lists.get_bootstrap(idxs, k_repeat,
+					random_state=random_state,
+					)
+				all_kf_files[_kf] += [all_kf_files[_kf][idx] for idx in new_idxs]
+				all_kf_files_ids[_kf] += [all_kf_files_ids[_kf][idx] for idx in new_idxs]
+		else:
+			raise Exception(f'invalid disbalanced_kf_mode={disbalanced_kf_mode}')
+
+
+		print(all_kf_files); print(all_kf_files_ids)
+		files = []
+		files_ids = []
+		for _kf in kfs:
+			files += all_kf_files[_kf]
+			files_ids += all_kf_files_ids[_kf]
+		return files, files_ids
+
+	### gather files from an specific kf value
 	else:
 		if not kf_set in kfold_rootdirs_dict.keys():
 			return [], []
 		kfold_rootdirs_dict_set = kfold_rootdirs_dict[kf_set]
-		if not str(kf) in kfold_rootdirs_dict_set.keys():
+		if not kf in kfold_rootdirs_dict_set.keys():
 			return [], []
 		kfrd = kfold_rootdirs_dict_set[str(kf)]
 		files, files_ids = gather_files_by_id(kfrd,
@@ -481,4 +523,4 @@ def gather_files_by_kfold(rootdir, kf, kf_set,
 			key_value_separator,
 			fext,
 			)
-	return files, files_ids
+		return files, files_ids

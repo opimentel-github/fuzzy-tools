@@ -15,7 +15,6 @@ FILESIZE_FACTOR = 1e-6 # in mbs
 
 KEY_KEY_SEP_CHAR = '~'
 KEY_VALUE_SEP_CHAR = '='
-KFOLF_CHAR = '@'
 
 VERBOSE = 0
 
