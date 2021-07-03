@@ -11,7 +11,7 @@ EXTENDED_PERCENT = 0.1
 ###################################################################################################################################################
 
 def get_xlim(_x_values, axis_extended_percent):
-	x_values = np.concatenate(_x_values, axis=0) if isinstance(_x_values, list) else copy(_x_values)
+	x_values = np.array(_x_values)
 	assert len(x_values.shape)==1
 
 	x_min, x_max = x_values.min(), x_values.max()
@@ -34,8 +34,8 @@ class AxisLims(object):
 		self.axis_d = {k:[] for k in self.axis_clip_values.keys()}
 		pass
 
-	def append(self, axis_name, axis_values:tuple):
-		self.axis_d[axis_name] += [axis_values]
+	def append(self, axis_name, axis_values):
+		self.axis_d[axis_name] += [x for x in axis_values]
 
 	def get_axis_lim(self, axis_name):
 		axis_extended_percent = self.axis_extended_percent[axis_name]
