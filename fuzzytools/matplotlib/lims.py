@@ -12,6 +12,7 @@ EXTENDED_PERCENT = 0.1
 
 def get_xlim(_x_values, axis_extended_percent):
 	x_values = np.array(_x_values)
+	print(x_values.shape)
 	assert len(x_values.shape)==1
 
 	x_min, x_max = x_values.min(), x_values.max()

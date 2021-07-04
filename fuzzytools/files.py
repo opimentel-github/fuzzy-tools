@@ -453,6 +453,7 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 	kf_str=KFOLF_CHAR,
 	disbalanced_kf_mode='error', # error ignore oversampling
 	random_state=None,
+	kfs=None,
 	):
 	'''
 	format must be .../kf@kf_set/files
@@ -466,7 +467,7 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 	if kf=='.':
 		all_kf_files = {}
 		all_kf_files_ids = {}
-		kfs = list(kfold_rootdirs_dict[kf_set].keys())
+		kfs = list(kfold_rootdirs_dict[kf_set].keys()) if kfs is None else kfs
 		for _kf in kfs:
 			kfrd = kfold_rootdirs_dict[kf_set][_kf]
 			_files, _files_ids = gather_files_by_id(kfrd,
