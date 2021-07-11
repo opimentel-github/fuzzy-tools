@@ -179,8 +179,8 @@ class LatexTable():
 		key_key_separator:str=C_.KEY_KEY_SEP_CHAR,
 		key_value_separator:str=C_.KEY_VALUE_SEP_CHAR,
 		delete_redundant_model_keys:bool=True,
-		caption:str='???',
-		label:str='???',
+		caption:str='',
+		label:str='.tab',
 		resizebox=True,
 		centered:bool=False,
 		custom_tabular_align:str=None, # 'ccc|llll'

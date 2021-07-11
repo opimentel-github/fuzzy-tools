@@ -10,6 +10,7 @@ from . import labels as ds_labels
 from copy import copy, deepcopy
 
 EPS = C_.EPS
+CHECK_DISTRIBUTION = False
 
 # https://stackoverflow.com/questions/53977031/precision-score-does-not-match-with-metrics-formula
 # https://machinelearningmastery.com/roc-curves-and-precision-recall-curves-for-classification-in-python/#:~:text=ROC%20Curves%20and%20AUC%20in%20Python,-We%20can%20plot&text=The%20function%20takes%20both%20the,for%20each%20threshold%20and%20thresholds.
@@ -169,7 +170,7 @@ def get_multiclass_metrics(_y_pred_p, _y_true, class_names,
 		'aucroc',
 		'xentropy',
 		],
-	check_distribution=False,
+	check_distribution=CHECK_DISTRIBUTION,
 	):
 	### checks
 	assert len(class_names)>2
