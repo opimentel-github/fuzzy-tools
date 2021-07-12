@@ -31,6 +31,8 @@ def plot_missclassifications(_y_pred_p, _y_true, class_names,
 	fig, axs = plt.subplots(len(class_names), 1, figsize=figsize)
 	for kc,c in enumerate(class_names):
 		ax = axs[kc]
+		title = f'y_true={c}'
+		ax.set_title(title)
 		valid_idxs = np.where(y_true==kc)[0]
 		# print(valid_idxs)
 		for k,idx in enumerate(valid_idxs):
@@ -47,8 +49,8 @@ def plot_missclassifications(_y_pred_p, _y_true, class_names,
 					txt = f'{obj_y_pred_c}' if obj_id is None else f'{obj_id} [{obj_y_pred_c}]'
 					ax.text(k, obj_y_pred_p, txt, rotation=90, ha='center', va='top', fontsize=fontsize)
 
-		ax.plot([None], [None], 'o', c='k', label=f'correct-classification for y_true={c}')
-		ax.plot([None], [None], 'D', c='r', label=f'miss-classification for y_true={c}')
+		ax.plot([None], [None], 'o', c='k', label=f'correct-classification')
+		ax.plot([None], [None], 'D', c='r', label=f'miss-classification')
 		if not pred_prob_th is None:
 			ax.axhline(pred_prob_th, linestyle='--', c='r', label=f'y_pred_threshold={pred_prob_th}')
 
@@ -58,5 +60,4 @@ def plot_missclassifications(_y_pred_p, _y_true, class_names,
 		ax.grid(alpha=.5)
 		ax.legend(loc=legend_loc)
 	
-	axs[0].set_title(title)
 	return fig, axs
