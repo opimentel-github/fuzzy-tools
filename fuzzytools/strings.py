@@ -14,19 +14,19 @@ ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 
 ###################################################################################################################################################
 
-def string_count(s,
-	length=None,
+def alphabet_count(k,
+	length=1,
 	):
-	assert s>=0
+	assert k>=0
 	base = ALPHABET
 	base_first = base[0]
 	length = len(base) if length is None else length
-	assert s<len(base)**length
+	assert k<len(base)**length
 	res = ""
 	b = len(base)
-	while s:
-		res+=base[s%b]
-		s//= b
+	while k:
+		res+=base[k%b]
+		k//= b
 	txt = res[::-1] or base_first
 	return base_first*(length-len(txt))+txt
 
