@@ -51,8 +51,8 @@ def plot_missclassifications(_y_pred_p, _y_true, class_names,
 				ax.plot(k, obj_y_pred_p, 'D', c='r')
 				if pred_prob_th is None or obj_y_pred_p>=pred_prob_th:
 					ax.text(k, obj_y_pred_p, txt, rotation=90, ha='center', va='top', fontsize=fontsize)
-				if verbose:
-					print(f'k={k}; c={c}; txt={txt}')
+					if verbose:
+						print(f'k={k}; c={c}; txt={txt}')
 
 		ax.plot([None], [None], 'o', c='k', label=f'correct-classification')
 		ax.plot([None], [None], 'D', c='r', label=f'miss-classification')
