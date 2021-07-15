@@ -14,21 +14,30 @@ ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 
 ###################################################################################################################################################
 
+def bf_alphabet_count(k,
+	extra_string=None,
+	string_length=1,
+	):
+	c = alphabet_count(k, string_length)
+	s = '' if extra_string is None else f'.{extra_string}'
+	txt = '$\\bf{('+f'{c}{s}'+')}$'
+	return txt
+
 def alphabet_count(k,
-	length=1,
+	string_length=None,
 	):
 	assert k>=0
 	base = ALPHABET
 	base_first = base[0]
-	length = len(base) if length is None else length
-	assert k<len(base)**length
+	string_length = len(base) if string_length is None else string_length
+	assert k<len(base)**string_length
 	res = ""
 	b = len(base)
 	while k:
 		res+=base[k%b]
 		k//= b
 	txt = res[::-1] or base_first
-	return base_first*(length-len(txt))+txt
+	return base_first*(string_length-len(txt))+txt
 
 def delete_string_chars(s, chars):
 	return ''.join([c for c in s if not c in chars])

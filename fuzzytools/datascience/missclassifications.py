@@ -5,7 +5,7 @@ from . import C_
 import numpy as np
 import matplotlib.pyplot as plt
 from . import labels as ds_labels
-from ..strings import alphabet_count
+from ..strings import bf_alphabet_count
 
 FIGSIZE = None
 CHECK_DISTRIBUTION = False
@@ -34,7 +34,7 @@ def plot_missclassification_map(_y_pred_p, _y_true, class_names,
 	for kc,c in enumerate(class_names):
 		ax = axs[kc]
 		title = ''
-		title += '$\\bf{('+alphabet_count(kc)+')}$'+f' y_true={c}'+'\n'
+		title += f'{bf_alphabet_count(kc)} y_true={c}'+'\n'
 		ax.set_title(title[:-1])
 		valid_idxs = np.where(y_true==kc)[0]
 		# print(valid_idxs)
