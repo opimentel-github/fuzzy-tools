@@ -21,6 +21,7 @@ def plot_missclassifications(_y_pred_p, _y_true, class_names,
 	legend_loc='upper right',
 	fontsize=10,
 	pred_prob_th=None,
+	verbose=0,
 	):
 	### checks
 	assert len(class_names)>2
@@ -43,13 +44,15 @@ def plot_missclassifications(_y_pred_p, _y_true, class_names,
 			obj_y_pred_p = y_pred_p[idx][obj_y_pred]
 			correct_classification = obj_y_pred==kc
 			obj_id = None if obj_ids is None else obj_ids[idx]
+			txt = f'{obj_y_pred_c}' if obj_id is None else f'{obj_id} [{obj_y_pred_c}]'
 			if correct_classification:
 				ax.plot(k, obj_y_pred_p, 'o', c='k')
 			else:
 				ax.plot(k, obj_y_pred_p, 'D', c='r')
 				if pred_prob_th is None or obj_y_pred_p>=pred_prob_th:
-					txt = f'{obj_y_pred_c}' if obj_id is None else f'{obj_id} [{obj_y_pred_c}]'
 					ax.text(k, obj_y_pred_p, txt, rotation=90, ha='center', va='top', fontsize=fontsize)
+				if verbose:
+					print(f'k={k}; c={c}; txt={txt}')
 
 		ax.plot([None], [None], 'o', c='k', label=f'correct-classification')
 		ax.plot([None], [None], 'D', c='r', label=f'miss-classification')
