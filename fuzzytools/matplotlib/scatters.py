@@ -34,8 +34,9 @@ def scatter(ax, x, _y_true, class_names, scatter_kwargs,
 		_y_true = [valid_idxs]
 		_scatter_kwargs = deepcopy(scatter_kwargs[class_name])
 		if add_class_label:
+			label = _scatter_kwargs.get('label', None)
 			_scatter_kwargs.update({
-				'label':_scatter_kwargs.get('label', '')+f' [{class_name}]',
+				'label':f'{class_name}' if label is None else label+f' [{class_name}]',
 				})
 		ax.scatter(_x[:,0], _x[:,1], **_scatter_kwargs)
 	return ax
