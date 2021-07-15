@@ -14,14 +14,16 @@ ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 
 ###################################################################################################################################################
 
+def bf(s):
+	return '$\\bf{('+str(s)+')}$'
+
 def bf_alphabet_count(k,
 	extra_string=None,
 	string_length=1,
 	):
 	c = alphabet_count(k, string_length)
 	s = '' if extra_string is None else f'.{extra_string}'
-	txt = '$\\bf{('+f'{c}{s}'+')}$'
-	return txt
+	return bf(f'{c}{s}')
 
 def alphabet_count(k,
 	string_length=None,
