@@ -34,7 +34,7 @@ def plot_missclassifications(_y_pred_p, _y_true, class_names,
 	for kc,c in enumerate(class_names):
 		ax = axs[kc]
 		title = ''
-		title += '$\\bf{('+ALPHABET[kc]+')}$'+f' y_true={c}'
+		title += '$\\bf{('+ALPHABET[kc]+')}$'+f' y_true={c}'+'\n'
 		ax.set_title(title[:-1])
 		valid_idxs = np.where(y_true==kc)[0]
 		# print(valid_idxs)
