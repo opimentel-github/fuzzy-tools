@@ -5,6 +5,7 @@ from . import C_
 import numpy as np
 import matplotlib.pyplot as plt
 from . import labels as ds_labels
+from ..strings import ALPHABET
 
 FIGSIZE = None
 CHECK_DISTRIBUTION = False
@@ -31,8 +32,9 @@ def plot_missclassifications(_y_pred_p, _y_true, class_names,
 	fig, axs = plt.subplots(len(class_names), 1, figsize=figsize)
 	for kc,c in enumerate(class_names):
 		ax = axs[kc]
-		title = f'y_true={c}'
-		ax.set_title(title)
+		title = ''
+		title += '$\\bf{('+ALPHABET[kc]+')}$'+f' y_true={c}'
+		ax.set_title(title[:-1])
 		valid_idxs = np.where(y_true==kc)[0]
 		# print(valid_idxs)
 		for k,idx in enumerate(valid_idxs):
