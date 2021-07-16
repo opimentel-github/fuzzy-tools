@@ -21,7 +21,7 @@ def _check(x):
 class DimReductor():
 	def __init__(self, scaler, reduction_map,
 		inter_pca_dims=None,
-		fit_drop_duplicates=True,
+		fit_drop_duplicates=False,
 		):
 		self.scaler = scaler
 		self.reduction_map = reduction_map
