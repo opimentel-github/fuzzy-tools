@@ -33,11 +33,14 @@ class DimReductor():
 		self.fitted = False
 		self.n_components = self.reduction_map.n_components
 
-	def fit(self, x):
+	def fit(self, x,
+		normal_std=0,
+		):
 		new_x = np.concatenate(x, axis=0) if isinstance(x, list) else copy(x)
 		_check(new_x)
 		
 		new_x = np.unique(new_x, axis=0) if self.fit_drop_duplicates else new_x
+		new_x = new_x+np.random.normal(0, normal_std, size=new_x.shape) if normal_std>0 else new_x
 		new_x = self.scaler.fit_transform(new_x)
 		if not self.inter_pca_dims is None:
 			if not hasattr(self, 'pca'):
