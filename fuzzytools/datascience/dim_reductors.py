@@ -21,12 +21,10 @@ def _check(x):
 class DimReductor():
 	def __init__(self, scaler, reduction_map,
 		inter_pca_dims=None,
-		fit_drop_duplicates=False,
 		):
 		self.scaler = scaler
 		self.reduction_map = reduction_map
 		self.inter_pca_dims = inter_pca_dims
-		self.fit_drop_duplicates = fit_drop_duplicates
 		self.reset()
 
 	def reset(self):
@@ -34,12 +32,13 @@ class DimReductor():
 		self.n_components = self.reduction_map.n_components
 
 	def fit(self, x,
+		drop_duplicates=False,
 		normal_std=0,
 		):
 		new_x = np.concatenate(x, axis=0) if isinstance(x, list) else copy(x)
 		_check(new_x)
 		
-		new_x = np.unique(new_x, axis=0) if self.fit_drop_duplicates else new_x
+		new_x = np.unique(new_x, axis=0) if drop_duplicates else new_x
 		new_x = new_x+np.random.normal(0, normal_std, size=new_x.shape) if normal_std>0 else new_x
 		new_x = self.scaler.fit_transform(new_x)
 		if not self.inter_pca_dims is None:
