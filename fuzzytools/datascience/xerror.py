@@ -66,6 +66,7 @@ class XError():
 			return np.take(self.x, [idx], axis=self.dim)
 
 	def get_percentile(self, p:int):
+		assert p>=0 and p<=100
 		assert isinstance(p, int)
 		if not p in self.percentiles: # percentile does not exist
 			percentile = np.percentile(self.x, p, axis=self.dim)
@@ -75,6 +76,12 @@ class XError():
 
 	def get_p(self, p:int):
 		return self.get_percentile(p)
+
+	def get_pbounds(self, p):
+		if p<=50:
+			return self.get_p(p), self.get_p(100-p)
+		else:
+			return self.get_p(100-p), self.get_p(p)
 
 	def get_mean(self):
 		return np.mean(self.x, axis=self.dim)
