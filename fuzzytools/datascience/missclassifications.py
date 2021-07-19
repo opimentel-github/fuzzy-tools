@@ -22,6 +22,8 @@ def plot_missclassification_map(_y_pred_p, _y_true, class_names,
 	fontsize=10,
 	pred_prob_th=None,
 	verbose=0,
+	dx=.5,
+	dx_miss=2,
 	):
 	### checks
 	assert len(class_names)>2
@@ -38,6 +40,7 @@ def plot_missclassification_map(_y_pred_p, _y_true, class_names,
 		ax.set_title(title[:-1])
 		valid_idxs = np.where(y_true==kc)[0]
 		# print(valid_idxs)
+		pos_x = 0
 		for k,idx in enumerate(valid_idxs):
 			obj_y_pred = y_pred[idx]
 			obj_y_pred_c = class_names[obj_y_pred]
@@ -46,13 +49,15 @@ def plot_missclassification_map(_y_pred_p, _y_true, class_names,
 			obj_id = None if obj_ids is None else obj_ids[idx]
 			txt = f'{obj_y_pred_c}' if obj_id is None else f'{obj_id} [{obj_y_pred_c}]'
 			if correct_classification:
-				ax.plot(k, obj_y_pred_p, 'o', c='k')
+				ax.plot(pos_x, obj_y_pred_p, 'o', c='k')
+				pos_x += dx
 			else:
-				ax.plot(k, obj_y_pred_p, 'D', c='r')
+				ax.plot(pos_x, obj_y_pred_p, 'D', c='r')
 				if pred_prob_th is None or obj_y_pred_p>=pred_prob_th:
-					ax.text(k, obj_y_pred_p, txt, rotation=90, ha='center', va='top', fontsize=fontsize)
+					ax.text(pos_x, obj_y_pred_p, txt, rotation=90, ha='center', va='top', fontsize=fontsize)
 					if verbose:
 						print(f'k={k}; c={c}; txt={txt}')
+				pos_x += dx_miss
 
 		ax.plot([None], [None], 'o', c='k', label=f'correct-classification')
 		ax.plot([None], [None], 'D', c='r', label=f'miss-classification')
