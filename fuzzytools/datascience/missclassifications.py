@@ -49,7 +49,6 @@ def plot_missclassification_map(_y_pred_p, _y_true, class_names,
 			correct_classification = obj_y_pred==kc
 			obj_id = None if obj_ids is None else obj_ids[idx]
 			txt = f'{obj_y_pred_c}' if obj_id is None else f'{obj_id} [{obj_y_pred_c}]'
-			miss_obj_ids += [obj_id]
 			if correct_classification:
 				ax.plot(pos_x, obj_y_pred_p, 'o', c='k')
 				pos_x += dx
@@ -59,6 +58,7 @@ def plot_missclassification_map(_y_pred_p, _y_true, class_names,
 					ax.text(pos_x, obj_y_pred_p, txt, rotation=90, ha='center', va='top', fontsize=fontsize)
 					if verbose:
 						print(f'k={k}; c={c}; txt={txt}')
+				miss_obj_ids += [obj_id]
 				pos_x += dx_miss
 
 		ax.plot([None], [None], 'o', c='k', label=f'correct-classification')
