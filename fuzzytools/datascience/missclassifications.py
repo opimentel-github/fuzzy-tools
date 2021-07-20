@@ -33,6 +33,7 @@ def plot_missclassification_map(_y_pred_p, _y_true, class_names,
 		)
 
 	fig, axs = plt.subplots(len(class_names), 1, figsize=figsize)
+	miss_obj_ids = []
 	for kc,c in enumerate(class_names):
 		ax = axs[kc]
 		title = ''
@@ -48,6 +49,7 @@ def plot_missclassification_map(_y_pred_p, _y_true, class_names,
 			correct_classification = obj_y_pred==kc
 			obj_id = None if obj_ids is None else obj_ids[idx]
 			txt = f'{obj_y_pred_c}' if obj_id is None else f'{obj_id} [{obj_y_pred_c}]'
+			miss_obj_ids += [obj_id]
 			if correct_classification:
 				ax.plot(pos_x, obj_y_pred_p, 'o', c='k')
 				pos_x += dx
@@ -69,5 +71,4 @@ def plot_missclassification_map(_y_pred_p, _y_true, class_names,
 		ax.set_xticks([])
 		ax.grid(alpha=.5)
 		ax.legend(loc=legend_loc)
-	
-	return fig, axs
+	return fig, axs, miss_obj_ids
