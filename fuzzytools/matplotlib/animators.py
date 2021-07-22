@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import division
-from . import C_
+from . import _C
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import numpy as np
@@ -17,11 +17,11 @@ class PlotAnimator():
 	def __init__(self,
 		video_duration=10,
 		is_dummy:bool=False,
-		init_offset:float=C_.AN_SEGS_OFFSET,
-		end_offset:float=C_.AN_SEGS_OFFSET,
+		init_offset:float=_C.AN_SEGS_OFFSET,
+		end_offset:float=_C.AN_SEGS_OFFSET,
 		save_init_frame:bool=False,
 		save_end_frame:bool=False,
-		verbose=C_.VERBOSE,
+		verbose=_C.VERBOSE,
 		):
 		self.video_duration = video_duration
 		self.is_dummy = is_dummy
@@ -77,14 +77,14 @@ class PlotAnimator():
 
 		save_filename = '.'.join(save_filedir.split('.')[:-1])
 		if self.save_init_frame:
-			save_fig(f'{save_filename}.first.{C_.AN_SAVE_IMAGE_FEXT}', imgs[0],
+			save_fig(f'{save_filename}.first.{_C.AN_SAVE_IMAGE_FEXT}', imgs[0],
 				uses_close_fig=None,
 				verbose=self.verbose,
 				fig_is_img=True,
 				)
 
 		if self.save_end_frame:
-			save_fig(f'{save_filename}.last.{C_.AN_SAVE_IMAGE_FEXT}', imgs[-1],
+			save_fig(f'{save_filename}.last.{_C.AN_SAVE_IMAGE_FEXT}', imgs[-1],
 				uses_close_fig=None,
 				verbose=self.verbose,
 				fig_is_img=True,

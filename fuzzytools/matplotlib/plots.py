@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import division
-from . import C_
+from . import _C
 
 from ..datascience import statistics as fstats
 from . import colors as cc
@@ -32,7 +32,7 @@ def plot_bar(plot_df,
 	title:str='plot_bar',
 	axis_lim:tuple=[None, None],
 	grid:bool=True,
-	grid_alpha:float=C_.PLOT_GRID_ALPHA,
+	grid_alpha:float=_C.PLOT_GRID_ALPHA,
 	legend_loc:str='upper center',
 	cmap=None,
 	alpha:float=1,
@@ -41,7 +41,7 @@ def plot_bar(plot_df,
 	indexs = list(plot_df.index)
 	columns = list(plot_df.columns)
 	cmap = cc.get_default_cmap(len(indexs)) if cmap is None else cmap
-	fig, ax = plt.subplots(1,1, figsize=(10, np.sqrt((len(columns)+1)*3)) if figsize is None else figsize, dpi=C_.PLOT_DPI) if fig is None else (fig, ax)
+	fig, ax = plt.subplots(1,1, figsize=(10, np.sqrt((len(columns)+1)*3)) if figsize is None else figsize, dpi=_C.PLOT_DPI) if fig is None else (fig, ax)
 
 	### anotations
 	if add_poblation_annotations or add_percent_annotations:
@@ -62,7 +62,7 @@ def plot_bar(plot_df,
 		list_values = []
 		c = cmap.colors[ki]
 		legend_handles.append(mpatches.Patch(color=c, label=index))
-		new_y = y - bar_width/2. + ki/float(len(indexs))*bar_width
+		new_y = y-bar_width/2.+ki/float(len(indexs))*bar_width
 		new_bar_width = bar_width/float(len(indexs))
 		for kc,column in enumerate(columns):
 			value = plot_df[column][index]
@@ -158,21 +158,21 @@ def plot_hist_discrete(data_dict:dict,
 
 	fig=None,
 	ax=None,
-	figsize:tuple=C_.PLOT_FIGSIZE,
+	figsize:tuple=_C.PLOT_FIGSIZE,
 	xlabel:str='values',
 	ylabel:str='population',
 	title:str='plot_hist_discrete',
 	xlim:tuple=[None, None],
 	ylim:tuple=[None, None],
 	grid:bool=True,
-	grid_alpha:float=C_.PLOT_GRID_ALPHA,
+	grid_alpha:float=_C.PLOT_GRID_ALPHA,
 	legend_loc:str='upper center',
 	cmap=None,
 	alpha:float=1,
 	verbose:int=0,
 	**kwargs):
 
-	fig, ax = (plt.subplots(1,1, figsize=figsize, dpi=C_.PLOT_DPI) if fig is None else (fig, ax))
+	fig, ax = (plt.subplots(1,1, figsize=figsize, dpi=_C.PLOT_DPI) if fig is None else (fig, ax))
 	if not isinstance(data_dict, dict):
 		data_dict = {'distribution':data_dict} # transform in a dummy dict
 	keys = list(data_dict.keys())
@@ -188,7 +188,7 @@ def plot_hist_discrete(data_dict:dict,
 		c = cmap.colors[k]
 		x = uniques
 		new_bar_width = bar_width/float(len(keys))
-		new_x = x - bar_width/2. + k/float(len(keys))*bar_width+new_bar_width*0.5
+		new_x = x-bar_width/2. + k/float(len(keys))*bar_width+new_bar_width*0.5
 		ax.bar(new_x, counts, width=new_bar_width, color=c, label=key)
 
 	#### LEGEND
@@ -228,14 +228,14 @@ def plot_hist_bins(data_dict:dict,
 
 	fig=None,
 	ax=None,
-	figsize:tuple=C_.PLOT_FIGSIZE,
+	figsize:tuple=_C.PLOT_FIGSIZE,
 	xlabel:str='values',
 	ylabel:str='population',
 	title:str='plot_hist_bins',
 	xlim:tuple=None,
 	ylim:tuple=None,
 	grid:bool=True,
-	grid_alpha:float=C_.PLOT_GRID_ALPHA,
+	grid_alpha:float=_C.PLOT_GRID_ALPHA,
 	legend_loc:str='upper right',
 	cmap=None,
 	alpha:float=0.5,
@@ -244,7 +244,7 @@ def plot_hist_bins(data_dict:dict,
 	if histtype in ['step']:
 		alpha=1
 
-	fig, ax = plt.subplots(1,1, figsize=figsize, dpi=C_.PLOT_DPI) if fig is None else (fig, ax)
+	fig, ax = plt.subplots(1, 1, figsize=figsize, dpi=_C.PLOT_DPI) if fig is None else (fig, ax)
 	keys = list(data_dict.keys())
 	cmap = cc.get_default_cmap(len(keys)) if cmap is None else cmap
 
@@ -253,7 +253,7 @@ def plot_hist_bins(data_dict:dict,
 		x = np.array(data_dict[key].copy())
 		if verbose>0:
 			x_samples, x_mean, x_std, x_min, x_max = len(x), np.mean(x), np.std(x), np.min(x), np.max(x)
-			print(f'key: {key} - {C_.SAMPLES_TEXT}: {x_samples:,} - x_mean: {x_mean:.5f} - x_std: {x_std:.5f} - x_min: {x_min:.5f} - x_max: {x_max:.5f}')
+			print(f'key: {key}; {_C.SAMPLES_TEXT}: {x_samples:,}; x_mean: {x_mean:.5f}; x_std: {x_std:.5f}; x_min: {x_min:.5f}; x_max: {x_max:.5f}')
 
 		c = cmap.colors[k]
 		hist_kwargs = {
@@ -272,9 +272,9 @@ def plot_hist_bins(data_dict:dict,
 		p50 = np.percentile(x, 50)
 		p95 = np.percentile(x, 95)
 		#label = f'{key}'+', $N='+f'{len(x):,}'+'$'+', $p_{50}='+f'{p50:.2f}'+'_{-'+f'{p50-p5:.2f}'+'}^{+'+f'{p95-p50:.2f}'+'}$'
-		#label = f'{key}'+' - $N: '+f'{len(x):,}'+'$'+' - $p_{50}: '+f'{p50:.2f}'+'_{-'+f'{p50-p5:.2f}'+'}^{+'+f'{p95-p50:.2f}'+'}$'
-		label = f'{key} '+'($p50_{5}^{95}='+f'{p50:.2f}'+'_{'+f'{p5:.2f}'+'}^{'+f'{p95:.2f}'+'}$ - '+f'{len(x):,}#)'
-		#label = f'{key}'+' - $N: '+f'{len(x):,}'+'$'+' - $p50_{p5-p50}^{p95-p50}: '+f'{p50:.2f}'+'_{-'+f'{p50-p5:.2f}'+'}^{+'+f'{p95-p50:.2f}'+'}$'
+		#label = f'{key}'+'; $N: '+f'{len(x):,}'+'$'+'; $p_{50}: '+f'{p50:.2f}'+'_{-'+f'{p50-p5:.2f}'+'}^{+'+f'{p95-p50:.2f}'+'}$'
+		label = f'{key} '+'($p50_{5}^{95}='+f'{p50:.2f}'+'_{'+f'{p5:.2f}'+'}^{'+f'{p95:.2f}'+'}$; '+f'{len(x):,}#)'
+		#label = f'{key}'+'; $N: '+f'{len(x):,}'+'$'+'; $p50_{p5-p50}^{p95-p50}: '+f'{p50:.2f}'+'_{-'+f'{p50-p5:.2f}'+'}^{+'+f'{p95-p50:.2f}'+'}$'
 		legend_handles.append(mpatches.Patch(color=c, label=label))
 
 	ax.set_xlabel(xlabel)
@@ -299,7 +299,7 @@ def plot_hist_bins(data_dict:dict,
 			x = np.array(data_dict[key].copy())
 			c = cmap.colors[k]
 			p50 = np.median(x)
-			ann_y = new_max_ylim*0.9 - (k+1)*new_max_ylim*0.1
+			ann_y = new_max_ylim*0.9-(k+1)*new_max_ylim*0.1
 			#ann = ax.annotate(f'{ann_x:.4f}', xy=(ann_x, ann_y), xytext=(0, annotation_size), fontsize=5, ha='center',
 			#		textcoords='offset points',
 			#		size=annotation_size, va='center', color='w',

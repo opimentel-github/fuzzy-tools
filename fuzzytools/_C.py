@@ -11,6 +11,8 @@ FILENAME = '_filename' # data.txt
 CFILENAME = '_cfilename' # data
 FEXT = '_fext' # txt
 
+KFOLF_CHAR = '@'
+
 FILESIZE_FACTOR = 1e-6 # in mbs
 
 KEY_KEY_SEP_CHAR = '~'
@@ -32,7 +34,7 @@ PM_CHAR = '±'
 DELTA_LATEXCHAR = '$\Delta$'
 
 ###################################################################################################################################################
-### cuteplots
+### matplotlib
 
 PLOT_STD_ALPHA = 0.25
 PLOT_GRID_ALPHA = 0.25

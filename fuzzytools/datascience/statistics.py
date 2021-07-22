@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import division
-from . import C_
+from . import _C
 
 import numpy as np
 import random
@@ -85,7 +85,7 @@ def get_random_stratified_keys(keys, keys_classes, class_names, nc,
 def stratified_kfold_split(obj_names, obj_classes_, class_names, new_sets_props, kfolds,
 	random_state=0,
 	permute=False,
-	eps=C_.EPS,
+	eps=_C.EPS,
 	):
 	sum_ = sum([new_sets_props[k] for k in new_sets_props.keys()])
 	assert abs(1-sum_)<=eps
@@ -109,7 +109,7 @@ def stratified_kfold_split(obj_names, obj_classes_, class_names, new_sets_props,
 		#print(obj_names_kf)
 		
 		for ks,new_sets_prop_k in enumerate(new_sets_props.keys()):
-			obj_names_kdict[f'{kf}{C_.KFOLF_CHAR}{new_sets_prop_k}'] = []
+			obj_names_kdict[f'{kf}{_C.KFOLF_CHAR}{new_sets_prop_k}'] = []
 			
 			for kc,c in enumerate(class_names):
 				to_fill_pop = round(populations_cdict[c]*new_sets_props[new_sets_prop_k])
@@ -119,7 +119,7 @@ def stratified_kfold_split(obj_names, obj_classes_, class_names, new_sets_props,
 				#print(kf, new_sets_prop_k, c, valid_indexs, len(obj_names_kf))
 				obj_names_to_add = [obj_names_kf[valid_index] for valid_index in valid_indexs]
 				for obj_name_to_add in obj_names_to_add:
-					obj_names_kdict[f'{kf}{C_.KFOLF_CHAR}{new_sets_prop_k}'].append(obj_name_to_add)
+					obj_names_kdict[f'{kf}{_C.KFOLF_CHAR}{new_sets_prop_k}'].append(obj_name_to_add)
 					obj_names_kf.pop(obj_names_kf.index(obj_name_to_add)) # remove from list
 
 	return obj_names_kdict

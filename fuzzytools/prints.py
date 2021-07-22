@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import division
-from . import C_
+from . import _C
 
 import sys, os
 from . import strings
@@ -26,13 +26,13 @@ class ShowPrints():
 ###################################################################################################################################################
 
 def print_bar(
-	char=C_.MIDDLE_LINE_CHAR,
-	N=C_.BAR_SIZE,
+	char=_C.MIDDLE_LINE_CHAR,
+	N=_C.BAR_SIZE,
 	):
 	print(strings.get_bar(char, N))
 
 def print_big_bar():
-	print_bar(C_.TOP_SQUARE_CHAR)
+	print_bar(_C.TOP_SQUARE_CHAR)
 
 def full_print(x,
 	flush=False,

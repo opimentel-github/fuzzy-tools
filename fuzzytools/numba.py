@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import division
-from . import C_
+from . import _C
 
 import numpy as np
 from numba import jit
@@ -56,7 +56,7 @@ def uniform(a, b, size):
 
 @jit(nopython=True)
 def log(x,
-	eps=C_.EPS,
+	eps=_C.EPS,
 	):
 	assert np.all(x>=0)
 	return np.log(x+eps)
@@ -91,7 +91,7 @@ def argmax(x,
 
 @jit(nopython=True)
 def log_mu_std(x,
-	eps=C_.EPS,
+	eps=_C.EPS,
 	axis=-1,
 	):
 	assert np.all(x>=0) # slow
@@ -102,7 +102,7 @@ def log_mu_std(x,
 
 @jit(nopython=True)
 def log_norm(x, mu, std,
-	eps=C_.EPS,
+	eps=_C.EPS,
 	):
 	assert np.all(x>=0) # slow
 	log_x = np.log(x+eps)
@@ -111,7 +111,7 @@ def log_norm(x, mu, std,
 
 @jit(nopython=True)
 def inv_log_norm(z, mu, std,
-	eps=C_.EPS,
+	eps=_C.EPS,
 	):
 	log_x = z*(std+eps)+mu
 	x = np.exp(log_x)-eps

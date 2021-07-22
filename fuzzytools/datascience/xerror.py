@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import division
-from . import C_
+from . import _C
 
 import numpy as np
 from ..strings import xstr
@@ -16,7 +16,7 @@ class XError():
 	def __init__(self, _x,
 		dim:int=0, # fixme
 		error_scale=1,
-		n_decimals=C_.N_DECIMALS,
+		n_decimals=_C.N_DECIMALS,
 		mode='mean/std',
 		repr_pm=True,
 		initial_percentiles=[1,5,10,90,95,99],
@@ -114,7 +114,7 @@ class XError():
 			return f'{xstr(None)}'
 		else:
 			txt = f'{xstr(self.mean, self.n_decimals)}'
-			txt += f'{C_.PM_CHAR}{xstr(self.std, self.n_decimals)}' if self.repr_pm else ''
+			txt += f'{_C.PM_CHAR}{xstr(self.std, self.n_decimals)}' if self.repr_pm else ''
 			return txt
 
 	def __ge__(self, other): # self >= other

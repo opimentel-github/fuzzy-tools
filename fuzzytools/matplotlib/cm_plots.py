@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import division
-from . import C_
+from . import _C
 
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
@@ -39,7 +39,7 @@ def plot_confusion_matrix(y_pred:np.ndarray, y_target:np.ndarray, class_names:li
 	
 	fig=None,
 	ax=None,
-	figsize=C_.PLOT_FIGSIZE_CMAP,
+	figsize=_C.PLOT_FIGSIZE_CMAP,
 	title:str='plot_custom_confusion_matrix',
 	cmap=plt.cm.Reds,
 	fontsize=11,
@@ -76,7 +76,7 @@ def plot_custom_confusion_matrix(cms:np.ndarray, class_names:list,
 	
 	fig=None,
 	ax=None,
-	figsize=C_.PLOT_FIGSIZE_CMAP,
+	figsize=_C.PLOT_FIGSIZE_CMAP,
 	title:str='plot_custom_confusion_matrix',
 	cmap=plt.cm.Reds,
 	fontsize=11,
@@ -105,7 +105,7 @@ def plot_custom_confusion_matrix(cms:np.ndarray, class_names:list,
 		raise Exception(f'no mode {normalize_mode}')
 
 	cms_xe = XError(cm_norm*100, 0)
-	fig, ax = plt.subplots(1, 1, figsize=figsize, dpi=C_.PLOT_DPI) if fig is None else (fig, ax)
+	fig, ax = plt.subplots(1, 1, figsize=figsize, dpi=_C.PLOT_DPI) if fig is None else (fig, ax)
 	ax.set(xticks=np.arange(len(plot_classes)), yticks=np.arange(len(plot_classes)))
 	img = ax.imshow(cms_xe.median, interpolation='nearest', cmap=cmap)
 	#bar_img = copy(img)

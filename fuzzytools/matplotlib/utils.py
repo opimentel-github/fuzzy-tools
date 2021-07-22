@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import division
-from . import C_
+from . import _C
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -45,7 +45,7 @@ def _fig2img(fig,
 
 def save_fig(save_filedirs, fig,
 	uses_close_fig=True,
-	verbose=C_.VERBOSE,
+	verbose=_C.VERBOSE,
 	fig_is_img=False,
 	):
 	save_filedirs = [None] if save_filedirs is None else save_filedirs

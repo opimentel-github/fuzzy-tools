@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import division
-from . import C_
+from . import _C
 
 from sklearn import metrics as skmetrics
 import numpy as np
@@ -8,7 +8,7 @@ import math
 from nested_dict import nested_dict
 from copy import copy, deepcopy
 
-EPS = C_.EPS
+EPS = _C.EPS
 CHECK_DISTRIBUTION = False
 
 ###################################################################################################################################################

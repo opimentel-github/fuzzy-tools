@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import division
-from . import C_
+from . import _C
 
 import pandas as pd
 #from nested_dict import nested_dict
@@ -10,7 +10,7 @@ import numpy as np
 
 def clean_df_nans(df,
 	mode='value', # value mean median
-	nan_value=C_.NAN_VALUE,
+	nan_value=_C.NAN_VALUE,
 	df_values=None,
 	):
 	new_df = df.replace([np.inf, -np.inf], np.nan) # replace infinites to nan

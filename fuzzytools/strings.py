@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import division
-from . import C_
+from . import _C
 
 import os
 from termcolor import colored
@@ -53,8 +53,8 @@ def random_augment_string(s, a, b):
 	return ''.join(l)
 
 def get_dict_from_string(string:str,
-	key_key_separator:str=C_.KEY_KEY_SEP_CHAR,
-	key_value_separator:str=C_.KEY_VALUE_SEP_CHAR,
+	key_key_separator:str=_C.KEY_KEY_SEP_CHAR,
+	key_value_separator:str=_C.KEY_VALUE_SEP_CHAR,
 	):
 	pairs = string.split(key_key_separator)
 	ret = {}
@@ -66,22 +66,22 @@ def get_dict_from_string(string:str,
 	return ret
 
 def get_string_from_dict(d:str,
-	key_key_separator:str=C_.KEY_KEY_SEP_CHAR,
-	key_value_separator:str=C_.KEY_VALUE_SEP_CHAR,
+	key_key_separator:str=_C.KEY_KEY_SEP_CHAR,
+	key_value_separator:str=_C.KEY_VALUE_SEP_CHAR,
 	keeps_none=True,
 	):
 	ret = key_key_separator.join([f'{key}{key_value_separator}{d[key]}' for key in d.keys() if keeps_none or not d[key] is None])
 	return ret
 
 def get_bar(
-	char:str=C_.MIDDLE_LINE_CHAR,
-	N:int=C_.BAR_SIZE,
+	char:str=_C.MIDDLE_LINE_CHAR,
+	N:int=_C.BAR_SIZE,
 	):
 	if N is None:
 		try:
 			N = os.get_terminal_size().columns
 		except OSError:
-			N = C_.JUPYTER_NOTEBOOK_BAR_SIZE
+			N = _C.JUPYTER_NOTEBOOK_BAR_SIZE
 	return char*N
 
 def string_replacement(string:str, replace_dict:dict):
@@ -133,11 +133,11 @@ def color_str(txt, color):
 ###################################################################################################################################################
 
 def _format_float(x,
-	n_decimals:int=C_.N_DECIMALS,
-	remove_zero=C_.REMOVE_ZERO,
+	n_decimals:int=_C.N_DECIMALS,
+	remove_zero=_C.REMOVE_ZERO,
 	):
 	if np.isnan(x):
-		return C_.NAN_CHAR
+		return _C.NAN_CHAR
 	txt = format(x, f',.{n_decimals}f')
 	if remove_zero and abs(x)<1:
 		txt = txt.replace('0.', '.')
@@ -145,17 +145,17 @@ def _format_float(x,
 
 def _format_int(x):
 	if np.isnan(x):
-		return C_.NAN_CHAR
+		return _C.NAN_CHAR
 	return f'{x:,}'
 
 def xstr(x,
-	n_decimals:int=C_.N_DECIMALS,
-	remove_zero=C_.REMOVE_ZERO,
+	n_decimals:int=_C.N_DECIMALS,
+	remove_zero=_C.REMOVE_ZERO,
 	add_pos=False,
 	):
 	p = '+' if add_pos and x>0 else ''
 	if x is None:
-		return C_.NAN_CHAR
+		return _C.NAN_CHAR
 	if isinstance(x, str):
 		return x
 	if isinstance(x, int):

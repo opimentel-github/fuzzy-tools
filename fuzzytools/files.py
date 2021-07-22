@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import division
-from . import C_
+from . import _C
 
 import pickle
 import os
@@ -23,18 +23,18 @@ def path_exists(rootdir:str):
 	return os.path.isdir(rootdir)
 
 def get_filesize(filedir:str):
-	return os.path.getsize(filedir)*C_.FILESIZE_FACTOR if filedir_exists(filedir) else None # in mb
+	return os.path.getsize(filedir)*_C.FILESIZE_FACTOR if filedir_exists(filedir) else None # in mb
 
 ###################################################################################################################################################
 
 def delete_filedirs(filedirs:list,
-	verbose=C_.VERBOSE,
+	verbose=_C.VERBOSE,
 	):
 	all_success = sum([delete_filedir(filedir, verbose) for filedir in filedirs])>0
 	return all_success
 
 def delete_filedir(filedir:str,
-	verbose=C_.VERBOSE,
+	verbose=_C.VERBOSE,
 	):
 	success = False
 	if not filedir is None:
@@ -56,7 +56,7 @@ def copy_filedir(src_filedir, dst_filedir):
 
 def create_dir(new_dir:str,
 	iterative:bool=True,
-	verbose:int=C_.VERBOSE,
+	verbose:int=_C.VERBOSE,
 	):
 	if path_exists(new_dir):
 		return
@@ -72,7 +72,7 @@ def create_dir(new_dir:str,
 
 
 def create_dir_individual(new_dir:str,
-	verbose:int=C_.VERBOSE,
+	verbose:int=_C.VERBOSE,
 	):
 	if path_exists(new_dir):
 		return
@@ -82,7 +82,7 @@ def create_dir_individual(new_dir:str,
 	os.mkdir(new_dir)
 		
 def create_dir_iterative(new_dir:str,
-	verbose:int=C_.VERBOSE,
+	verbose:int=_C.VERBOSE,
 	):
 	if path_exists(new_dir):
 		return
@@ -96,7 +96,7 @@ def create_dir_iterative(new_dir:str,
 ###################################################################################################################################################
 
 def save_pickle(filedir:str, file:object,
-	verbose=C_.VERBOSE,
+	verbose=_C.VERBOSE,
 	):
 	'''
 	Parameters
@@ -115,7 +115,7 @@ def save_pickle(filedir:str, file:object,
 	
 def load_pickle(filedir:str,
 	return_none_if_missing=False,
-	verbose=C_.VERBOSE,
+	verbose=_C.VERBOSE,
 	):
 	'''
 	Parameters
@@ -164,18 +164,18 @@ def save_time_stamp(rootdir,
 ###################################################################################################################################################
 
 def get_dict_from_filedir(filedir:str,
-	key_key_separator:str=C_.KEY_KEY_SEP_CHAR,
-	key_value_separator:str=C_.KEY_VALUE_SEP_CHAR,
+	key_key_separator:str=_C.KEY_KEY_SEP_CHAR,
+	key_value_separator:str=_C.KEY_VALUE_SEP_CHAR,
 	):
 	splits = filedir.split('/')
 	ret_dict = {
-		C_.FILEDIR:filedir,
-		C_.ROOTDIR:'/'.join(splits[:-1]),
-		C_.FILENAME:'.'.join(splits[-1].split('.')),
-		C_.CFILENAME:'.'.join(splits[-1].split('.')[:-1]),
-		C_.FEXT:splits[-1].split('.')[-1],
+		_C.FILEDIR:filedir,
+		_C.ROOTDIR:'/'.join(splits[:-1]),
+		_C.FILENAME:'.'.join(splits[-1].split('.')),
+		_C.CFILENAME:'.'.join(splits[-1].split('.')[:-1]),
+		_C.FEXT:splits[-1].split('.')[-1],
 	}
-	ret_dict.update(strings.get_dict_from_string(ret_dict[C_.CFILENAME],
+	ret_dict.update(strings.get_dict_from_string(ret_dict[_C.CFILENAME],
 		key_key_separator,
 		key_value_separator,
 	))
@@ -185,7 +185,7 @@ def search_for_filedirs(rootdir:str,
 	string_query:list=[''],
 	string_filter:list=[],
 	fext:str=None,
-	verbose:int=C_.VERBOSE,
+	verbose:int=_C.VERBOSE,
 	sort:bool=False,
 	):
 	'''
@@ -219,7 +219,7 @@ def search_for_filedirs(rootdir:str,
 		filedirs_res = []
 		for filedir in filedirs:
 			filedict = get_dict_from_filedir(filedir)
-			cfilename = filedict[C_.CFILENAME]
+			cfilename = filedict[_C.CFILENAME]
 			if strings.query_strings_in_string(string_query, cfilename) and not strings.query_strings_in_string(string_filter, cfilename):
 				filedirs_res.append(filedir)
 
@@ -308,7 +308,7 @@ def get_newest_filedir(filedirs,
 class PFile(object):
 	def __init__(self, filedir,
 		file=None,
-		verbose=C_.VERBOSE,
+		verbose=_C.VERBOSE,
 		):
 		self.set_filedir(filedir)
 		self.set_file(file)
@@ -406,8 +406,8 @@ def gather_files(rootdir,
 
 def gather_files_by_id(rootdir,
 	id_key='id',
-	key_key_separator:str=C_.KEY_KEY_SEP_CHAR,
-	key_value_separator:str=C_.KEY_VALUE_SEP_CHAR,
+	key_key_separator:str=_C.KEY_KEY_SEP_CHAR,
+	key_value_separator:str=_C.KEY_VALUE_SEP_CHAR,
 	fext:str=None,
 	):
 	if id_key is None:
@@ -447,8 +447,8 @@ def get_kfold_rootdirs_dict(rootdir,
 
 def gather_files_by_kfold(rootdir, _kf, kf_set,
 	id_key=None,
-	key_key_separator:str=C_.KEY_KEY_SEP_CHAR,
-	key_value_separator:str=C_.KEY_VALUE_SEP_CHAR,
+	key_key_separator:str=_C.KEY_KEY_SEP_CHAR,
+	key_value_separator:str=_C.KEY_VALUE_SEP_CHAR,
 	fext:str=None,
 	kf_str=KFOLF_CHAR,
 	disbalanced_kf_mode='error', # error ignore oversampling

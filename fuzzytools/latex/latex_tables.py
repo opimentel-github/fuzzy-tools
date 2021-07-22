@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import division
-from . import C_
+from . import _C
 
 import copy
 import pandas as pd
@@ -31,8 +31,8 @@ class SubLatexTable():
 		bold_axis:list=None,
 		rule_ab:tuple=(2, 1),
 		split_index_names=True,
-		key_key_separator:str=C_.KEY_KEY_SEP_CHAR,
-		key_value_separator:str=C_.KEY_VALUE_SEP_CHAR,
+		key_key_separator:str=_C.KEY_KEY_SEP_CHAR,
+		key_value_separator:str=_C.KEY_VALUE_SEP_CHAR,
 		hline_k=None,
 		bold_function=get_max_elements,
 		repr_replace_dict={},
@@ -110,7 +110,7 @@ class SubLatexTable():
 				mdl_info_dict[index] = {k:d.get(k, None) for k in self.model_attrs}
 
 			self.mdl_info_df = pd.DataFrame.from_dict(mdl_info_dict, orient='index').reindex(list(mdl_info_dict.keys()))
-			self.mdl_info_df = self.mdl_info_df.fillna(C_.NAN_CHAR)
+			self.mdl_info_df = self.mdl_info_df.fillna(_C.NAN_CHAR)
 			self.new_info_df = pd.concat([self.mdl_info_df, self.info_df], axis=1)
 
 	def __repr__(self):
@@ -176,8 +176,8 @@ class LatexTable():
 		bold_axis:list=None,
 		rule_ab:tuple=(2, 1),
 		split_index_names=True,
-		key_key_separator:str=C_.KEY_KEY_SEP_CHAR,
-		key_value_separator:str=C_.KEY_VALUE_SEP_CHAR,
+		key_key_separator:str=_C.KEY_KEY_SEP_CHAR,
+		key_value_separator:str=_C.KEY_VALUE_SEP_CHAR,
 		delete_redundant_model_keys:bool=True,
 		caption:str='',
 		label:str='.tab',
@@ -258,8 +258,8 @@ class LatexTable():
 			#txt += '\n'
 
 		txt += self.get_end_txt()+'\n'
-		txt = txt.replace(C_.PM_CHAR, f'${utils.get_slash()}pm$')
-		txt = txt.replace(C_.NAN_CHAR, '$-$')
+		txt = txt.replace(_C.PM_CHAR, f'${utils.get_slash()}pm$')
+		txt = txt.replace(_C.NAN_CHAR, '$-$')
 		txt = txt.replace('%', utils.get_slash()+'%')
 		txt = strings.get_bar(char='%')+'\n'+txt+strings.get_bar(char='%')+'\n'
 		return strings.color_str(txt, 'red')

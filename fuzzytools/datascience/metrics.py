@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import division
-from . import C_
+from . import _C
 
 from sklearn import metrics as skmetrics
 import numpy as np
@@ -9,7 +9,7 @@ from nested_dict import nested_dict
 from . import labels as ds_labels
 from copy import copy, deepcopy
 
-EPS = C_.EPS
+EPS = _C.EPS
 CHECK_DISTRIBUTION = False
 
 # https://stackoverflow.com/questions/53977031/precision-score-does-not-match-with-metrics-formula

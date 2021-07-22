@@ -1,7 +1,7 @@
 from __future__ import print_function
 from __future__ import division
 from __future__ import annotations
-from . import C_
+from . import _C
 
 from nested_dict import nested_dict
 import copy

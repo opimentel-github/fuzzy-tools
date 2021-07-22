@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import division
-from . import C_
+from . import _C
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -85,7 +85,7 @@ def colors(n:int=None):
 	return get_default_colorlist(n)
 	
 def get_default_colorlist(n:int=None):
-	return colorlist_to_cycled_colorlist(COLORS_DICT[C_.DEFAULT_CMAP], n)
+	return colorlist_to_cycled_colorlist(COLORS_DICT[_C.DEFAULT_CMAP], n)
 
 def get_nice_colorlist(n:int=None):
 	return colorlist_to_cycled_colorlist([NICE_COLORS_DICT[k] for k in NICE_COLORS_DIC.keys()], n)

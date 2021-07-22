@@ -1,6 +1,6 @@
 from __future__ import print_function
 from __future__ import division
-from . import C_
+from . import _C
 
 import sys
 import re
@@ -21,7 +21,7 @@ WIDTH = 30
 class ProgressBarMulti():
 	def __init__(self, total:int, m:int,
 		width:int=WIDTH,
-		fmt=C_.BAR_FULL_MODE,
+		fmt=_C.BAR_FULL_MODE,
 		output=BAR_OUTPUT,
 		):
 		self.bar_names = [k for k in range(m)]
@@ -48,7 +48,7 @@ class ProgressBarMultiColor():
 	def __init__(self, total:int, bar_names:list,
 		bar_colors:list=None,
 		width:int=WIDTH,
-		fmt=C_.BAR_FULL_MODE,
+		fmt=_C.BAR_FULL_MODE,
 		output=BAR_OUTPUT,
 		):
 		self.in_ipynb = ipynb.in_ipynb()
@@ -93,7 +93,7 @@ class ProgressBarMultiColor():
 class ProgressBar():
 	def __init__(self, total:int,
 		width:int=WIDTH,
-		fmt=C_.BAR_FULL_MODE,
+		fmt=_C.BAR_FULL_MODE,
 		output=BAR_OUTPUT,
 		position:int=0,
 		dynamic_ncols=False,
