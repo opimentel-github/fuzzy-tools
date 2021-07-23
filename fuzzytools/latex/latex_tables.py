@@ -181,7 +181,6 @@ class LatexTable():
 		delete_redundant_model_keys:bool=True,
 		caption:str='',
 		label:str='.tab',
-		resizebox=True,
 		centered:bool=False,
 		custom_tabular_align:str=None, # 'ccc|llll'
 		hline_k=None,
@@ -218,7 +217,6 @@ class LatexTable():
 		self.delete_redundant_model_keys = delete_redundant_model_keys
 		self.caption = caption
 		self.label = label
-		self.resizebox = resizebox
 		self.centered = centered
 		self.custom_tabular_align = custom_tabular_align
 		self.hline_k = hline_k
@@ -238,9 +236,9 @@ class LatexTable():
 		txt += utils.get_slash()+'centering'+'\n'
 		txt += utils.get_slash()+'caption{'+'\n'+self.caption+'\n'+'}'+'\n'
 		txt += utils.get_slash()+'label{'+self.label+'}'+utils.get_slash()+'vspace{.1cm}'+'\n'
-		txt += '\\resizebox{1\\textwidth}{!}{'+'\n' if self.resizebox else ''
+		txt += '\\tiny\\scriptsize\\footnotesize\\small\\normalsize'+'\n'
 		tabular_align = utils.get_bar_latex(self.new_model_attrs, self.results_columns) if self.custom_tabular_align is None else self.custom_tabular_align
-		txt += utils.get_slash()+'begin{tabular}{'+tabular_align+'}'+'\n'
+		txt += utils.get_slash()+'begin{tabularx}{\\textwidth}{'+tabular_align+'}'+'\n'
 		return txt[:-1]
 
 	def get_top_txt(self):
@@ -255,19 +253,17 @@ class LatexTable():
 		for sub_latex_table in self.sub_latex_tables:
 			txt += str(sub_latex_table)
 			txt += utils.get_hline()+'\n'
-			#txt += '\n'
 
 		txt += self.get_end_txt()+'\n'
 		txt = txt.replace(_C.PM_CHAR, f'${utils.get_slash()}pm$')
 		txt = txt.replace(_C.NAN_CHAR, '$-$')
 		txt = txt.replace('%', utils.get_slash()+'%')
 		txt = strings.get_bar(char='%')+'\n'+txt+strings.get_bar(char='%')+'\n'
-		return strings.color_str(txt, 'red')
-		#return txt
+		txt = strings.color_str(txt, 'red')
+		return txt
 
 	def get_end_txt(self):
 		txt = ''
-		txt += '\\end{tabular}'+'\n'
-		txt += '}'+'\n' if self.resizebox else ''
+		txt += '\\end{tabularx}'+'\n'
 		txt += '\\end{table*}'+'\n' if self.centered else '\\end{table}'+'\n'
 		return txt[:-1]
