@@ -10,6 +10,11 @@ from . import utils as utils
 from ..lists import get_max_elements
 from ..dataframes import DFBuilder
 
+KEY_KEY_SEP_CHAR = _C.KEY_KEY_SEP_CHAR
+KEY_VALUE_SEP_CHAR = _C.KEY_VALUE_SEP_CHAR
+NAN_CHAR = _C.NAN_CHAR
+PM_CHAR = _C.PM_CHAR
+
 ###################################################################################################################################################
 
 class SubLatexTable():
@@ -31,8 +36,8 @@ class SubLatexTable():
 		bold_axis:list=None,
 		rule_ab:tuple=(2, 1),
 		split_index_names=True,
-		key_key_separator:str=_C.KEY_KEY_SEP_CHAR,
-		key_value_separator:str=_C.KEY_VALUE_SEP_CHAR,
+		key_key_separator:str=KEY_KEY_SEP_CHAR,
+		key_value_separator:str=KEY_VALUE_SEP_CHAR,
 		hline_k=None,
 		bold_function=get_max_elements,
 		repr_replace_dict={},
@@ -110,7 +115,7 @@ class SubLatexTable():
 				mdl_info_dict[index] = {k:d.get(k, None) for k in self.model_attrs}
 
 			self.mdl_info_df = pd.DataFrame.from_dict(mdl_info_dict, orient='index').reindex(list(mdl_info_dict.keys()))
-			self.mdl_info_df = self.mdl_info_df.fillna(_C.NAN_CHAR)
+			self.mdl_info_df = self.mdl_info_df.fillna(NAN_CHAR)
 			self.new_info_df = pd.concat([self.mdl_info_df, self.info_df], axis=1)
 
 	def __repr__(self):
@@ -128,9 +133,6 @@ class SubLatexTable():
 					v_str = str(v)
 				model_attrs = len(values)-len(self.results_columns)
 				kvv = kv-model_attrs
-				#print(kvv,v, v_str)
-				#print(self.bold_df.values.shape)
-				#is_bold = 0
 				is_bold =  False if kvv<0 or self.bold_df is None else self.bold_df.values[k,kvv]
 				sub_txt += '\\textbf{'+v_str+'}' if is_bold else v_str
 				sub_txt += ' & '
@@ -143,9 +145,6 @@ class SubLatexTable():
 					hline_c = 0
 				else:
 					hline_c += 1
-				#if kk>0 and kk<len(self.row_colors)-1:
-				#	if kk%self.hline_k==0:
-				#		txt += utils.get_hline()+'\n'
 
 		txt = strings.string_replacement(txt, self.repr_replace_dict)
 		return txt
@@ -243,8 +242,10 @@ class LatexTable():
 
 	def get_top_txt(self):
 		txt = utils.get_hline()+'\n'
-		txt += ' & '.join([f'{c}' for c in self.new_model_attrs+self.results_columns])+f' {utils.get_slash()}srule{utils.get_dslash()}{utils.get_hline()+utils.get_hline()}'
-		return txt
+		txt += ' & '.join([f'{c}' for c in self.new_model_attrs+self.results_columns])+f' {utils.get_slash()}srule{utils.get_dslash()}'+'\n'
+		# txt += f'{utils.get_hline()+utils.get_hline()}'+'\n'
+		txt += '\\hlineB{3}'+'\n'
+		return txt[:-1]
 
 	def __repr__(self):
 		txt = ''
@@ -255,8 +256,8 @@ class LatexTable():
 			txt += utils.get_hline()+'\n'
 
 		txt += self.get_end_txt()+'\n'
-		txt = txt.replace(_C.PM_CHAR, f'${utils.get_slash()}pm$')
-		txt = txt.replace(_C.NAN_CHAR, '$-$')
+		txt = txt.replace(PM_CHAR, f'${utils.get_slash()}pm$')
+		txt = txt.replace(NAN_CHAR, '$-$')
 		txt = txt.replace('%', utils.get_slash()+'%')
 		txt = strings.get_bar(char='%')+'\n'+txt+strings.get_bar(char='%')+'\n'
 		txt = strings.color_str(txt, 'red')
