@@ -34,6 +34,6 @@ class LevelBar():
 			count = self.count_dict[key]
 			percent = count/self.total_count*100
 			bar.update(percent)
-			txt += f'{self.prefix_str}{bar.__repr__()} {key} - {count:,}/{self.total_count:,} ({percent:.2f}%)\n'
+			txt += f'{self.prefix_str}{str(bar)} {key} - {count:,}/{self.total_count:,} ({percent:.2f}%)\n'
 
 		return txt
