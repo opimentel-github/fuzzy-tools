@@ -10,6 +10,8 @@ from ..strings import xstr
 from copy import copy, deepcopy
 import matplotlib as mpl
 
+DPI = _C.DPI
+
 ###################################################################################################################################################
 
 def reorder_cms_classes(cms, classes, new_order_classes):
@@ -76,7 +78,8 @@ def plot_custom_confusion_matrix(cms:np.ndarray, class_names:list,
 	
 	fig=None,
 	ax=None,
-	figsize=_C.PLOT_FIGSIZE_CMAP,
+	figsize=None,
+	dpi=DPI,
 	title:str='plot_custom_confusion_matrix',
 	cmap=plt.cm.Reds,
 	fontsize=11,
@@ -105,7 +108,7 @@ def plot_custom_confusion_matrix(cms:np.ndarray, class_names:list,
 		raise Exception(f'no mode {normalize_mode}')
 
 	cms_xe = XError(cm_norm*100, 0)
-	fig, ax = plt.subplots(1, 1, figsize=figsize, dpi=_C.PLOT_DPI) if fig is None else (fig, ax)
+	fig, ax = plt.subplots(1, 1, figsize=figsize, dpi=dpi) if fig is None else (fig, ax)
 	ax.set(xticks=np.arange(len(plot_classes)), yticks=np.arange(len(plot_classes)))
 	img = ax.imshow(cms_xe.median, interpolation='nearest', cmap=cmap)
 	#bar_img = copy(img)
