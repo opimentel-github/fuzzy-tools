@@ -10,6 +10,8 @@ import numpy as np
 import math
 import pandas as pd
 
+DPI = _C.DPI
+
 ###################################################################################################################################################
 
 def plot_bar(plot_df,
@@ -28,6 +30,7 @@ def plot_bar(plot_df,
 	fig=None,
 	ax=None,
 	figsize:tuple=None,
+	dpi=DPI,
 	xlabel:str='population',
 	title:str='plot_bar',
 	axis_lim:tuple=[None, None],
@@ -41,7 +44,7 @@ def plot_bar(plot_df,
 	indexs = list(plot_df.index)
 	columns = list(plot_df.columns)
 	cmap = cc.get_default_cmap(len(indexs)) if cmap is None else cmap
-	fig, ax = plt.subplots(1,1, figsize=(10, np.sqrt((len(columns)+1)*3)) if figsize is None else figsize, dpi=_C.PLOT_DPI) if fig is None else (fig, ax)
+	fig, ax = plt.subplots(1,1, figsize=figsize, dpi=dpi) if fig is None else (fig, ax)
 
 	### anotations
 	if add_poblation_annotations or add_percent_annotations:
@@ -159,6 +162,7 @@ def plot_hist_discrete(data_dict:dict,
 	fig=None,
 	ax=None,
 	figsize:tuple=_C.PLOT_FIGSIZE,
+	dpi=DPI,
 	xlabel:str='values',
 	ylabel:str='population',
 	title:str='plot_hist_discrete',
@@ -172,7 +176,7 @@ def plot_hist_discrete(data_dict:dict,
 	verbose:int=0,
 	**kwargs):
 
-	fig, ax = (plt.subplots(1,1, figsize=figsize, dpi=_C.PLOT_DPI) if fig is None else (fig, ax))
+	fig, ax = (plt.subplots(1,1, figsize=figsize, dpi=dpi) if fig is None else (fig, ax))
 	if not isinstance(data_dict, dict):
 		data_dict = {'distribution':data_dict} # transform in a dummy dict
 	keys = list(data_dict.keys())
@@ -228,7 +232,8 @@ def plot_hist_bins(data_dict:dict,
 
 	fig=None,
 	ax=None,
-	figsize:tuple=_C.PLOT_FIGSIZE,
+	figsize:tuple=None,
+	dpi=DPI,
 	xlabel:str='values',
 	ylabel:str='population',
 	title:str='plot_hist_bins',
@@ -244,7 +249,7 @@ def plot_hist_bins(data_dict:dict,
 	if histtype in ['step']:
 		alpha=1
 
-	fig, ax = plt.subplots(1, 1, figsize=figsize, dpi=_C.PLOT_DPI) if fig is None else (fig, ax)
+	fig, ax = plt.subplots(1, 1, figsize=figsize, dpi=dpi) if fig is None else (fig, ax)
 	keys = list(data_dict.keys())
 	cmap = cc.get_default_cmap(len(keys)) if cmap is None else cmap
 
