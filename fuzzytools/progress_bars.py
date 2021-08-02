@@ -98,7 +98,7 @@ class ProgressBar():
 		position:int=0,
 		dynamic_ncols=False,
 		bar_format=BAR_FORMAT,
-		mininterval=1.,
+		miniters=1.,
 		append_time=False,
 		dummy=False,
 		):
@@ -109,7 +109,7 @@ class ProgressBar():
 		self.position = position
 		self.dynamic_ncols = dynamic_ncols
 		self.bar_format = bar_format
-		self.mininterval=mininterval
+		self.miniters=miniters
 		self.append_time = append_time
 		self.dummy = dummy
 		self.reset()
@@ -125,7 +125,7 @@ class ProgressBar():
 				'position':self.position,
 				'leave':True,
 				'dynamic_ncols':self.dynamic_ncols,
-				'mininterval':self.mininterval,
+				'miniters':self.miniters,
 				}
 
 	def not_dummy(self):
