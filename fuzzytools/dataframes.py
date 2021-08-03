@@ -12,10 +12,13 @@ def clean_df_nans(df,
 	mode='value', # value mean median
 	nan_value=_C.NAN_VALUE,
 	df_values=None,
+	drop_null_columns=False,
 	):
 	new_df = df.replace([np.inf, -np.inf], np.nan) # replace infinites to nan
 	null_cols = list(new_df.columns[new_df.isnull().all()])
-	new_df = new_df.drop(null_cols, axis='columns')
+	if drop_null_columns:
+		new_df = new_df.drop(null_cols, axis='columns')
+		
 	if mode=='value':
 		new_df = new_df.fillna(nan_value)
 
