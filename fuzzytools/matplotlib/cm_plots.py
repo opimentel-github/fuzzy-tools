@@ -146,7 +146,7 @@ def plot_custom_confusion_matrix(cms:np.ndarray, class_names:list,
 			txt = f'{cms_xe.median[i,j]:.1f}'
 			pi, pf = cms_xe.get_pbounds(percentile)
 			superindex = xstr(pf[i,j]-cms_xe.median[i,j], add_pos=True)
-			lowerindex = xstr(cms_xe.median[i,j]-pi[i,j], add_pos=True)
+			lowerindex = xstr(pi[i,j]-cms_xe.median[i,j], add_pos=True)
 			txt = '${'+txt+'}^{'+superindex+'}_{'+lowerindex+'}$' if len(cms_xe)>1 else txt 
 			ax.text(j, i, txt, ha='center', va='center',color='white' if cms_xe.median[i,j]>thresh else 'black', fontsize=fontsize)
 			
