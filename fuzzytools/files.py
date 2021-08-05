@@ -457,6 +457,9 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 	):
 	'''
 	format must be .../kf@kf_set/files
+
+	disbalanced_kf_mode is used just in case a k-fold iteration is missing and there is an imbalance on files (mostly for debuggin while results are still iterating)
+	the normal case is when all k-fold has the same amount of files!
 	'''
 	kfold_rootdirs_dict = get_kfold_rootdirs_dict(rootdir,
 		kf_str,

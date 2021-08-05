@@ -84,6 +84,7 @@ def plot_custom_confusion_matrix(cms:np.ndarray, class_names:list,
 	cmap=plt.cm.Reds,
 	fontsize=11,
 	percentile=95,
+	cbar_labelsize=7,
 	):
 	'''
 	Parameters
@@ -111,21 +112,14 @@ def plot_custom_confusion_matrix(cms:np.ndarray, class_names:list,
 	fig, ax = plt.subplots(1, 1, figsize=figsize, dpi=dpi) if fig is None else (fig, ax)
 	ax.set(xticks=np.arange(len(plot_classes)), yticks=np.arange(len(plot_classes)))
 	img = ax.imshow(cms_xe.median, interpolation='nearest', cmap=cmap)
-	#bar_img = copy(img)
-	#bar_img[0] = 100
 	if uses_percent:
 		boundaries = np.linspace(0, 100, 100//5+1)
-		#print(boundaries)
 		norm = mpl.colors.Normalize(vmin=0, vmax=100)
-		#fig.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap), cax=ax, label='Some Units')
 		cbar = ax.figure.colorbar(mpl.cm.ScalarMappable(norm=norm, cmap=cmap), ax=ax)
-		#cbar = ax.figure.colorbar(img, ax=ax, boundaries=boundaries)
-		#cbar.ax.set_ylabel('percent %')
 		ticks = cbar.get_ticks()
-		#ticks = np.linspace(0, 100, 20)
-		#print(ticks)
 		cbar.set_ticks(ticks)
 		cbar.set_ticklabels([f'{t:.0f}%' for t in ticks])
+		cbar.ax.tick_params(labelsize=cbar_labelsize)
 	else:
 		assert 0
 
