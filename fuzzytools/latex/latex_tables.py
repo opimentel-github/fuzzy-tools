@@ -179,7 +179,7 @@ class LatexTable():
 		key_value_separator:str=_C.KEY_VALUE_SEP_CHAR,
 		delete_redundant_model_keys:bool=True,
 		caption:str='',
-		label:str='.tab',
+		label:str='tab:',
 		centered:bool=False,
 		custom_tabular_align:str=None, # 'ccc|llll'
 		hline_k=None,
