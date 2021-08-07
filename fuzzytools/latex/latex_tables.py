@@ -231,7 +231,7 @@ class LatexTable():
 	def get_init_txt(self):
 		txt = ''
 		txt += f'{utils.get_slash()}def{utils.get_slash()}srule'+'{'+utils.get_rule(*self.rule_ab)+'}\n'
-		txt += utils.get_slash()+'begin{table*}\n' if self.centered else utils.get_slash()+'begin{table}[H]\n'
+		txt += utils.get_slash()+'begin{table*}\n' if self.centered else utils.get_slash()+'begin{table}[!t]'+'\n'
 		txt += utils.get_slash()+'centering'+'\n'
 		txt += utils.get_slash()+'caption{'+'\n'+self.caption+'\n'+'}'+'\n'
 		txt += utils.get_slash()+'label{'+self.label+'}'+utils.get_slash()+'vspace{.1cm}'+'\n'
