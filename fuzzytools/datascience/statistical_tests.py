@@ -5,6 +5,7 @@ from . import _C
 import numpy as np
 from scipy import stats
 from ..strings import xstr
+from .xerror import XError
 
 TH_PVALUE = 0.05
 LOWER_BOUND = 0.001
@@ -49,24 +50,24 @@ def _welch_test_is_greater(_x1, _x2,
 	verbose=1,
 	):
 	'''
-	check if x1>x2
+	check x1>x2 with statistical significance
 	'''
 	x1 = np.array(_x1)
 	x2 = np.array(_x2)
 	assert len(x1)>=1 and len(x1.shape)==1
 	assert len(x2)>=1 and len(x2.shape)==1
 	statistic, pvalue = stats.ttest_ind(x1, x2,
-		equal_var=False, # welch
 		alternative='greater', # two-sided less greater
+		equal_var=False, # welch
 		)
-	x1_mean = np.mean(x1)
-	x2_mean = np.mean(x2)
-	assert x1_mean>=x2_mean
+	x1_xe = XError(x1)
+	x2_xe = XError(x2)
+	assert x1_xe.mean>=x2_xe.mean
 	is_significant_greater = pvalue<th_pvalue
 	if verbose:
 		print(f'th-p-value={th_pvalue}')
-		print(f'mean(x1)={x1_mean}')
-		print(f'mean(x2)={x2_mean}')
+		print(f'x1={x1_xe}')
+		print(f'x2={x2_xe}')
 		if is_significant_greater:
 			print(f'x1>x2 with {format_pvalue(pvalue, lower_bound, upper_bound)}')
 		else:
