@@ -3,20 +3,20 @@ from __future__ import division
 from . import _C
 
 import numpy as np
-from ..strings import xstr
 import math
-from copy import copy
-from scipy import stats
+from copy import copy, deepcopy
+from ..strings import xstr
+
+N_DECIMALS = _C.N_DECIMALS
+PM_CHAR = _C.PM_CHAR
 
 ###################################################################################################################################################
-
-#class NDXError():
 
 class XError():
 	def __init__(self, _x,
 		dim:int=0, # fixme
 		error_scale=1,
-		n_decimals=_C.N_DECIMALS,
+		n_decimals=N_DECIMALS,
 		mode='mean/std',
 		repr_pm=True,
 		initial_percentiles=[1,5,10,90,95,99],
@@ -114,7 +114,7 @@ class XError():
 			return f'{xstr(None)}'
 		else:
 			txt = f'{xstr(self.mean, self.n_decimals)}'
-			txt += f'{_C.PM_CHAR}{xstr(self.std, self.n_decimals)}' if self.repr_pm else ''
+			txt += f'{PM_CHAR}{xstr(self.std, self.n_decimals)}' if self.repr_pm else ''
 			return txt
 
 	def __ge__(self, other): # self >= other
@@ -140,18 +140,6 @@ class XError():
 			return False
 		else:
 			return self.mean>other.mean
-
-	def gt_ttest(self, other,
-		pvalue_th=0.05,
-		verbose=0,
-		):
-		assert len(self)>1
-		assert len(other)>1
-		tvalue, pvalue = stats.ttest_ind(self.x, other.x, axis=self.dim)
-		is_greater = self.mean>other.mean and pvalue<pvalue_th
-		if verbose:
-			print(f'{str(self)}>{str(other)}={is_greater} (pvalue={pvalue}, th={pvalue_th})')
-		return is_greater
 
 	def copy(self):
 		return copy(self)
