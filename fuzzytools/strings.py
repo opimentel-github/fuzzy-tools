@@ -8,6 +8,14 @@ import numpy as np
 import random
 from copy import copy, deepcopy
 
+N_DECIMALS = _C.N_DECIMALS
+REMOVE_ZERO = _C.REMOVE_ZERO
+NAN_CHAR = _C.NAN_CHAR
+KEY_KEY_SEP_CHAR = _C.KEY_KEY_SEP_CHAR
+KEY_VALUE_SEP_CHAR = _C.KEY_VALUE_SEP_CHAR
+MIDDLE_LINE_CHAR = _C.MIDDLE_LINE_CHAR
+BAR_SIZE = _C.BAR_SIZE
+JUPYTER_NOTEBOOK_BAR_SIZE = _C.JUPYTER_NOTEBOOK_BAR_SIZE
 ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 
 # https://stackoverflow.com/questions/2267362/how-to-convert-an-integer-to-a-string-in-any-base
@@ -53,8 +61,8 @@ def random_augment_string(s, a, b):
 	return ''.join(l)
 
 def get_dict_from_string(string:str,
-	key_key_separator:str=_C.KEY_KEY_SEP_CHAR,
-	key_value_separator:str=_C.KEY_VALUE_SEP_CHAR,
+	key_key_separator:str=KEY_KEY_SEP_CHAR,
+	key_value_separator:str=KEY_VALUE_SEP_CHAR,
 	):
 	pairs = string.split(key_key_separator)
 	ret = {}
@@ -66,22 +74,22 @@ def get_dict_from_string(string:str,
 	return ret
 
 def get_string_from_dict(d:str,
-	key_key_separator:str=_C.KEY_KEY_SEP_CHAR,
-	key_value_separator:str=_C.KEY_VALUE_SEP_CHAR,
+	key_key_separator:str=KEY_KEY_SEP_CHAR,
+	key_value_separator:str=KEY_VALUE_SEP_CHAR,
 	keeps_none=True,
 	):
 	ret = key_key_separator.join([f'{key}{key_value_separator}{d[key]}' for key in d.keys() if keeps_none or not d[key] is None])
 	return ret
 
 def get_bar(
-	char:str=_C.MIDDLE_LINE_CHAR,
-	N:int=_C.BAR_SIZE,
+	char:str=MIDDLE_LINE_CHAR,
+	N:int=BAR_SIZE,
 	):
 	if N is None:
 		try:
 			N = os.get_terminal_size().columns
 		except OSError:
-			N = _C.JUPYTER_NOTEBOOK_BAR_SIZE
+			N = JUPYTER_NOTEBOOK_BAR_SIZE
 	return char*N
 
 def string_replacement(string:str, replace_dict:dict):
@@ -133,11 +141,11 @@ def color_str(txt, color):
 ###################################################################################################################################################
 
 def _format_float(x,
-	n_decimals:int=_C.N_DECIMALS,
-	remove_zero=_C.REMOVE_ZERO,
+	n_decimals:int=N_DECIMALS,
+	remove_zero=REMOVE_ZERO,
 	):
 	if np.isnan(x):
-		return _C.NAN_CHAR
+		return NAN_CHAR
 	txt = format(x, f',.{n_decimals}f')
 	if remove_zero and abs(x)<1:
 		txt = txt.replace('0.', '.')
@@ -145,17 +153,17 @@ def _format_float(x,
 
 def _format_int(x):
 	if np.isnan(x):
-		return _C.NAN_CHAR
+		return NAN_CHAR
 	return f'{x:,}'
 
 def xstr(x,
-	n_decimals:int=_C.N_DECIMALS,
-	remove_zero=_C.REMOVE_ZERO,
+	n_decimals:int=N_DECIMALS,
+	remove_zero=REMOVE_ZERO,
 	add_pos=False,
 	):
 	p = '+' if add_pos and x>0 else ''
 	if x is None:
-		return _C.NAN_CHAR
+		return NAN_CHAR
 	if isinstance(x, str):
 		return x
 	if isinstance(x, int):

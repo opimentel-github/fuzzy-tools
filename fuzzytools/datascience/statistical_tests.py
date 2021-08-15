@@ -27,10 +27,10 @@ def grid_is_greater_test(values_dict, test):
 		for key2 in values_dict.keys():
 			values2 = _check_values(values_dict[key2])
 			if np.mean(values1)<np.mean(values2):
-				pvalue_txt = '-'
+				d[key2] = '-'
 			else:
-				is_significant_greater, pvalue, pvalue_txt = test(values1, values2)
-			d[key2] = pvalue_txt
+				is_significant_greater, pvalue, pvalue_txt, diff = test(values1, values2)
+				d[key2] = f'{pvalue_txt} ($\\Delta$={xstr(diff)})'
 
 		df_builder.append(key1, d)
 
@@ -79,9 +79,11 @@ def welch_is_greater_test(_x1, _x2,
 		alternative='greater', # two-sided less greater
 		equal_var=False, # welch
 		)
-	assert np.mean(x1)>=np.mean(x2)
+	
 	is_significant_greater = pvalue<th_pvalue
 	pvalue_txt = format_pvalue(pvalue, th_pvalue, lower_bound, upper_bound)
+	diff = np.mean(x1)-np.mean(x2)
+	assert diff>=0
 	if verbose:
 		print(f'th-p-value={th_pvalue}')
 		print(f'x1={XError(x1)}')
@@ -90,4 +92,4 @@ def welch_is_greater_test(_x1, _x2,
 			print(f'x1>x2 with {pvalue_txt}')
 		else:
 			print(f'!x1>x2 with {pvalue_txt}')
-	return is_significant_greater, pvalue, pvalue_txt
+	return is_significant_greater, pvalue, pvalue_txt, diff
