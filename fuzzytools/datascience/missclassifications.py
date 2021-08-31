@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from . import labels as ds_labels
 from ..strings import bf_alphabet_count
+from ..dataframes import DFBuilder
 
 FIGSIZE = None
 CHECK_DISTRIBUTION = False
@@ -33,7 +34,7 @@ def plot_missclassification_map(_y_pred_p, _y_true, class_names,
 		)
 
 	fig, axs = plt.subplots(len(class_names), 1, figsize=figsize)
-	miss_obj_ids = []
+	miss_objs_df = DFBuilder()
 	for kc,c in enumerate(class_names):
 		ax = axs[kc]
 		title = ''
@@ -58,7 +59,11 @@ def plot_missclassification_map(_y_pred_p, _y_true, class_names,
 					ax.text(pos_x, obj_y_pred_p, txt, rotation=90, ha='center', va='top', fontsize=fontsize)
 					if verbose:
 						print(f'k={k}; c={c}; obj_y_pred_p={obj_y_pred_p:.3f}; txt={txt}')
-				miss_obj_ids += [obj_id]
+				miss_objs_df.append(obj_id, {
+					'c':c,
+					'obj_y_pred_c':obj_y_pred_c,
+					'obj_y_pred_p':obj_y_pred_p,
+					})
 				pos_x += dx_miss
 
 		ax.plot([None], [None], 'o', c='k', label=f'correct-classification')
@@ -71,4 +76,4 @@ def plot_missclassification_map(_y_pred_p, _y_true, class_names,
 		ax.set_xticks([])
 		ax.grid(alpha=.5)
 		ax.legend(loc=legend_loc)
-	return fig, axs, miss_obj_ids
+	return fig, axs, miss_objs_df.get_df()
