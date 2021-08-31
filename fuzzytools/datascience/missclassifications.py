@@ -57,7 +57,7 @@ def plot_missclassification_map(_y_pred_p, _y_true, class_names,
 				if pred_prob_th is None or obj_y_pred_p>=pred_prob_th:
 					ax.text(pos_x, obj_y_pred_p, txt, rotation=90, ha='center', va='top', fontsize=fontsize)
 					if verbose:
-						print(f'k={k}; c={c}; txt={txt}')
+						print(f'k={k}; c={c}; obj_y_pred_p={obj_y_pred_p:.3f}; txt={txt}')
 				miss_obj_ids += [obj_id]
 				pos_x += dx_miss
 
