@@ -20,23 +20,13 @@ def close_fig(fig):
 	plt.close(fig)
 	return
 
-'''
-def _fig2img(fig,
-	uses_close_fig=True,
-	):
-	img = Image.frombytes('RGB', fig.canvas.get_width_height(), fig.canvas.tostring_rgb())
-	if uses_close_fig:
-		close_fig(fig)
-	return img
-'''
-
 def _fig2img(fig,
 	uses_close_fig=True,
 	):
 	if fig is None:
 		return None
 	buf = io.BytesIO()
-	fig.savefig(buf, bbox_inches='tight')
+	fig.savefig(buf, bbox_inches='tight', dpi=fig.dpi)
 	buf.seek(0)
 	img = Image.open(buf)
 	if uses_close_fig:
