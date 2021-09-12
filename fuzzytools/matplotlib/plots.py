@@ -11,6 +11,7 @@ import math
 import pandas as pd
 
 DPI = _C.DPI
+PERCENTILE = 95
 
 ###################################################################################################################################################
 
@@ -245,6 +246,7 @@ def plot_hist_bins(data_dict:dict,
 	cmap=None,
 	alpha:float=0.5,
 	verbose:int=0,
+	percentile=PERCENTILE,
 	**kwargs):
 	if histtype in ['step']:
 		alpha=1
@@ -261,25 +263,23 @@ def plot_hist_bins(data_dict:dict,
 			print(f'key: {key}; {_C.SAMPLES_TEXT}: {x_samples:,}; x_mean: {x_mean:.5f}; x_std: {x_std:.5f}; x_min: {x_min:.5f}; x_max: {x_max:.5f}')
 
 		c = cmap.colors[k]
-		hist_kwargs = {
-			'density':uses_density,
-			'color':c,
-			'label':None,
-			'alpha':alpha,
-			'histtype':histtype,
-			'range':xrange,
-			'linewidth':linewidth,
-		}
 		bins = 'auto' if bins is None else bins
-		n, new_bins, patches = ax.hist(x, bins, **hist_kwargs)
-
-		p5 = np.percentile(x, 5)
-		p50 = np.percentile(x, 50)
-		p95 = np.percentile(x, 95)
-		#label = f'{key}'+', $N='+f'{len(x):,}'+'$'+', $p_{50}='+f'{p50:.2f}'+'_{-'+f'{p50-p5:.2f}'+'}^{+'+f'{p95-p50:.2f}'+'}$'
-		#label = f'{key}'+'; $N: '+f'{len(x):,}'+'$'+'; $p_{50}: '+f'{p50:.2f}'+'_{-'+f'{p50-p5:.2f}'+'}^{+'+f'{p95-p50:.2f}'+'}$'
-		label = f'{key} '+'($p50_{5}^{95}='+f'{p50:.2f}'+'_{'+f'{p5:.2f}'+'}^{'+f'{p95:.2f}'+'}$; '+f'{len(x):,}#)'
-		#label = f'{key}'+'; $N: '+f'{len(x):,}'+'$'+'; $p50_{p5-p50}^{p95-p50}: '+f'{p50:.2f}'+'_{-'+f'{p50-p5:.2f}'+'}^{+'+f'{p95-p50:.2f}'+'}$'
+		n, new_bins, patches = ax.hist(x, bins,
+			density=uses_density,
+			color=c,
+			label=None,
+			alpha=alpha,
+			histtype=histtype,
+			range=xrange,
+			linewidth=linewidth,
+		)
+		assert percentile>=0 and percentile<=100
+		lower_p = percentile if percentile<50 else 100-percentile
+		upper_p = 100-lower_p
+		lower_px = np.percentile(x, lower_p)
+		median_px = np.percentile(x, 50)
+		upper_px = np.percentile(x, upper_p)
+		label = f'{key} '+'($p50_{'+str(lower_p)+'}^{'+str(upper_p)+'}='+f'{median_px:.2f}'+'_{'+f'{lower_px:.2f}'+'}^{'+f'{upper_px:.2f}'+'}$; '+f'{len(x):,}#)'
 		legend_handles.append(mpatches.Patch(color=c, label=label))
 
 	ax.set_xlabel(xlabel)
@@ -303,7 +303,6 @@ def plot_hist_bins(data_dict:dict,
 		for k,key in enumerate(keys):
 			x = np.array(data_dict[key].copy())
 			c = cmap.colors[k]
-			p50 = np.median(x)
 			ann_y = new_max_ylim*0.9-(k+1)*new_max_ylim*0.1
 			#ann = ax.annotate(f'{ann_x:.4f}', xy=(ann_x, ann_y), xytext=(0, annotation_size), fontsize=5, ha='center',
 			#		textcoords='offset points',
@@ -311,9 +310,9 @@ def plot_hist_bins(data_dict:dict,
 			#		bbox=dict(boxstyle='round', fc=c, ec='none', alpha=annotation_alpha),
 			#		#arrowprops=dict(arrowstyle='wedge,tail_width=1.0', fc=c, ec='none', patchA=None, patchB=None, relpos=(0.5, 0.2), alpha=annotation_alpha),
 			#		)
-			ax.axvline(x=p5, ls='--', c=c, label=None, lw=lw)
-			ax.axvline(x=p50, ls='-', c=c, label=None, lw=lw)
-			ax.axvline(x=p95, ls='--', c=c, label=None, lw=lw)
+			ax.axvline(x=lower_px, ls='--', c=c, label=None, lw=lw)
+			ax.axvline(x=median_px, ls='-', c=c, label=None, lw=lw)
+			ax.axvline(x=upper_px, ls='--', c=c, label=None, lw=lw)
 
 	if return_legend_patches:
 		return fig, ax, legend_handles
