@@ -37,6 +37,8 @@ def bf_alphabet_count(k,
 def alphabet_count(k,
 	string_length=None,
 	):
+	if k is None:
+		return ''
 	assert k>=0
 	base = ALPHABET
 	base_first = base[0]
@@ -48,7 +50,7 @@ def alphabet_count(k,
 		res+=base[k%b]
 		k//= b
 	txt = res[::-1] or base_first
-	txt = '' if k is None else base_first*(string_length-len(txt))+txt
+	txt = base_first*(string_length-len(txt))+txt
 	return txt
 
 def delete_string_chars(s, chars):
