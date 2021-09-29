@@ -29,6 +29,8 @@ def bf_alphabet_count(k,
 	extra_string=None,
 	string_length=1,
 	):
+	if k is None:
+		return ''
 	c = alphabet_count(k, string_length)
 	s = '' if extra_string is None else f'.{extra_string}'
 	txt = bf(f'{c}{s}')
