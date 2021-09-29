@@ -31,7 +31,8 @@ def bf_alphabet_count(k,
 	):
 	c = alphabet_count(k, string_length)
 	s = '' if extra_string is None else f'.{extra_string}'
-	return bf(f'{c}{s}')
+	txt = bf(f'{c}{s}')
+	return txt
 
 def alphabet_count(k,
 	string_length=None,
@@ -47,7 +48,8 @@ def alphabet_count(k,
 		res+=base[k%b]
 		k//= b
 	txt = res[::-1] or base_first
-	return base_first*(string_length-len(txt))+txt
+	txt = '' if k is None else base_first*(string_length-len(txt))+txt
+	return txt
 
 def delete_string_chars(s, chars):
 	return ''.join([c for c in s if not c in chars])
