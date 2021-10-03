@@ -6,6 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
+DEFAULT_CMAP = 'cc_favs2'
+
 ###################################################################################################################################################
 
 class ColorCycler:
@@ -40,7 +42,7 @@ COLORS_DICT = {
 'mplot_v2':['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'],
 'mplot_ggplot':['#E24A33', '#348ABD', '#988ED5', '#777777', '#FBC15E', '#8EBA42', '#FFB5B8'],
 'cc_favs':['#F25E5E','#0396A6','#6ABE4F','#B6508A','#F2E749','#404040','#9E2536','#024873','#378A47','#4E2973','#FFD700','#0d0d0d','#008080','#F28963','#F24535',],
-'cc_favs2':['#F25E5E','#0396A6','#6ABE4F','#B6508A','#1B9E77','#E7298A','#666666','#0d0d0d','#4E2973','#008080','#F24535','#FFD700'],
+'cc_favs2':['#0396A6','#F25E5E','#6ABE4F','#B6508A','#1B9E77','#E7298A','#666666','#0d0d0d','#4E2973','#008080','#F24535','#FFD700'],
 ###
 'cc_black':['#000000', '#696969', '#696969', '#808080', '#808080', '#A9A9A9', '#A9A9A9', '#C0C0C0', '#D3D3D3', '#D3D3D3'],
 'cc_red':['#BC8F8F', '#F08080', '#CD5C5C', '#A52A2A', '#B22222', '#800000', '#8B0000', '#FF0000'],
@@ -85,7 +87,7 @@ def colors(n:int=None):
 	return get_default_colorlist(n)
 	
 def get_default_colorlist(n:int=None):
-	return colorlist_to_cycled_colorlist(COLORS_DICT[_C.DEFAULT_CMAP], n)
+	return colorlist_to_cycled_colorlist(COLORS_DICT[DEFAULT_CMAP], n)
 
 def get_nice_colorlist(n:int=None):
 	return colorlist_to_cycled_colorlist([NICE_COLORS_DICT[k] for k in NICE_COLORS_DIC.keys()], n)
