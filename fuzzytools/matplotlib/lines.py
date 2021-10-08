@@ -30,10 +30,11 @@ def fill_beetween(ax, xs, ys,
 	fill_kwargs={},
 	median_args=[],
 	median_kwargs={},
+	return_y_range=False,
 	):
 	new_x = np.concatenate([x for x in xs], axis=0)
 	new_x = np.sort(new_x)
-	# print(new_x)
+	print(new_x)
 	new_ys = []
 	for x,y in zip(xs, ys):
 		assert x.shape==y.shape
@@ -43,7 +44,7 @@ def fill_beetween(ax, xs, ys,
 	
 	new_ys = np.concatenate(new_ys, axis=0)
 	if percentile is None:
-		return multiple_lines(ax, xs, ys, *median_args, **median_kwargs)
+		ax = multiple_lines(ax, xs, ys, *median_args, **median_kwargs)
 	else:
 		assert percentile>=0 and percentile<=100
 		lower_y = np.nanpercentile(new_ys, 100-percentile, axis=0)
@@ -53,4 +54,9 @@ def fill_beetween(ax, xs, ys,
 			ax.fill_between(new_x, lower_y, upper_y, *fill_args, **fill_kwargs)
 		if plot_median:
 			ax.plot(new_x, median_y, *median_args, **median_kwargs)
-	return ax
+	
+	if return_y_range:
+		y_range = np.abs(np.max(lower_y)-np.min(upper_y))
+		return ax, y_range
+	else:
+		return ax
