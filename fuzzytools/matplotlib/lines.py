@@ -34,7 +34,6 @@ def fill_beetween(ax, xs, ys,
 	):
 	new_x = np.concatenate([x for x in xs], axis=0)
 	new_x = np.sort(new_x)
-	print(new_x)
 	new_ys = []
 	for x,y in zip(xs, ys):
 		assert x.shape==y.shape
