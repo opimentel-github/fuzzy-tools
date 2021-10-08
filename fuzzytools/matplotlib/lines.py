@@ -55,7 +55,7 @@ def fill_beetween(ax, xs, ys,
 			ax.plot(new_x, median_y, *median_args, **median_kwargs)
 	
 	if return_y_range:
-		y_range = np.abs(np.max(upper_y)-np.min(lower_y))
+		y_range = [np.max(upper_y), np.min(lower_y)]
 		return ax, y_range
 	else:
 		return ax
