@@ -259,7 +259,7 @@ class LatexTable():
 		txt = txt.replace(PM_CHAR, f'${utils.get_slash()}pm$')
 		txt = txt.replace(NAN_CHAR, '$-$')
 		txt = txt.replace('%', utils.get_slash()+'%')
-		txt = strings.get_bar(char='%')+'\n'+txt+strings.get_bar(char='%')+'\n'
+		txt = strings.get_bar(char='v')+'\n'+txt+strings.get_bar(char='^')+'\n'
 		txt = strings.color_str(txt, 'red')
 		return txt
 
