@@ -90,13 +90,14 @@ def get_string_from_dict(d:str,
 def get_bar(
 	char:str=MIDDLE_LINE_CHAR,
 	N:int=BAR_SIZE,
+	init_string='',
 	):
 	if N is None:
 		try:
 			N = os.get_terminal_size().columns
 		except OSError:
 			N = JUPYTER_NOTEBOOK_BAR_SIZE
-	return char*N
+	return init_string+char*N
 
 def string_replacement(string:str, replace_dict:dict):
 	'''
