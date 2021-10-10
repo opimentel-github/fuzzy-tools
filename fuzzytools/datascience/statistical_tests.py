@@ -12,6 +12,7 @@ TH_PVALUE = 0.05
 LOWER_BOUND = 0.001
 UPPER_BOUND = 0.99
 PVALUE_CHAR = '$p^*$'
+N_DECIMALS = _C.N_DECIMALS
 
 ###################################################################################################################################################
 
@@ -19,7 +20,9 @@ def _check_values(values):
 	assert isinstance(values, list) or isinstance(values, np.ndarray)
 	return values
 
-def grid_is_greater_test(values_dict, test):
+def grid_is_greater_test(values_dict, test,
+	n_decimals=N_DECIMALS,
+	):
 	df_builder = DFBuilder()
 	for key1 in values_dict.keys():
 		d = {}
@@ -30,7 +33,7 @@ def grid_is_greater_test(values_dict, test):
 				d[key2] = '-'
 			else:
 				is_significant_greater, pvalue, pvalue_txt, diff = test(values1, values2)
-				d[key2] = f'{pvalue_txt} ($\\Delta$={xstr(diff)})'
+				d[key2] = f'{pvalue_txt} ($\\Delta$={xstr(diff, n_decimals=n_decimals)})'
 
 		df_builder.append(key1, d)
 

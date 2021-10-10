@@ -148,7 +148,7 @@ def color_str(txt, color):
 ###################################################################################################################################################
 
 def _format_float(x,
-	n_decimals:int=N_DECIMALS,
+	n_decimals=N_DECIMALS,
 	remove_zero=REMOVE_ZERO,
 	):
 	if np.isnan(x):
@@ -164,7 +164,7 @@ def _format_int(x):
 	return f'{x:,}'
 
 def xstr(x,
-	n_decimals:int=N_DECIMALS,
+	n_decimals=N_DECIMALS,
 	remove_zero=REMOVE_ZERO,
 	add_pos=False,
 	):
