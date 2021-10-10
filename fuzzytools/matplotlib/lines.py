@@ -30,7 +30,7 @@ def fill_beetween(ax, xs, ys,
 	fill_kwargs={},
 	median_args=[],
 	median_kwargs={},
-	return_y_range=False,
+	return_extras=False,
 	):
 	new_x = np.concatenate([x for x in xs], axis=0)
 	new_x = np.sort(new_x)
@@ -54,8 +54,8 @@ def fill_beetween(ax, xs, ys,
 		if plot_median:
 			ax.plot(new_x, median_y, *median_args, **median_kwargs)
 	
-	if return_y_range:
-		y_range = [np.max(upper_y), np.min(lower_y)]
-		return ax, y_range
+	if return_extras:
+		yrange = [np.max(upper_y), np.min(lower_y)]
+		return ax, median_y, yrange
 	else:
 		return ax
