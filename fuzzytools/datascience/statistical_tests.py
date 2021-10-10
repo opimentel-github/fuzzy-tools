@@ -88,7 +88,15 @@ def welch_is_greater_test(_x1, _x2,
 	
 	is_significant_greater = pvalue<th_pvalue
 	pvalue_txt = format_pvalue(pvalue, th_pvalue, lower_bound, upper_bound)
-	diff = np.around(np.mean(x1), n_decimals)-np.around(np.mean(x2), n_decimals)
+	mean_x1 = xstr(np.mean(x1),
+		n_decimals=n_decimals,
+		remove_zero=False,
+		)
+	mean_x2 = xstr(np.mean(x2),
+		n_decimals=n_decimals,
+		remove_zero=False,
+		)
+	diff = float(mean_x1)-float(mean_x2)
 	assert diff>=0
 	if verbose:
 		print(f'th-p-value={th_pvalue}')
