@@ -45,15 +45,14 @@ def fill_beetween(ax, xs, ys,
 	if percentile is None:
 		ax, median_y, yrange = multiple_lines(ax, xs, ys, *median_args, **median_kwargs)
 	else:
-	new_ys = []
+		assert percentile>=0 and percentile<=100
+		new_ys = []
 		for x,y in zip(xs, ys):
 			assert x.shape==y.shape
 			assert len(x.shape)==1
 			new_y = interp1d(x, y, kind=interp_kind, bounds_error=False)(new_x)
 			new_ys += [new_y[None]]
-		
 		new_ys = np.concatenate(new_ys, axis=0)
-		assert percentile>=0 and percentile<=100
 		lower_y = np.nanpercentile(new_ys, 100-percentile, axis=0)
 		median_y = np.nanpercentile(new_ys, 50, axis=0)
 		upper_y = np.nanpercentile(new_ys, percentile, axis=0)
