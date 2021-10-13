@@ -123,7 +123,7 @@ def plot_custom_confusion_matrix(cms:np.ndarray, class_names:list,
 	else:
 		assert 0
 
-	ax.set(xlabel='prediction')
+	ax.set(xlabel='predicted label')
 	ax.set(ylabel='true label')
 	true_class_populations = np.sum(cms[0], axis=-1)
 	balanced = all([tcp==true_class_populations[0] for tcp in true_class_populations])
