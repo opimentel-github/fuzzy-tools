@@ -52,7 +52,7 @@ def plot_bar(plot_df,
 		total_sum = {i:sum([plot_df[c][i] for c in columns]) for i in indexs}
 		#ann_df = pd.DataFrame.from_dict({c:{i:f' {100*plot_df[c][i]/total_sum[i]:.2f}%' for i in indexs} for c in columns}, orient='columns')
 		ann_df = pd.DataFrame.from_dict({c:{i:
-			(' '+f'{plot_df[c][i]:,}#' if add_poblation_annotations else '')+(f' ({100*plot_df[c][i]/total_sum[i]:.2f}%)' if add_percent_annotations else '')
+			(' '+f'{plot_df[c][i]:,}' if add_poblation_annotations else '')+(f' ({100*plot_df[c][i]/total_sum[i]:.2f}%)' if add_percent_annotations else '')
 			 for i in indexs} for c in columns}, orient='columns')
 
 	if uses_log_scale:
