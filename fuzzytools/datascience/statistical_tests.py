@@ -8,7 +8,7 @@ from ..strings import xstr
 from .xerror import XError
 from ..dataframes import DFBuilder
 
-NORMAL_TH_PVALUE = .05
+SHAPIRO_TH_PVALUE = .05
 N_DECIMALS = _C.N_DECIMALS
 PVALUE_CHAR = '$p_v$'
 NULL_CHAR = ''
@@ -29,6 +29,8 @@ def _check_values(values):
 def get_pvalue_symbol(pvalue,
 	get_upper_bound=False,
 	):
+	if pvalue is None:
+		return 'x'
 	symbols = list(PVALUE_SYMBOLS.keys())
 	for s in symbols:
 		lower_bound = PVALUE_SYMBOLS[s][0]
@@ -44,10 +46,10 @@ def get_pvalue_symbols():
 	return {f'<={PVALUE_SYMBOLS[s][-1]}':s for s in symbols}
 
 def is_normal(x,
-	th_pvalue=NORMAL_TH_PVALUE,
+	shapiro_th_pvalue=SHAPIRO_TH_PVALUE,
 	):
 	pvalue = stats.shapiro(x).pvalue
-	return not pvalue<th_pvalue
+	return not pvalue<shapiro_th_pvalue
 
 def grid_is_greater_test(values_dict, test,
 	n_decimals=N_DECIMALS,
@@ -74,19 +76,21 @@ def grid_is_greater_test(values_dict, test,
 ###################################################################################################################################################
 
 def format_pvalue(pvalue, diff):
-	if pvalue is None:
-		return NULL_CHAR
-	txt = f'$\Delta$={xstr(diff)}{get_pvalue_symbol(pvalue)}; {PVALUE_CHAR}={xstr(pvalue)}'
+	txt = f'$\Delta$={xstr(diff)}{get_pvalue_symbol(pvalue)}'
+	if not pvalue is None:
+		txt = f'; {PVALUE_CHAR}={xstr(pvalue)}'
 	return txt
 
 def welch_is_greater_test(_x1, _x2,
 	verbose=0,
 	sort=False,
 	n_decimals=N_DECIMALS,
+	shapiro_th_pvalue=SHAPIRO_TH_PVALUE,
 	):
 	'''
 	check if mean(x1)>mean(x2) with statistical significance
 	'''
+	pvalue = None
 	assert len(_x1)>=1 and len(_x1.shape)==1
 	assert len(_x2)>=1 and len(_x2.shape)==1
 	if sort:
@@ -110,8 +114,10 @@ def welch_is_greater_test(_x1, _x2,
 		)
 	diff = float(mean_x1)-float(mean_x2)
 	assert diff>=0
-	pvalue = None
-	are_normal = is_normal(x1) and is_normal(x2)
+	normal_kwargs = {
+		'shapiro_th_pvalue':shapiro_th_pvalue,
+		}
+	are_normal = is_normal(x1, **normal_kwargs) and is_normal(x2, **normal_kwargs)
 	if verbose:
 		print(f'are_normal={are_normal}')
 	if are_normal:
