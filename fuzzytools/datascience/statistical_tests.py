@@ -76,7 +76,7 @@ def grid_is_greater_test(values_dict, test,
 def format_pvalue(pvalue, diff):
 	if pvalue is None:
 		return NULL_CHAR
-	txt = f'$\Delta$={diff}{get_pvalue_symbol(pvalue)}; {PVALUE_CHAR}={xstr(pvalue)}'
+	txt = f'$\Delta$={xstr(diff)}{get_pvalue_symbol(pvalue)}; {PVALUE_CHAR}={xstr(pvalue)}'
 	return txt
 
 def welch_is_greater_test(_x1, _x2,
