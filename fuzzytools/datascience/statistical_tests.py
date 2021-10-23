@@ -8,6 +8,7 @@ from ..strings import xstr
 from .xerror import XError
 from ..dataframes import DFBuilder
 
+INCLUDE_PVALUE = False
 SHAPIRO_TH_PVALUE = .05
 N_DECIMALS = _C.N_DECIMALS
 PVALUE_CHAR = '$p_v$'
@@ -75,9 +76,11 @@ def grid_is_greater_test(values_dict, test,
 
 ###################################################################################################################################################
 
-def format_pvalue(pvalue, diff):
+def format_pvalue(diff, pvalue,
+	include_pvalue=INCLUDE_PVALUE,
+	):
 	txt = f'$\Delta$={xstr(diff)}{get_pvalue_symbol(pvalue)}'
-	if not pvalue is None:
+	if not pvalue is None and include_pvalue:
 		txt = f'{txt}; {PVALUE_CHAR}={xstr(pvalue)}'
 	return txt
 
@@ -86,6 +89,7 @@ def welch_is_greater_test(_x1, _x2,
 	sort=False,
 	n_decimals=N_DECIMALS,
 	shapiro_th_pvalue=SHAPIRO_TH_PVALUE,
+	include_pvalue=INCLUDE_PVALUE,
 	):
 	'''
 	check if mean(x1)>mean(x2) with statistical significance
@@ -126,5 +130,7 @@ def welch_is_greater_test(_x1, _x2,
 			equal_var=False, # welch
 			)
 
-	pvalue_txt = format_pvalue(pvalue, diff)
+	pvalue_txt = format_pvalue(diff, pvalue,
+		include_pvalue=include_pvalue,
+		)
 	return diff, pvalue, pvalue_txt
