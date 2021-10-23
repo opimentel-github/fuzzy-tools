@@ -54,6 +54,8 @@ def is_normal(x,
 
 def grid_is_greater_test(values_dict, test,
 	n_decimals=N_DECIMALS,
+	shapiro_th_pvalue=SHAPIRO_TH_PVALUE,
+	include_pvalue=INCLUDE_PVALUE,
 	):
 	print(get_pvalue_symbols())
 	df_builder = DFBuilder()
@@ -67,6 +69,8 @@ def grid_is_greater_test(values_dict, test,
 			else:
 				diff, pvalue, pvalue_txt = test(values1, values2,
 					n_decimals=n_decimals,
+					shapiro_th_pvalue=shapiro_th_pvalue,
+					include_pvalue=include_pvalue,
 					)
 				d[key2] = f'{pvalue_txt}'
 
