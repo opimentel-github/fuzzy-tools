@@ -17,14 +17,16 @@ INITIAL_PERCENTILES = [1,5,10,90,95,99]
 
 def average_measurements(measurements):
 	n = len(measurements)
+	samples = measurements[0].n
 	new_measurement = Measurement(None)
 	x = []
 	for m in measurements:
-		assert measurements[0].n==m.n
+		assert m.n==samples
 		x += [uncertainties.ufloat(m.get_mean(), m.get_std())]
 	x = sum(x)/n
 	new_measurement.mean = x.n
 	new_measurement.std = x.s
+	new_measurement.n = samples
 	return new_measurement
 
 def mean_std_repr(mean, std, n_decimals):
