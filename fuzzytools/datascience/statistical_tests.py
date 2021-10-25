@@ -26,6 +26,9 @@ PVALUE_SYMBOLS = {
 
 ###################################################################################################################################################
 
+def _check_xe(xe):
+	assert len(xe)>=1 and len(xe.shape)==1
+
 def get_pvalue_symbol(pvalue,
 	get_upper_bound=False,
 	):
@@ -75,8 +78,8 @@ def ttest(x1, x2,
 	tvalue = None
 	pvalue = None
 	if type(x1)==XError and type(x2)==XError:
-		assert len(x1)>=1 and len(x1.shape)==1
-		assert len(x2)>=1 and len(x2.shape)==1
+		_check_xe(x1)
+		_check_xe(x2)
 		pass
 
 	elif type(x1)==Measurement and type(x2)==Measurement:
@@ -88,6 +91,7 @@ def ttest(x1, x2,
 			pvalue = stats.t.sf(abs(tvalue), df)*2
 		if alternative=='greater':
 			pvalue = stats.t.sf(abs(tvalue), df)
+
 	else:
 		raise Exception(f'{type(x1)} {type(x2)}')
 
@@ -99,9 +103,9 @@ def welchtest(x1, x2,
 	):
 	tvalue = None
 	pvalue = None
-	if type(x1, XError) and type(x2, XError):
-		assert len(x1)>=1 and len(x1.shape)==1
-		assert len(x2)>=1 and len(x2.shape)==1
+	if type(x1)==XError and type(x2)==XError:
+		_check_xe(x1)
+		_check_xe(x2)
 		normal_kwargs = {
 			'shapiro_th_pvalue':shapiro_th_pvalue,
 			}
@@ -115,14 +119,8 @@ def welchtest(x1, x2,
 				)
 
 	elif type(x1)==Measurement and type(x2)==Measurement:
-		s = math.sqrt(((len(x1)-1)*x1.get_std()**2+(len(x2)-1)*x2.get_std()**2)/(len(x1)+len(x2)-2))
-		se = s*math.sqrt(1/len(x1)+1/len(x2))
-		tvalue = (x1.get_mean()-x2.get_mean())/se
-		df = len(x1)+len(x2)-2
-		if alternative=='two-sided':
-			pvalue = scipy.stats.t.sf(abs(tvalue), df)*2
-		if alternative=='greater':
-			pvalue = scipy.stats.t.sf(abs(tvalue), df)
+		pass
+
 	else:
 		raise Exception(f'{type(x1)} {type(x2)}')
 
