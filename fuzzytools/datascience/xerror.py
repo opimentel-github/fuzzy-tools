@@ -23,10 +23,7 @@ def average_measurements(measurements):
 		assert m.n==samples
 		x += [uncertainties.ufloat(m.get_mean(), m.get_std())]
 	x = sum(x)/n
-	new_measurement = Measurement(None)
-	new_measurement.mean = x.n
-	new_measurement.std = x.s
-	new_measurement.n = samples
+	new_measurement = Measurement().set_mean_std_n(x.n, x.s, samples)
 	return new_measurement
 
 def mean_std_repr(mean, std, n_decimals):
@@ -55,6 +52,12 @@ class Measurement():
 			self.mean = self.xe.get_mean()
 			self.std = self.xe.get_std()
 			self.n = len(self.xe)
+
+	def set_mean_std_n(self, mean, std, n):
+		self.mean = mean
+		self.std = std
+		self.n = n
+		return self
 
 	def get_mean(self):
 		return self.mean
