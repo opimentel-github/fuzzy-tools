@@ -47,6 +47,7 @@ class Measurement():
 		if not self.xe is None:
 			self.mean = self.xe.get_mean()
 			self.std = self.xe.get_std()
+			self.n = len(self.xe)
 
 	def get_mean(self):
 		return self.mean
