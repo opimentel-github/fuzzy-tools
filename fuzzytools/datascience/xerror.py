@@ -6,9 +6,60 @@ import numpy as np
 import math
 from copy import copy, deepcopy
 from ..strings import xstr
+import math
+import uncertainties
 
 N_DECIMALS = _C.N_DECIMALS
 PM_CHAR = _C.PM_CHAR
+INITIAL_PERCENTILES = [1,5,10,90,95,99]
+
+###################################################################################################################################################
+
+def average_measurements(measurements):
+	n = len(measurements)
+	new_measurement = Measurement(None)
+	x = []
+	for m in measurements:
+		assert measurements[0].n==m.n
+		x += [uncertainties.ufloat(m.get_mean(), m.get_std())]
+	x = sum(x)/n
+	new_measurement.mean = x.n
+	new_measurement.std = x.s
+	return new_measurement
+
+def mean_std_repr(mean, std, n_decimals):
+	txt = f'{xstr(mean, n_decimals)}'
+	txt += f'{PM_CHAR}{xstr(std, n_decimals)}'
+	return txt
+
+###################################################################################################################################################
+
+class Measurement():
+	def __init__(self,
+		xe=None,
+		n_decimals=N_DECIMALS,
+		):
+		self.xe = xe
+		self.n_decimals = n_decimals
+		self.reset()
+
+	def reset(self):
+		if not self.xe is None:
+			self.mean = self.xe.get_mean()
+			self.std = self.xe.get_std()
+
+	def get_mean(self):
+		return self.mean
+
+	def get_std(self):
+		return self.std
+
+	def __len__(self):
+		return self.n
+
+	def __repr__(self):
+		txt = mean_std_repr(self.get_mean(), self.get_std(), self.n_decimals)
+		return txt
 
 ###################################################################################################################################################
 
@@ -19,7 +70,7 @@ class XError():
 		n_decimals=N_DECIMALS,
 		mode='mean/std',
 		repr_pm=True,
-		initial_percentiles=[1,5,10,90,95,99],
+		initial_percentiles=INITIAL_PERCENTILES,
 		):
 		self._x = _x
 		self.dim = dim
@@ -44,7 +95,6 @@ class XError():
 			self.median = self.get_median()
 			self.std = self.get_std()
 			self.serror = self.get_standar_error()
-			
 			for p in self.initial_percentiles:
 				self.get_percentile(p)
 
@@ -113,8 +163,7 @@ class XError():
 		if self.is_dummy():
 			return f'{xstr(None)}'
 		else:
-			txt = f'{xstr(self.mean, self.n_decimals)}'
-			txt += f'{PM_CHAR}{xstr(self.std, self.n_decimals)}' if self.repr_pm else ''
+			txt = mean_std_repr(self.get_mean(), self.get_std(), self.n_decimals) if self.repr_pm else ''
 			return txt
 
 	def __ge__(self, other): # self >= other
