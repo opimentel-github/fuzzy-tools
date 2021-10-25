@@ -74,12 +74,12 @@ def ttest(x1, x2,
 	):
 	tvalue = None
 	pvalue = None
-	if isinstance(x1, XError) and isinstance(x2, XError):
+	if type(x1)==XError and type(x2)==XError:
 		assert len(x1)>=1 and len(x1.shape)==1
 		assert len(x2)>=1 and len(x2.shape)==1
 		pass
 
-	elif isinstance(x1, Measurement) and isinstance(x2, Measurement):
+	elif type(x1)==Measurement and type(x2)==Measurement:
 		s = math.sqrt(((len(x1)-1)*x1.get_std()**2+(len(x2)-1)*x2.get_std()**2)/(len(x1)+len(x2)-2))
 		se = s*math.sqrt(1/len(x1)+1/len(x2))
 		tvalue = (x1.get_mean()-x2.get_mean())/se
@@ -89,7 +89,7 @@ def ttest(x1, x2,
 		if alternative=='greater':
 			pvalue = stats.t.sf(abs(tvalue), df)
 	else:
-		raise Exception(f'')
+		raise Exception(f'{type(x1)} {type(x2)}')
 
 	return tvalue, pvalue
 
@@ -99,7 +99,7 @@ def welchtest(x1, x2,
 	):
 	tvalue = None
 	pvalue = None
-	if isinstance(x1, XError) and isinstance(x2, XError):
+	if type(x1, XError) and type(x2, XError):
 		assert len(x1)>=1 and len(x1.shape)==1
 		assert len(x2)>=1 and len(x2.shape)==1
 		normal_kwargs = {
@@ -114,7 +114,7 @@ def welchtest(x1, x2,
 				equal_var=False, # welch
 				)
 
-	elif isinstance(x1, Measurement) and isinstance(x2, Measurement):
+	elif type(x1)==Measurement and type(x2)==Measurement:
 		s = math.sqrt(((len(x1)-1)*x1.get_std()**2+(len(x2)-1)*x2.get_std()**2)/(len(x1)+len(x2)-2))
 		se = s*math.sqrt(1/len(x1)+1/len(x2))
 		tvalue = (x1.get_mean()-x2.get_mean())/se
@@ -124,7 +124,7 @@ def welchtest(x1, x2,
 		if alternative=='greater':
 			pvalue = scipy.stats.t.sf(abs(tvalue), df)
 	else:
-		raise Exception(f'')
+		raise Exception(f'{type(x1)} {type(x2)}')
 
 	return tvalue, pvalue
 

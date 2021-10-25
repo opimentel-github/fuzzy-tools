@@ -18,20 +18,25 @@ INITIAL_PERCENTILES = [1,5,10,90,95,99]
 def average_measurements(measurements):
 	n = len(measurements)
 	samples = measurements[0].n
-	new_measurement = Measurement(None)
 	x = []
 	for m in measurements:
 		assert m.n==samples
 		x += [uncertainties.ufloat(m.get_mean(), m.get_std())]
 	x = sum(x)/n
+	new_measurement = Measurement(None)
 	new_measurement.mean = x.n
 	new_measurement.std = x.s
 	new_measurement.n = samples
 	return new_measurement
 
 def mean_std_repr(mean, std, n_decimals):
-	txt = f'{xstr(mean, n_decimals)}'
-	txt += f'{PM_CHAR}{xstr(std, n_decimals)}'
+	mean_txt = xstr(mean,
+		n_decimals=n_decimals,
+		)
+	std_txt = xstr(std,
+		n_decimals=n_decimals,
+		)
+	txt = f'{mean_txt}{PM_CHAR}{std_txt}'
 	return txt
 
 ###################################################################################################################################################
@@ -120,7 +125,7 @@ class XError():
 
 	def get_percentile(self, p:int):
 		assert p>=0 and p<=100
-		assert isinstance(p, int)
+		assert type(p)==int
 		if not p in self.percentiles: # percentile does not exist
 			percentile = np.percentile(self.x, p, axis=self.dim)
 			setattr(self, f'p{p}', percentile)
@@ -206,14 +211,14 @@ class XError():
 		return xe
 
 	def __add__(self, other):
-		if isinstance(other, float) or isinstance(other, int):
+		if type(other)==float or type(other)==int:
 			#xe = self.copy(self.x.copy()+other)
 			xe = copy(self)
 			xe._x = self.x+other
 			xe.reset()
 			return xe
 
-		elif isinstance(self, float) or isinstance(self, int):
+		elif type(self)==float or type(self)==int:
 			xe = copy(other)
 			xe._x = other.x+self
 			xe.reset()
@@ -235,14 +240,14 @@ class XError():
 		return self+other
 
 	def __truediv__(self, other):
-		assert isinstance(other, float) or isinstance(other, int)
+		assert type(other)==float or type(other)==int
 		xe = copy(self)
 		xe._x = xe._x/other
 		xe.reset()
 		return xe
 
 	def __mul__(self, other):
-		assert isinstance(other, float) or isinstance(other, int)
+		assert type(other)==float or type(other)==int
 		xe = copy(self)
 		xe._x = xe._x*other
 		xe.reset()
