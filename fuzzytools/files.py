@@ -454,6 +454,7 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 	disbalanced_kf_mode='error', # error ignore oversampling
 	random_state=None,
 	kfs=None,
+	returns_all_kf_files=False,
 	):
 	'''
 	format must be .../kf@kf_set/files
@@ -511,7 +512,11 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 		for _kf in kfs:
 			files += all_kf_files[_kf]
 			files_ids += all_kf_files_ids[_kf]
-		return files, files_ids
+
+		if returns_all_kf_files:
+			return files, files_ids, all_kf_files
+		else:
+			return files, files_ids
 
 	### gather files from an specific kf value
 	else:

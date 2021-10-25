@@ -8,8 +8,9 @@ from ..strings import xstr
 from .xerror import XError
 from ..dataframes import DFBuilder
 
+DEFAULT_TH_PVALUE = .05
 INCLUDE_PVALUE = False
-SHAPIRO_TH_PVALUE = .05
+SHAPIRO_TH_PVALUE = DEFAULT_TH_PVALUE
 N_DECIMALS = _C.N_DECIMALS
 PVALUE_CHAR = '$p_v$'
 NULL_CHAR = ''
@@ -48,14 +49,20 @@ def get_pvalue_symbols():
 
 def is_normal(x,
 	shapiro_th_pvalue=SHAPIRO_TH_PVALUE,
+	verbose=0,
 	):
 	pvalue = stats.shapiro(x).pvalue
-	return not pvalue<shapiro_th_pvalue
+	not_normal = pvalue<shapiro_th_pvalue
+	normal = not not_normal
+	if verbose:
+		print(normal, pvalue)
+	return normal
 
 def grid_is_greater_test(values_dict, test,
 	n_decimals=N_DECIMALS,
 	shapiro_th_pvalue=SHAPIRO_TH_PVALUE,
 	include_pvalue=INCLUDE_PVALUE,
+	verbose=0,
 	):
 	print(get_pvalue_symbols())
 	df_builder = DFBuilder()
@@ -71,6 +78,7 @@ def grid_is_greater_test(values_dict, test,
 					n_decimals=n_decimals,
 					shapiro_th_pvalue=shapiro_th_pvalue,
 					include_pvalue=include_pvalue,
+					verbose=verbose,
 					)
 				d[key2] = f'{pvalue_txt}'
 
@@ -124,11 +132,12 @@ def welch_is_greater_test(_x1, _x2,
 	assert diff>=0
 	normal_kwargs = {
 		'shapiro_th_pvalue':shapiro_th_pvalue,
+		'verbose':verbose,
 		}
-	are_normal = is_normal(x1, **normal_kwargs) and is_normal(x2, **normal_kwargs)
+	both_are_normal = is_normal(x1, **normal_kwargs) and is_normal(x2, **normal_kwargs)
 	if verbose:
-		print(f'are_normal={are_normal}')
-	if are_normal:
+		print(f'both_are_normal={both_are_normal}')
+	if both_are_normal:
 		statistic, pvalue = stats.ttest_ind(x1, x2,
 			alternative='greater', # two-sided less greater
 			equal_var=False, # welch
