@@ -514,9 +514,9 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 			files_ids += all_kf_files_ids[_kf]
 
 		if returns_all_kf_files:
-			return files, files_ids, all_kf_files
+			return files, files_ids, kfs, all_kf_files
 		else:
-			return files, files_ids
+			return files, files_ids, kfs
 
 	### gather files from an specific kf value
 	else:
@@ -532,4 +532,4 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 			key_value_separator,
 			fext,
 			)
-		return files, files_ids
+		return files, files_ids, [kf]
