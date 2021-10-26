@@ -62,6 +62,12 @@ class Measurement():
 		return txt
 
 	def __add__(self, other):
+		if other is None or other==0:
+			return self
+
+		if self is None or self==0:
+			return other
+
 		if type(other)==Measurement:
 			assert self.n==other.n
 			new_measurement = Measurement(un=self.un+other.un)
@@ -242,6 +248,7 @@ class XError():
 			xe.reset()
 			return xe
 
+		###
 		xe = copy(other)
 		xe._x = other.x+self
 		xe.reset()
