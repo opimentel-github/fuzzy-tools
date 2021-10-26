@@ -92,7 +92,7 @@ class ConfusionMatrix():
 
 		if other is None or other==0:
 			return self
-
+			
 		if type(self)==ConfusionMatrix and type(other)==ConfusionMatrix:
 			assert self.size()==other.size()
 			assert self.get_class_names()==other.get_class_names()

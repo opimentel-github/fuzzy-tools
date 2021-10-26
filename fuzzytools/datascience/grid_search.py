@@ -101,11 +101,18 @@ class GridSeacher():
 		return self.__radd__(other)
 
 	def __radd__(self, other):
-		if other==0 or other is None:
+		if other is None or other==0:
 			return self
-		elif self==0 or self is None:
+
+		if self is None or self==0:
 			return other
-		else:
+
+		if type(self)==GridSeacher and type(other)==GridSeacher:
 			gs = GridSeacher({})
 			gs.params_grid = self.params_grid+other.params_grid
 			return gs
+
+		assert 0
+
+	def __radd__(self, other):
+		return self+other
