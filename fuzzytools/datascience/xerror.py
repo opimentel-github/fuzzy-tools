@@ -15,17 +15,6 @@ INITIAL_PERCENTILES = [1,5,10,90,95,99]
 
 ###################################################################################################################################################
 
-def average_measurements(measurements):
-	n = len(measurements)
-	samples = measurements[0].n
-	x = []
-	for m in measurements:
-		assert m.n==samples
-		x += [uncertainties.ufloat(m.get_mean(), m.get_std())]
-	x = sum(x)/n
-	new_measurement = Measurement().set_mean_std_n(x.n, x.s, samples)
-	return new_measurement
-
 def mean_std_repr(mean, std, n_decimals):
 	mean_txt = xstr(mean,
 		n_decimals=n_decimals,
@@ -41,29 +30,29 @@ def mean_std_repr(mean, std, n_decimals):
 class Measurement():
 	def __init__(self,
 		xe=None,
+		un=None,
 		n_decimals=N_DECIMALS,
 		):
-		self.xe = xe
+		if not xe is None:
+			self.set_mean_std_n(xe.get_mean(), xe.get_std(), len(xe))
+		if not un is None:
+			self.un = copy(un)
 		self.n_decimals = n_decimals
 		self.reset()
 
 	def reset(self):
-		if not self.xe is None:
-			self.mean = self.xe.get_mean()
-			self.std = self.xe.get_std()
-			self.n = len(self.xe)
+		pass
 
 	def set_mean_std_n(self, mean, std, n):
-		self.mean = mean
-		self.std = std
+		self.un = uncertainties.ufloat(mean, std)
 		self.n = n
 		return self
 
 	def get_mean(self):
-		return self.mean
+		return self.un.n
 
 	def get_std(self):
-		return self.std
+		return self.un.s
 
 	def __len__(self):
 		return self.n
@@ -71,6 +60,27 @@ class Measurement():
 	def __repr__(self):
 		txt = mean_std_repr(self.get_mean(), self.get_std(), self.n_decimals)
 		return txt
+
+	def __add__(self, other):
+		if type(other)==Measurement:
+			assert self.n==other.n
+			new_measurement = Measurement(un=self.un+other.un)
+			new_measurement.n = self.n
+			return new_measurement
+
+	def __radd__(self, other):
+		return self+other
+
+	def __truediv__(self, other):
+		if type(other)==Measurement:
+			assert self.n==other.n
+			new_measurement = Measurement(un=self.un/other.un)
+			new_measurement.n = self.n
+			return new_measurement
+		else:
+			new_measurement = Measurement(un=self.un/other)
+			new_measurement.n = self.n
+			return new_measurement
 
 ###################################################################################################################################################
 
@@ -214,30 +224,28 @@ class XError():
 		return xe
 
 	def __add__(self, other):
-		if type(other)==float or type(other)==int:
-			#xe = self.copy(self.x.copy()+other)
-			xe = copy(self)
-			xe._x = self.x+other
-			xe.reset()
-			return xe
-
-		elif type(self)==float or type(self)==int:
-			xe = copy(other)
-			xe._x = other.x+self
-			xe.reset()
-			return xe
-
-		elif other is None or other.is_dummy():
+		if other is None or other==0:
 			return copy(self)
 
-		elif self is None or self.is_dummy():
+		if self is None or self==0:
 			return copy(other)
 
-		else:
+		if type(self)==XError and type(other)==XError:
+			if self.is_dummy():
+				return copy(other)
+
+			if other.is_dummy():
+				return copy(self)
+
 			xe = copy(self)
 			xe._x = np.concatenate([self.x, other.x], axis=self.dim)
 			xe.reset()
 			return xe
+
+		xe = copy(other)
+		xe._x = other.x+self
+		xe.reset()
+		return xe
 
 	def __radd__(self, other):
 		return self+other
