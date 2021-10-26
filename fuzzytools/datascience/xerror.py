@@ -68,7 +68,7 @@ class Measurement():
 		if other is None or other==0:
 			return self
 
-		if type(other)==Measurement:
+		if type(self)==Measurement and type(other)==Measurement:
 			assert self.n==other.n
 			new_measurement = Measurement(un=self.un+other.un)
 			new_measurement.n = self.n
