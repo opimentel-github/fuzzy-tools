@@ -62,11 +62,11 @@ class Measurement():
 		return txt
 
 	def __add__(self, other):
-		if other is None or other==0:
-			return self
-
 		if self is None or self==0:
 			return other
+
+		if other is None or other==0:
+			return self
 
 		if type(other)==Measurement:
 			assert self.n==other.n
@@ -74,19 +74,24 @@ class Measurement():
 			new_measurement.n = self.n
 			return new_measurement
 
+		assert 0
+
 	def __radd__(self, other):
 		return self+other
 
 	def __truediv__(self, other):
-		if type(other)==Measurement:
+		if type(self)==Measurement and type(other)==Measurement:
 			assert self.n==other.n
 			new_measurement = Measurement(un=self.un/other.un)
 			new_measurement.n = self.n
 			return new_measurement
-		else:
+
+		if type(other)==float or type(other)==int:
 			new_measurement = Measurement(un=self.un/other)
 			new_measurement.n = self.n
 			return new_measurement
+
+		assert 0
 
 ###################################################################################################################################################
 
@@ -193,30 +198,6 @@ class XError():
 			txt = mean_std_repr(self.get_mean(), self.get_std(), self.n_decimals) if self.repr_pm else ''
 			return txt
 
-	def __ge__(self, other): # self >= other
-		if other is None or other.is_dummy():
-			return True
-		elif self is None or self.is_dummy():
-			return False
-		else:
-			return self>other or self==other
-
-	def __eq__(self, other): # self == other
-		if other is None or other.is_dummy():
-			return self is None or self.is_dummy()
-		elif self is None or self.is_dummy():
-			return other is None or other.is_dummy()
-		else:
-			return np.allclose(self.mean, other.mean)
-
-	def __gt__(self, other): # self > other
-		if other is None or other.is_dummy():
-			return True
-		elif self is None or self.is_dummy():
-			return False
-		else:
-			return self.mean>other.mean
-
 	def copy(self):
 		return copy(self)
 
@@ -230,11 +211,11 @@ class XError():
 		return xe
 
 	def __add__(self, other):
-		if other is None or other==0:
-			return copy(self)
-
 		if self is None or self==0:
 			return copy(other)
+
+		if other is None or other==0:
+			return copy(self)
 
 		if type(self)==XError and type(other)==XError:
 			if self.is_dummy():
@@ -248,11 +229,19 @@ class XError():
 			xe.reset()
 			return xe
 
-		###
-		xe = copy(other)
-		xe._x = other.x+self
-		xe.reset()
-		return xe
+		if type(self)==float or type(self)==int:
+			xe = copy(other)
+			xe._x = other.x+self
+			xe.reset()
+			return xe
+
+		if type(other)==float or type(other)==int:
+			xe = copy(self)
+			xe._x = self.x+other
+			xe.reset()
+			return xe
+
+		assert 0
 
 	def __radd__(self, other):
 		return self+other

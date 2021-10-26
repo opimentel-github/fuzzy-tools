@@ -29,6 +29,8 @@ def normalize_cm(cm, normalize_mode,
 		raise Exception(f'normalize_mode={normalize_mode}')
 	return new_cm
 
+###################################################################################################################################################
+
 class ConfusionMatrix():
 	def __init__(self, cms, class_names,
 		normalize_mode=NORMALIZE_MODE, # true_label predicted_label
@@ -98,13 +100,15 @@ class ConfusionMatrix():
 			new_cm = ConfusionMatrix(None, None, cm_df=new_cm_df)
 			return new_cm
 
+		assert 0
+
 	def __radd__(self, other):
 		return self+other
 
 	def __truediv__(self, other):
-			new_cm_df = self.cm_df/other
-			new_cm = ConfusionMatrix(None, None, cm_df=new_cm_df)
-			return new_cm
+		new_cm_df = self.cm_df/other
+		new_cm = ConfusionMatrix(None, None, cm_df=new_cm_df)
+		return new_cm
 
 	def __rmul__(self, other):
 		return self*other
