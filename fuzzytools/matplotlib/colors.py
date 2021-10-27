@@ -61,7 +61,7 @@ def get_colorlist_names():
 	return [k for k in COLORS_DICT.keys()]
 
 def colorlist_to_cycled_colorlist(colorlist:list, n:int=None):
-	assert isinstance(colorlist, list)
+	assert type(colorlist)==list
 	if n is None:
 		new_colorlist = colorlist.copy()
 	else:
@@ -74,10 +74,10 @@ def colorlist_to_cmap(colorlist:list, name:str='default'):
 	cmap = mpl.colors.ListedColormap(colorlist, name=name)
 	return cmap
 
-def hextofloats(hex:str, decimals:int=4):
-	assert isinstance(hex, str)
-	assert hex[0]=='#'
-	c = [round(int(hex[i:i + 2], 16) / 255., decimals) for i in (1, 3, 5)]
+def hextofloats(_hex:str, decimals:int=4):
+	assert type(_hex)==str
+	assert _hex[0]=='#'
+	c = [round(int(_hex[i:i + 2], 16) / 255., decimals) for i in (1, 3, 5)]
 	return tuple(c)
 
 def get_colorlist(colorlist_name, n:int=None):
@@ -103,7 +103,7 @@ def get_default_cmap(n:int=None):
 	return get_cmap(colorlist, 'default_cpc_cmap')
 
 def palplot(cmap):
-	if isinstance(cmap, list):
+	if type(cmap)==list:
 		cmap = get_cmap(cmap)
 	
 	n = len(cmap.colors)

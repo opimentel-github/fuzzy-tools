@@ -98,9 +98,6 @@ class GridSeacher():
 		return txt
 
 	def __add__(self, other):
-		return self.__radd__(other)
-
-	def __radd__(self, other):
 		if other is None or other==0:
 			return self
 
