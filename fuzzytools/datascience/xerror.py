@@ -7,7 +7,6 @@ import math
 from copy import copy, deepcopy
 from ..strings import xstr
 import math
-import uncertainties
 
 N_DECIMALS = _C.N_DECIMALS
 PM_CHAR = _C.PM_CHAR
@@ -24,74 +23,6 @@ def mean_std_repr(mean, std, n_decimals):
 		)
 	txt = f'{mean_txt}{PM_CHAR}{std_txt}'
 	return txt
-
-###################################################################################################################################################
-
-class Measurement():
-	def __init__(self,
-		xe=None,
-		un=None,
-		n_decimals=N_DECIMALS,
-		):
-		if not xe is None:
-			self.set_mean_std_n(xe.get_mean(), xe.get_std(), len(xe))
-		if not un is None:
-			self.un = copy(un)
-		self.n_decimals = n_decimals
-		self.reset()
-
-	def reset(self):
-		pass
-
-	def set_mean_std_n(self, mean, std, n):
-		self.un = uncertainties.ufloat(mean, std)
-		self.n = n
-		return self
-
-	def get_mean(self):
-		return self.un.n
-
-	def get_std(self):
-		return self.un.s
-
-	def __len__(self):
-		return self.n
-
-	def __repr__(self):
-		txt = mean_std_repr(self.get_mean(), self.get_std(), self.n_decimals)
-		return txt
-
-	def __add__(self, other):
-		if self is None or self==0:
-			return other
-
-		if other is None or other==0:
-			return self
-
-		if type(self)==Measurement and type(other)==Measurement:
-			assert self.n==other.n
-			new_measurement = Measurement(un=self.un+other.un)
-			new_measurement.n = self.n
-			return new_measurement
-
-		assert 0
-
-	def __radd__(self, other):
-		return self+other
-
-	def __truediv__(self, other):
-		if type(self)==Measurement and type(other)==Measurement:
-			assert self.n==other.n
-			new_measurement = Measurement(un=self.un/other.un)
-			new_measurement.n = self.n
-			return new_measurement
-
-		if type(other)==float or type(other)==int:
-			new_measurement = Measurement(un=self.un/other)
-			new_measurement.n = self.n
-			return new_measurement
-
-		assert 0
 
 ###################################################################################################################################################
 
@@ -214,10 +145,10 @@ class XError():
 		if self is None or self==0:
 			return copy(other)
 
-		if other is None or other==0:
+		elif other is None or other==0:
 			return copy(self)
 
-		if type(self)==XError and type(other)==XError:
+		elif type(self)==XError and type(other)==XError:
 			if self.is_dummy():
 				return copy(other)
 
@@ -229,19 +160,20 @@ class XError():
 			xe.reset()
 			return xe
 
-		if type(self)==float or type(self)==int:
+		elif type(self)==float or type(self)==int:
 			xe = copy(other)
 			xe._x = other.x+self
 			xe.reset()
 			return xe
 
-		if type(other)==float or type(other)==int:
+		elif type(other)==float or type(other)==int:
 			xe = copy(self)
 			xe._x = self.x+other
 			xe.reset()
 			return xe
 
-		assert 0
+		else:
+			raise Exception(f'{type(self)}; {type(other)}')
 
 	def __radd__(self, other):
 		return self+other

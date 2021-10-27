@@ -5,7 +5,7 @@ from . import _C
 import numpy as np
 from scipy import stats
 from ..strings import xstr
-from .xerror import XError, Measurement
+from .xerror import XError
 from ..dataframes import DFBuilder
 import math
 from mlxtend.evaluate import permutation_test
@@ -100,20 +100,8 @@ def ttest(x1, x2,
 		_check_xe(x2)
 		pass
 
-	elif type(x1)==Measurement and type(x2)==Measurement:
-		s = math.sqrt(((len(x1)-1)*x1.get_std()**2+(len(x2)-1)*x2.get_std()**2)/(len(x1)+len(x2)-2))
-		se = s*math.sqrt(1/len(x1)+1/len(x2))
-		tvalue = (x1.get_mean()-x2.get_mean())/se
-		df = len(x1)+len(x2)-2
-		pvalue = stats.t.sf(abs(tvalue), df)
-		if alternative=='two-sided':
-			pvalue = pvalue*2
-		elif alternative=='greater':
-			pvalue = pvalue
-		else:
-			raise Exception(f'{alternative}')
 	else:
-		raise Exception(f'{type(x1)} {type(x2)}')
+		raise Exception(f'{type(x1)}; {type(x2)}')
 
 	return pvalue
 
@@ -137,11 +125,8 @@ def welchtest(x1, x2,
 				equal_var=False, # welch
 				)
 
-	elif type(x1)==Measurement and type(x2)==Measurement:
-		pass
-
 	else:
-		raise Exception(f'{type(x1)} {type(x2)}')
+		raise Exception(f'{type(x1)}; {type(x2)}')
 
 	return pvalue
 
@@ -159,11 +144,8 @@ def permutationtest(x1, x2,
 			alternative=alternative,
 			)
 
-	elif type(x1)==Measurement and type(x2)==Measurement:
-		pass
-
 	else:
-		raise Exception(f'{type(x1)} {type(x2)}')
+		raise Exception(f'{type(x1)}; {type(x2)}')
 
 	return pvalue
 
