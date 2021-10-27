@@ -78,7 +78,7 @@ def _permutation_test(x1, x2,
 	pvalue = permutation_test(x1, x2,
 		method='approximate',
 		num_rounds=NUM_ROUNDS,
-		seed=RANDOM_STATE,
+		seed=int(RANDOM_STATE),
 		)
 	if alternative=='two-sided':
 		pvalue = pvalue
