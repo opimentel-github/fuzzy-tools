@@ -10,7 +10,7 @@ from ..dataframes import DFBuilder
 import math
 from mlxtend.evaluate import permutation_test
 
-NUM_ROUNDS = 1e5
+NUM_ROUNDS = 1e4
 RANDOM_STATE = 0
 ALTERNATIVE = 'two-sided' # two-sided less greater
 DEFAULT_TH_PVALUE = .05
