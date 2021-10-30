@@ -16,6 +16,7 @@ class BalancedCyclicBoostraping():
 		uses_shuffle=True,
 		uses_counter=False,
 		samples_per_class=None,
+		class_names=None,
 		):
 		assert len(l_objs)==len(l_classes)
 		assert batch_prop>=0 and batch_prop<=1
@@ -25,12 +26,11 @@ class BalancedCyclicBoostraping():
 		self.uses_shuffle = uses_shuffle
 		self.uses_counter = uses_counter
 		self.samples_per_class = samples_per_class
+		self.class_names = class_names
 		self.reset()
 
 	def reset(self):
-		if len(self)==0:
-			return
-		self.class_names, counts = np.unique(self.l_classes, return_counts=True)
+		self.class_names, counts = np.unique(self.l_classes, return_counts=True) if self.class_names is None else self.class_names
 		self.samples_per_class = int(max(counts)*self.batch_prop) if self.samples_per_class is None else self.samples_per_class
 		self.reset_counter()
 		self.l_objs_dict = {}
@@ -41,11 +41,14 @@ class BalancedCyclicBoostraping():
 	def get_class_names(self):
 		return self.class_names
 
+	def get_nof_classes(self):
+		return len(self.get_class_names())
+
 	def get_nof_samples(self):
 		return len(self.l_objs)
 
 	def __len__(self):
-		return len(self.get_class_names())*self.samples_per_class
+		return self.get_nof_classes()*self.samples_per_class
 
 	def get_n(self):
 		return self.samples_per_class
@@ -56,6 +59,7 @@ class BalancedCyclicBoostraping():
 			'batch_prop':self.batch_prop,
 			'samples_per_class':self.samples_per_class,
 			'nof_samples':self.get_nof_samples(),
+			'nof_classes':self.get_nof_classes(),
 			'__len__':len(self),
 			}, '; ', '=')
 		txt += ')'
