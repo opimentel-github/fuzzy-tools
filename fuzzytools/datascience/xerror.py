@@ -49,6 +49,7 @@ class XError():
 		self.x = np.array([]) if is_dummy else np.array(self._x).copy()
 		self.shape = self.x.shape
 		self.compute_statistics()
+		return self
 
 	def compute_statistics(self):
 		if not self.is_dummy():
@@ -69,7 +70,11 @@ class XError():
 	def is_1d(self):
 		return len(self.shape)==1
 
-	def __getitem__(self, idx):
+	# def __getitem__(self, idx):
+	# 	# avoid this if you want dataframe repr working!
+	# 	return self.get_item(idx)
+
+	def get_item(self, idx):
 		if self.is_dummy():
 			return None
 		elif self.is_1d():
@@ -156,20 +161,17 @@ class XError():
 
 			xe = copy(self)
 			xe._x = np.concatenate([self.x, other.x], axis=self.dim)
-			xe.reset()
-			return xe
+			return xe.reset()
 
 		elif type(self)==float or type(self)==int:
 			xe = copy(other)
 			xe._x = other.x+self
-			xe.reset()
-			return xe
+			return xe.reset()
 
 		elif type(other)==float or type(other)==int:
 			xe = copy(self)
 			xe._x = self.x+other
-			xe.reset()
-			return xe
+			return xe.reset()
 
 		else:
 			raise Exception(f'{type(self)}; {type(other)}')
@@ -181,8 +183,7 @@ class XError():
 		assert type(other)==float or type(other)==int
 		xe = copy(self)
 		xe._x = xe._x/other
-		xe.reset()
-		return xe
+		return xe.reset()
 
 	def __mul__(self, other):
 		assert type(other)==float or type(other)==int
