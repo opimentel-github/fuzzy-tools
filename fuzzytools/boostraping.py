@@ -15,7 +15,7 @@ class BalancedCyclicBoostraping():
 		batch_prop=1,
 		uses_shuffle=True,
 		uses_counter=False,
-		_samples_per_class=None,
+		samples_per_class=None,
 		):
 		assert len(l_objs)==len(l_classes)
 		assert batch_prop>=0 and batch_prop<=1
