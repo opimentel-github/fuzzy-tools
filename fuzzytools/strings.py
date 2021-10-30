@@ -18,7 +18,7 @@ JUPYTER_NOTEBOOK_BAR_SIZE = _C.JUPYTER_NOTEBOOK_BAR_SIZE
 MIDDLE_LINE_CHAR = _C.MIDDLE_LINE_CHAR
 KEY_KEY_SEP_CHAR = _C.KEY_KEY_SEP_CHAR
 KEY_VALUE_SEP_CHAR = _C.KEY_VALUE_SEP_CHAR
-NAN_CHAR = '─'
+NAN_CHAR = _C.NAN_CHAR
 
 # https://stackoverflow.com/questions/2267362/how-to-convert-an-integer-to-a-string-in-any-base
 
