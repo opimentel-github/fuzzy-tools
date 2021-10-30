@@ -30,13 +30,21 @@ class BalancedCyclicBoostraping():
 		self.reset()
 
 	def reset(self):
-		self.class_names = np.unique(self.l_classes, return_counts=True) if self.class_names is None else self.class_names
+		self.class_names = np.unique(self.l_classes) if self.class_names is None else self.class_names
 		self.samples_per_class = int(self.get_majority_class_nof_samples()*self.batch_prop) if self.samples_per_class is None else self.samples_per_class
 		self.reset_counter()
 		self.l_objs_dict = {}
 		for c in self.class_names:
 			self.l_objs_dict[c] = [obj for obj,_c in zip(self.l_objs, self.l_classes) if _c==c]
 		self.reset_cycles()
+
+	def reset_counter(self):
+		self.counter = {obj:0 for obj in self.l_objs}
+
+	def reset_cycles(self):
+		if self.uses_shuffle:
+			self.shuffle()
+		self.cycles_dict = {c:cycle(self.l_objs_dict[c]) for c in self.class_names}
 
 	def get_majority_class_nof_samples(self):
 		class_names, counts = np.unique(self.l_classes, return_counts=True)
@@ -68,14 +76,6 @@ class BalancedCyclicBoostraping():
 			}, '; ', '=')
 		txt += ')'
 		return txt
-
-	def reset_counter(self):
-		self.counter = {obj:0 for obj in self.l_objs}
-
-	def reset_cycles(self):
-		if self.uses_shuffle:
-			self.shuffle()
-		self.cycles_dict = {c:cycle(self.l_objs_dict[c]) for c in self.class_names}
 	
 	def shuffle(self):
 		for c in self.class_names:
