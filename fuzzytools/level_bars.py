@@ -5,12 +5,14 @@ from . import _C
 from tqdm import tqdm
 import sys
 
+NCOLS = 10
+
 ###################################################################################################################################################
 
 class LevelBar():
 	def __init__(self, count_dict,
 		prefix_str='',
-		ncols=10,
+		ncols=NCOLS,
 		):
 		self.f = open('/dev/null', 'w')
 		self.bar_kwargs = {

@@ -10,14 +10,15 @@ import math
 import uncertainties
 import pandas as pd
 from nested_dict import nested_dict
-from .xerror import XError, Measurement
+from .xerror import XError
 
 NORMALIZE_MODE = 'true_label' # true_label predicted_label
+K = 100
 
 ###################################################################################################################################################
 
 def normalize_cm(cm, normalize_mode,
-	k=100,
+	k=K,
 	):
 	if normalize_mode=='true_label':
 		new_cm = cm/np.sum(cm, axis=1)[:,None]*k
@@ -33,7 +34,7 @@ def normalize_cm(cm, normalize_mode,
 
 class ConfusionMatrix():
 	def __init__(self, cms, class_names,
-		normalize_mode=NORMALIZE_MODE, # true_label predicted_label
+		normalize_mode=NORMALIZE_MODE,
 		cm_df=None,
 		):
 		if cm_df is None:
@@ -53,7 +54,7 @@ class ConfusionMatrix():
 		for i in range(0, size[0]):
 			for j in range(0, size[1]):
 				xe = XError([cm[i,j] for cm in cms])
-				cm_dict[class_names[i]][class_names[j]] = Measurement(xe=xe)
+				cm_dict[class_names[i]][class_names[j]] = xe
 		self.cm_df = pd.DataFrame.from_dict(cm_dict, orient='index')
 
 	def get_means(self):
@@ -90,17 +91,18 @@ class ConfusionMatrix():
 		if self is None or self==0:
 			return other
 
-		if other is None or other==0:
+		elif other is None or other==0:
 			return self
 			
-		if type(self)==ConfusionMatrix and type(other)==ConfusionMatrix:
+		elif type(self)==ConfusionMatrix and type(other)==ConfusionMatrix:
 			assert self.size()==other.size()
 			assert self.get_class_names()==other.get_class_names()
 			new_cm_df = self.cm_df.add(other.cm_df)
 			new_cm = ConfusionMatrix(None, None, cm_df=new_cm_df)
 			return new_cm
 
-		assert 0
+		else:
+			raise Exception(f'{type(self)}; {type(other)}')
 
 	def __radd__(self, other):
 		return self+other

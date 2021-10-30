@@ -3,14 +3,16 @@ from __future__ import division
 from . import _C
 
 import pandas as pd
-#from nested_dict import nested_dict
 import numpy as np
+
+NAN_VALUE = _C.NAN_VALUE
+MODE = 'value' # value mean median
 
 ###################################################################################################################################################
 
 def clean_df_nans(df,
-	mode='value', # value mean median
-	nan_value=_C.NAN_VALUE,
+	mode=MODE,
+	nan_value=NAN_VALUE,
 	df_values=None,
 	drop_null_columns=False,
 	):
@@ -29,6 +31,9 @@ def clean_df_nans(df,
 	elif mode=='median':
 		df_values = new_df.median(axis='index', skipna=True) if df_values is None else df_values
 		new_df = new_df.fillna(df_values)
+
+	else:
+		raise Exception(f'{mode}')
 
 	return new_df, df_values, null_cols
 

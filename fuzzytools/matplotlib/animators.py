@@ -11,17 +11,22 @@ import os
 import math
 import matplotlib.pyplot as plt
 
+VERBOSE = 0
+AN_SEGS_OFFSET = 1
+AN_SAVE_IMAGE_FEXT = _C.AN_SAVE_IMAGE_FEXT
+VIDEO_DURATION = 10
+
 ###################################################################################################################################################
 
 class PlotAnimator():
 	def __init__(self,
-		video_duration=10,
+		video_duration=VIDEO_DURATION,
 		is_dummy:bool=False,
-		init_offset:float=_C.AN_SEGS_OFFSET,
-		end_offset:float=_C.AN_SEGS_OFFSET,
+		init_offset:float=AN_SEGS_OFFSET,
+		end_offset:float=AN_SEGS_OFFSET,
 		save_init_frame:bool=False,
 		save_end_frame:bool=False,
-		verbose=_C.VERBOSE,
+		verbose=VERBOSE,
 		):
 		self.video_duration = video_duration
 		self.is_dummy = is_dummy
@@ -77,14 +82,14 @@ class PlotAnimator():
 
 		save_filename = '.'.join(save_filedir.split('.')[:-1])
 		if self.save_init_frame:
-			save_fig(f'{save_filename}.first.{_C.AN_SAVE_IMAGE_FEXT}', imgs[0],
+			save_fig(f'{save_filename}.first.{AN_SAVE_IMAGE_FEXT}', imgs[0],
 				uses_close_fig=None,
 				verbose=self.verbose,
 				fig_is_img=True,
 				)
 
 		if self.save_end_frame:
-			save_fig(f'{save_filename}.last.{_C.AN_SAVE_IMAGE_FEXT}', imgs[-1],
+			save_fig(f'{save_filename}.last.{AN_SAVE_IMAGE_FEXT}', imgs[-1],
 				uses_close_fig=None,
 				verbose=self.verbose,
 				fig_is_img=True,

@@ -8,19 +8,19 @@ import itertools
 ###################################################################################################################################################
 
 def search_Iter(d:dict, aux_d:dict):
-	if isinstance(d, dict):
+	if type(d)==dict:
 		keys = list(d.keys())
 		for key in keys:
 			search_Iter(d[key], aux_d)
 
-	elif isinstance(d, GDIter):
+	elif type(d)==GDIter:
 		indexs = list(range(len(d.args)))
 		aux_d[id(d)] = indexs
 	else:
 		pass
 
 def create_new_dict(d:dict, id_indexs:list):
-	if isinstance(d, dict):
+	if type(d)==dict:
 		keys = list(d.keys())
 		new_dict = {}
 		for key in keys:
@@ -28,7 +28,7 @@ def create_new_dict(d:dict, id_indexs:list):
 			new_dict[key] = value
 		return new_dict
 
-	elif isinstance(d, GDIter):
+	elif type(d)==GDIter:
 		index = id_indexs[id(d)]
 		return d.args[index]
 
@@ -36,7 +36,7 @@ def create_new_dict(d:dict, id_indexs:list):
 		return d
 
 def decompose_dict_Iter(d:dict):
-	assert isinstance(d, dict)
+	assert type(d)==dict
 	
 	# search for GDIter objects
 	handler_dict = {}
@@ -98,18 +98,19 @@ class GridSeacher():
 		return txt
 
 	def __add__(self, other):
-		if other is None or other==0:
-			return self
-
 		if self is None or self==0:
 			return other
 
-		if type(self)==GridSeacher and type(other)==GridSeacher:
+		elif other is None or other==0:
+			return self
+
+		elif type(self)==GridSeacher and type(other)==GridSeacher:
 			gs = GridSeacher({})
 			gs.params_grid = self.params_grid+other.params_grid
 			return gs
 
-		assert 0
+		else:
+			raise Exception(f'{type(self)}; {type(other)}')
 
 	def __radd__(self, other):
 		return self+other

@@ -140,7 +140,7 @@ def plot_hist_labels(values_dict_raw:dict, classes_names:list,
 	data_dict = {}
 	for k,key in enumerate(legends): # the sets
 		values = values_dict[key]
-		populations_cdict = fstats.get_populations_cdict(values, classes_names)
+		populations_cdict = fstats.get_nof_samples_cdict(values, classes_names)
 		for c in populations_cdict.keys():
 			if not key in data_dict.keys():
 				data_dict[key] = {c:{}}

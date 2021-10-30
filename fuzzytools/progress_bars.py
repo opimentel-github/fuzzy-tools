@@ -13,6 +13,7 @@ BAR_FORMAT = '{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}, {rate_fmt}{postfix}]
 #'bar_format':'{l_bar}{bar}| {n_fmt}/{total_fmt} [{rate_fmt}{postfix}]',
 #'bar_format':'{l_bar}{bar}{r_bar}',
 #'bar_format':'{l_bar}{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}{postfix}]',
+BAR_FULL_MODE = '%(current)d/%(total)d %(bar)s %(percent)3d%% - %(remaining)d remaining - %(string)s'
 BAR_OUTPUT = sys.stderr # sys.stderr sys.stdout
 WIDTH = 30
 
@@ -21,7 +22,7 @@ WIDTH = 30
 class ProgressBarMulti():
 	def __init__(self, total:int, m:int,
 		width:int=WIDTH,
-		fmt=_C.BAR_FULL_MODE,
+		fmt=BAR_FULL_MODE,
 		output=BAR_OUTPUT,
 		):
 		self.bar_names = [k for k in range(m)]
@@ -48,7 +49,7 @@ class ProgressBarMultiColor():
 	def __init__(self, total:int, bar_names:list,
 		bar_colors:list=None,
 		width:int=WIDTH,
-		fmt=_C.BAR_FULL_MODE,
+		fmt=BAR_FULL_MODE,
 		output=BAR_OUTPUT,
 		):
 		self.in_ipynb = ipynb.in_ipynb()
@@ -93,7 +94,7 @@ class ProgressBarMultiColor():
 class ProgressBar():
 	def __init__(self, total:int,
 		width:int=WIDTH,
-		fmt=_C.BAR_FULL_MODE,
+		fmt=BAR_FULL_MODE,
 		output=BAR_OUTPUT,
 		position:int=0,
 		dynamic_ncols=False,

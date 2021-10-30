@@ -9,7 +9,7 @@ from nested_dict import nested_dict
 from . import labels as ds_labels
 from copy import copy, deepcopy
 
-EPS = _C.EPS
+EPS = 1e-10
 CHECK_DISTRIBUTION = False
 
 # https://stackoverflow.com/questions/53977031/precision-score-does-not-match-with-metrics-formula
@@ -115,20 +115,19 @@ class BinBatchCM():
 	def get_f1score(self):
 		return self.get_fscore(1)
 
-	def _get_bin_p(self):
-		p = self.pos_probability
-		y_true = self.y_true==self.pos_label
-		assert np.sum(y_true)<len(y_true), 'needs samples from both classes'
-		# print(p, y_true)
-		return p, y_true
+	def _get_pos_p(self):
+		pos_p = self.pos_probability
+		pos_y_true = self.y_true==self.pos_label
+		assert np.sum(pos_y_true)<len(pos_y_true), 'needs samples from both classes'
+		return pos_y_true, pos_p
 
 	def get_xentropy(self):
-		p, y_true = self._get_bin_p()
-		return np.mean(-1*np.log(p+EPS))
+		pos_y_true, pos_p = self._get_pos_p()
+		return np.mean(-1*np.log(pos_p+EPS))
 
 	def get_prc(self):
-		p, y_true = self._get_bin_p()
-		precision, recall, thresholds = skmetrics.precision_recall_curve(y_true, p)
+		pos_y_true, pos_p = self._get_pos_p()
+		precision, recall, thresholds = skmetrics.precision_recall_curve(pos_y_true, pos_p)
 		d = {
 			'recall':recall,
 			'precision':precision,
@@ -138,12 +137,13 @@ class BinBatchCM():
 		return d
 
 	def get_aucpr(self):
-		p, y_true = self._get_bin_p()
-		return skmetrics.average_precision_score(y_true, p, pos_label=1)
+		pos_y_true, pos_p = self._get_pos_p()
+		aucpr = skmetrics.average_precision_score(pos_y_true, pos_p, pos_label=1)
+		return aucpr
 
 	def get_rocc(self):
-		p, y_true = self._get_bin_p()
-		fpr, tpr, thresholds = skmetrics.roc_curve(y_true, p)
+		pos_y_true, pos_p = self._get_pos_p()
+		fpr, tpr, thresholds = skmetrics.roc_curve(pos_y_true, pos_p)
 		d = {
 			'fpr':fpr,
 			'tpr':tpr,
@@ -153,8 +153,9 @@ class BinBatchCM():
 		return d
 
 	def get_aucroc(self):
-		p, y_true = self._get_bin_p()
-		return skmetrics.roc_auc_score(self.y_true, p)
+		pos_y_true, pos_p = self._get_pos_p()
+		aucroc = skmetrics.roc_auc_score(pos_y_true, pos_p)
+		return aucroc
 
 ###################################################################################################################################################
 

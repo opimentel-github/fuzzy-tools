@@ -3,15 +3,20 @@ from __future__ import division
 from __future__ import annotations
 from . import _C
 
+from . import lists
 from nested_dict import nested_dict
 import copy
 
 ###################################################################################################################################################
 
-def update_dicts(d_list):
-	assert isinstance(d_list, list)
+def get_random_key(d:dict):
+	keys = list(d.keys())
+	key = lists.get_random_item(keys)
+	return key
+
+def update_dicts(*args):
 	d = {}
-	for _d in d_list:
+	for _d in args:
 		assert isinstance(_d, dict)
 		d.update(_d)
 	return d

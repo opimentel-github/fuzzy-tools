@@ -56,14 +56,6 @@ def get_sigma_clipping_indexing(x, dist_mean, dist_sigma, sigma_m:float,
 		valid_indexs &= x > dist_mean-dist_sigma*sigma_m # is valid if is in range
 	return valid_indexs
 
-def get_populations_cdict(labels, class_names):
-	uniques, counts = np.unique(labels, return_counts=True)
-	d = {}
-	for c in class_names:
-		v = counts[list(uniques).index(c)] if c in uniques else 0
-		d[c] = v
-	return d
-
 def get_random_stratified_keys(keys, keys_classes, class_names, nc,
 	random_seed=None,
 	):
@@ -82,44 +74,28 @@ def get_random_stratified_keys(keys, keys_classes, class_names, nc,
 		i +=1
 	return d
 
-def stratified_kfold_split(obj_names, obj_classes_, class_names, new_sets_props, kfolds,
-	random_state=0,
-	permute=False,
-	eps=_C.EPS,
-	):
-	sum_ = sum([new_sets_props[k] for k in new_sets_props.keys()])
-	assert abs(1-sum_)<=eps
-	assert len(new_sets_props.keys())>=2
-	
-	new_sets_props_len = len(new_sets_props.keys())
-	obj_names_len = len(obj_names)
-	obj_classes_d = {obj_name:obj_classes_[k] for k,obj_name in enumerate(obj_names)}
-	populations_cdict = get_populations_cdict(obj_classes_, class_names)
-	
-	_obj_names = obj_names.copy()
-	if permute:
-		random.seed(random_state)
-		random.shuffle(_obj_names) # permute
-	
-	obj_names_kdict = {}
-	for kf in range(kfolds):
-		obj_names_kf = [obj_name for obj_name in _obj_names]
-		shift_n = (obj_names_len//kfolds)*kf
-		obj_names_kf = obj_names_kf[shift_n:]+obj_names_kf[:shift_n] # shift list!!
-		#print(obj_names_kf)
-		
-		for ks,new_sets_prop_k in enumerate(new_sets_props.keys()):
-			obj_names_kdict[f'{kf}{_C.KFOLF_CHAR}{new_sets_prop_k}'] = []
-			
-			for kc,c in enumerate(class_names):
-				to_fill_pop = round(populations_cdict[c]*new_sets_props[new_sets_prop_k])
-				#print(kf, new_sets_prop_k, c, to_fill_pop)
-				obj_classes = np.array([obj_classes_d[obj_name] for obj_name in obj_names_kf])
-				valid_indexs = np.where(obj_classes==c)[0][:to_fill_pop] if ks<=new_sets_props_len-2 else np.where(obj_classes==c)[0]
-				#print(kf, new_sets_prop_k, c, valid_indexs, len(obj_names_kf))
-				obj_names_to_add = [obj_names_kf[valid_index] for valid_index in valid_indexs]
-				for obj_name_to_add in obj_names_to_add:
-					obj_names_kdict[f'{kf}{_C.KFOLF_CHAR}{new_sets_prop_k}'].append(obj_name_to_add)
-					obj_names_kf.pop(obj_names_kf.index(obj_name_to_add)) # remove from list
+###################################################################################################################################################
 
-	return obj_names_kdict
+def get_class_names(labels):
+	uniques = np.unique(labels)
+	return uniques
+
+def get_nof_samples_cdict(labels,
+	class_names=None,
+	):
+	uniques, counts = np.unique(labels, return_counts=True)
+	class_names = uniques if class_names is None else class_names
+	d = {}
+	for c in class_names:
+		v = counts[list(uniques).index(c)] if c in uniques else 0
+		d[c] = v
+	return d
+
+def get_samples_cdict(objs, labels,
+	class_names=None,
+	):
+	class_names = get_class_names(labels) if class_names is None else class_names
+	d = {c:[] for c in class_names}
+	for obj,label in zip(objs,labels):
+		d[label] += [obj]
+	return d

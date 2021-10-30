@@ -9,8 +9,8 @@ from ..strings import xstr
 import math
 
 N_DECIMALS = _C.N_DECIMALS
-PM_CHAR = _C.PM_CHAR
-INITIAL_PERCENTILES = [1,5,10,90,95,99]
+PM_CHAR = '±'
+INITIAL_PERCENTILES = [1, 5, 10, 90, 95, 99]
 
 ###################################################################################################################################################
 
@@ -51,7 +51,6 @@ class XError():
 		self.compute_statistics()
 
 	def compute_statistics(self):
-		#print('compute_statistics')
 		if not self.is_dummy():
 			self.percentiles = []
 			self.mean = self.get_mean()
@@ -64,13 +63,13 @@ class XError():
 	def is_dummy(self):
 		return len(self.x)==0
 
-	def size(self):
+	def get_size(self):
 		return self.shape
 
 	def is_1d(self):
 		return len(self.shape)==1
 
-	def item(self, idx):
+	def __getitem__(self, idx):
 		if self.is_dummy():
 			return None
 		elif self.is_1d():

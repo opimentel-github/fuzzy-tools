@@ -12,7 +12,17 @@ from nested_dict import nested_dict
 from .times import get_date_hour
 from shutil import copyfile
 
-KFOLF_CHAR = '@'
+KEY_KEY_SEP_CHAR = _C.KEY_KEY_SEP_CHAR
+KEY_VALUE_SEP_CHAR = _C.KEY_VALUE_SEP_CHAR
+KFOLF_CHAR = _C.KFOLF_CHAR
+FILEDIR = '_filedir' # ../../save/data.txt
+ROOTDIR = '_rootdir' # ../../save/
+FILENAME = '_filename' # data.txt
+CFILENAME = '_cfilename' # data
+FEXT = '_fext' # txt
+FILESIZE_FACTOR = 1e-6 # in mbs
+VERBOSE = 0
+IMBALANCED_KF_MODE = 'error' # error ignore oversampling 
 
 ###################################################################################################################################################
 
@@ -23,18 +33,18 @@ def path_exists(rootdir:str):
 	return os.path.isdir(rootdir)
 
 def get_filesize(filedir:str):
-	return os.path.getsize(filedir)*_C.FILESIZE_FACTOR if filedir_exists(filedir) else None # in mb
+	return os.path.getsize(filedir)*FILESIZE_FACTOR if filedir_exists(filedir) else None # in mb
 
 ###################################################################################################################################################
 
 def delete_filedirs(filedirs:list,
-	verbose=_C.VERBOSE,
+	verbose=VERBOSE,
 	):
 	all_success = sum([delete_filedir(filedir, verbose) for filedir in filedirs])>0
 	return all_success
 
 def delete_filedir(filedir:str,
-	verbose=_C.VERBOSE,
+	verbose=VERBOSE,
 	):
 	success = False
 	if not filedir is None:
@@ -56,7 +66,7 @@ def copy_filedir(src_filedir, dst_filedir):
 
 def create_dir(new_dir:str,
 	iterative:bool=True,
-	verbose:int=_C.VERBOSE,
+	verbose:int=VERBOSE,
 	):
 	if path_exists(new_dir):
 		return
@@ -72,7 +82,7 @@ def create_dir(new_dir:str,
 
 
 def create_dir_individual(new_dir:str,
-	verbose:int=_C.VERBOSE,
+	verbose:int=VERBOSE,
 	):
 	if path_exists(new_dir):
 		return
@@ -82,7 +92,7 @@ def create_dir_individual(new_dir:str,
 	os.mkdir(new_dir)
 		
 def create_dir_iterative(new_dir:str,
-	verbose:int=_C.VERBOSE,
+	verbose:int=VERBOSE,
 	):
 	if path_exists(new_dir):
 		return
@@ -96,7 +106,7 @@ def create_dir_iterative(new_dir:str,
 ###################################################################################################################################################
 
 def save_pickle(filedir:str, file:object,
-	verbose=_C.VERBOSE,
+	verbose=VERBOSE,
 	):
 	'''
 	Parameters
@@ -115,7 +125,7 @@ def save_pickle(filedir:str, file:object,
 	
 def load_pickle(filedir:str,
 	return_none_if_missing=False,
-	verbose=_C.VERBOSE,
+	verbose=VERBOSE,
 	):
 	'''
 	Parameters
@@ -164,18 +174,18 @@ def save_time_stamp(rootdir,
 ###################################################################################################################################################
 
 def get_dict_from_filedir(filedir:str,
-	key_key_separator:str=_C.KEY_KEY_SEP_CHAR,
-	key_value_separator:str=_C.KEY_VALUE_SEP_CHAR,
+	key_key_separator:str=KEY_KEY_SEP_CHAR,
+	key_value_separator:str=KEY_VALUE_SEP_CHAR,
 	):
 	splits = filedir.split('/')
 	ret_dict = {
-		_C.FILEDIR:filedir,
-		_C.ROOTDIR:'/'.join(splits[:-1]),
-		_C.FILENAME:'.'.join(splits[-1].split('.')),
-		_C.CFILENAME:'.'.join(splits[-1].split('.')[:-1]),
-		_C.FEXT:splits[-1].split('.')[-1],
+		FILEDIR:filedir,
+		ROOTDIR:'/'.join(splits[:-1]),
+		FILENAME:'.'.join(splits[-1].split('.')),
+		CFILENAME:'.'.join(splits[-1].split('.')[:-1]),
+		FEXT:splits[-1].split('.')[-1],
 	}
-	ret_dict.update(strings.get_dict_from_string(ret_dict[_C.CFILENAME],
+	ret_dict.update(strings.get_dict_from_string(ret_dict[CFILENAME],
 		key_key_separator,
 		key_value_separator,
 	))
@@ -185,7 +195,7 @@ def search_for_filedirs(rootdir:str,
 	string_query:list=[''],
 	string_filter:list=[],
 	fext:str=None,
-	verbose:int=_C.VERBOSE,
+	verbose:int=VERBOSE,
 	sort:bool=False,
 	):
 	'''
@@ -204,31 +214,29 @@ def search_for_filedirs(rootdir:str,
 	----------
 	filesret (list[srt]): list of filedirs that meet the conditions
 	'''
-	PrintC = prints.ShowPrints if verbose>0 else prints.HiddenPrints
-	with PrintC():
-		prints.print_bar()
-		filedirs = get_filedirs(rootdir, fext=fext)
-		print(f'found filedirs: ({rootdir})')
-		for k,filedir in enumerate(filedirs):
-			filesize = get_filesize(filedir)
-			print(f'({k}) - {filedir} - {filesize:.3f}[mbs]')
-				
-		if sort:
-			filedirs.sort(key=str.lower)
+	prints.print_bar()
+	filedirs = get_filedirs(rootdir, fext=fext)
+	print(f'found filedirs: ({rootdir})')
+	for k,filedir in enumerate(filedirs):
+		filesize = get_filesize(filedir)
+		print(f'({k}) - {filedir} - {filesize:.3f}[mbs]')
+			
+	if sort:
+		filedirs.sort(key=str.lower)
 
-		filedirs_res = []
-		for filedir in filedirs:
-			filedict = get_dict_from_filedir(filedir)
-			cfilename = filedict[_C.CFILENAME]
-			if strings.query_strings_in_string(string_query, cfilename) and not strings.query_strings_in_string(string_filter, cfilename):
-				filedirs_res.append(filedir)
+	filedirs_res = []
+	for filedir in filedirs:
+		filedict = get_dict_from_filedir(filedir)
+		cfilename = filedict[CFILENAME]
+		if strings.query_strings_in_string(string_query, cfilename) and not strings.query_strings_in_string(string_filter, cfilename):
+			filedirs_res.append(filedir)
 
-		prints.print_bar()
-		print(f'filedirs after searching with filters: ({rootdir})')
-		for k,filedir in enumerate(filedirs_res):
-			filesize = get_filesize(filedir)
-			print(f'({k}) - {filedir} - {filesize:.3f}[mbs]')
-		prints.print_bar()
+	prints.print_bar()
+	print(f'filedirs after searching with filters: ({rootdir})')
+	for k,filedir in enumerate(filedirs_res):
+		filesize = get_filesize(filedir)
+		print(f'({k}) - {filedir} - {filesize:.3f}[mbs]')
+	prints.print_bar()
 	return filedirs_res
 
 def get_filedirs(rootdir:str,
@@ -265,7 +273,7 @@ def get_roodirs(rootdir):
 			roodirs += [root]
 	return roodirs
 
-def get_filedir_count(filedir:str,
+def get_nof_filedirs(filedir:str,
 	fext:str=None,
 	):
 	'''
@@ -273,8 +281,8 @@ def get_filedir_count(filedir:str,
 	'''
 	return len(get_filedirs(filedir, fext=fext))
 
-def print_all_filedirs(filedir:str='.'):
-	print(f'total files in {filedir}: {get_filedir_count(filedir)}')
+def print_all_filedirs(filedir):
+	print(f'total files in {filedir}: {get_nof_filedirs(filedir)}')
 	for root, dirs, files in os.walk(filedir):
 		level = root.replace(filedir, '').count(os.sep)
 		indent = ' ' * 4 * (level)+'> '
@@ -298,8 +306,9 @@ def get_newest_filedir(filedirs,
 		dates = [getctime(f) for f in filedirs]
 	elif mode=='m':
 		dates = [getmtime(f) for f in filedirs]
+	else:
+		raise Exception(f'{mode}')
 	max_date = max(dates)
-	#print(filedirs,dates,max_date)
 	filedir = filedirs[dates.index(max_date)]
 	return filedir
 
@@ -308,7 +317,7 @@ def get_newest_filedir(filedirs,
 class PFile(object):
 	def __init__(self, filedir,
 		file=None,
-		verbose=_C.VERBOSE,
+		verbose=VERBOSE,
 		):
 		self.set_filedir(filedir)
 		self.set_file(file)
@@ -406,8 +415,8 @@ def gather_files(rootdir,
 
 def gather_files_by_id(rootdir,
 	id_key='id',
-	key_key_separator:str=_C.KEY_KEY_SEP_CHAR,
-	key_value_separator:str=_C.KEY_VALUE_SEP_CHAR,
+	key_key_separator:str=KEY_KEY_SEP_CHAR,
+	key_value_separator:str=KEY_VALUE_SEP_CHAR,
 	fext:str=None,
 	):
 	if id_key is None:
@@ -447,11 +456,11 @@ def get_kfold_rootdirs_dict(rootdir,
 
 def gather_files_by_kfold(rootdir, _kf, kf_set,
 	id_key=None,
-	key_key_separator:str=_C.KEY_KEY_SEP_CHAR,
-	key_value_separator:str=_C.KEY_VALUE_SEP_CHAR,
+	key_key_separator:str=KEY_KEY_SEP_CHAR,
+	key_value_separator:str=KEY_VALUE_SEP_CHAR,
 	fext:str=None,
 	kf_str=KFOLF_CHAR,
-	disbalanced_kf_mode='error', # error ignore oversampling
+	imbalanced_kf_mode=IMBALANCED_KF_MODE,
 	random_state=None,
 	kfs=None,
 	returns_all_kf_files=False,
@@ -459,13 +468,12 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 	'''
 	format must be .../kf@kf_set/files
 
-	disbalanced_kf_mode is used just in case a k-fold iteration is missing and there is an imbalance on files (mostly for debuggin while results are still iterating)
+	imbalanced_kf_mode is used just in case a k-fold iteration is missing and there is an imbalance on files (mostly for debuggin while results are still iterating)
 	the normal case is when all k-fold has the same amount of files!
 	'''
 	kfold_rootdirs_dict = get_kfold_rootdirs_dict(rootdir,
 		kf_str,
 	)
-
 	### gather files from all kf values
 	kf = str(_kf)
 	if kf=='.':
@@ -485,14 +493,14 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 			all_kf_files_ids[_kf] = [f'{_kf}{kf_str}{_fid}' for _fid in _files_ids]
 
 		# print(all_kf_files); print(all_kf_files_ids)
-		if disbalanced_kf_mode=='error':
+		if imbalanced_kf_mode=='error':
 			for _kf in kfs:
 				assert len(all_kf_files[_kf])==[kfs[0]], f'not equal size of kf files in all kf values {[len(all_kf_files[_kf]) for _kf in kfs]}'
 
-		elif disbalanced_kf_mode=='ignore':
+		elif imbalanced_kf_mode=='ignore':
 			pass
 
-		elif disbalanced_kf_mode=='oversampling':
+		elif imbalanced_kf_mode=='oversampling':
 			max_len = max([len(all_kf_files[_kf]) for _kf in kfs])
 			for _kf in kfs:
 				_len = len(all_kf_files[_kf])
@@ -504,7 +512,7 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 				all_kf_files[_kf] += [all_kf_files[_kf][idx] for idx in new_idxs]
 				all_kf_files_ids[_kf] += [all_kf_files_ids[_kf][idx] for idx in new_idxs]
 		else:
-			raise Exception(f'invalid disbalanced_kf_mode={disbalanced_kf_mode}')
+			raise Exception(f'{imbalanced_kf_mode}')
 
 		# print(all_kf_files); print(all_kf_files_ids)
 		files = []

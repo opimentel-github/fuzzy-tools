@@ -5,9 +5,9 @@ from . import _C
 import os
 from .lists import split_list_in_batches
 
-M = 5
-N_PROCESS = None
 BACKEND = 'multiprocessing' # loky multiprocessing threading
+N_PROCESS = None
+M = 5
 
 # https://medium.com/contentsquare-engineering-blog/multithreading-vs-multiprocessing-in-python-ece023ad55a
 ###################################################################################################################################################

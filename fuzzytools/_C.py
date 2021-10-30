@@ -3,35 +3,28 @@ import numpy as np
 
 ###################################################################################################################################################
 
-BAR_FULL_MODE = '%(current)d/%(total)d %(bar)s %(percent)3d%% - %(remaining)d remaining - %(string)s'
-
-FILEDIR = '_filedir' # ../../save/data.txt
-ROOTDIR = '_rootdir' # ../../save/
-FILENAME = '_filename' # data.txt
-CFILENAME = '_cfilename' # data
-FEXT = '_fext' # txt
-
-KFOLF_CHAR = '@'
-
-FILESIZE_FACTOR = 1e-6 # in mbs
-
-KEY_KEY_SEP_CHAR = '~'
-KEY_VALUE_SEP_CHAR = '='
-
-VERBOSE = 0
-
-BAR_SIZE = None # for auto width
+EPS = 1e-5
+NAN_VALUE = -999
+N_DECIMALS = 3
+BAR_SIZE = None
 JUPYTER_NOTEBOOK_BAR_SIZE = 100
-BAR_LAST_CHAR = '>'
+
+###################################################################################################################################################
+
+ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
 MIDDLE_LINE_CHAR = '─'
+BAR_LAST_CHAR = '>'
 BOT_SQUARE_CHAR ='▄'
 TOP_SQUARE_CHAR = '▀'
 BAR_CHAR= '-'
 DOBLE_BAR_CHAR = '═'
-NAN_CHAR = '─'
-PM_CHAR = '±'
+KFOLF_CHAR = '@'
+KEY_KEY_SEP_CHAR = '~'
+KEY_VALUE_SEP_CHAR = '='
 
-DELTA_LATEXCHAR = '$\Delta$'
+###################################################################################################################################################
+
+
 
 ###################################################################################################################################################
 ### matplotlib
@@ -46,17 +39,12 @@ DPI = 200
 
 AN_LOAD_IMAGE_FEXT = 'jpg'
 AN_SAVE_IMAGE_FEXT = 'png'
-AN_SEGS_OFFSET = 1
-
-SAMPLES_TEXT = 'N'
 
 ###################################################################################################################################################
 ### datascience
 
-NAN_VALUE = -999
-EPS = 1e-5
+
+
 CM_FORMAT = np.uint32
 STD_LATEXCHAR = '$\sigma$'
 SERROR_LATEXCHAR = '$SE$'
-N_DECIMALS = 3
-REMOVE_ZERO = True

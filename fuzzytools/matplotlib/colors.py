@@ -70,26 +70,38 @@ def colorlist_to_cycled_colorlist(colorlist:list, n:int=None):
 		new_colorlist = [next(cycler) for _ in range(n)]
 	return [hextofloats(c) for c in new_colorlist]
 
-def colorlist_to_cmap(colorlist:list, name:str='default'):
+def colorlist_to_cmap(colorlist:list,
+	name='default',
+	):
 	cmap = mpl.colors.ListedColormap(colorlist, name=name)
 	return cmap
 
-def hextofloats(_hex:str, decimals:int=4):
+def hextofloats(_hex:str,
+	decimals:int=4,
+	):
 	assert type(_hex)==str
 	assert _hex[0]=='#'
 	c = [round(int(_hex[i:i + 2], 16) / 255., decimals) for i in (1, 3, 5)]
 	return tuple(c)
 
-def get_colorlist(colorlist_name, n:int=None):
+def get_colorlist(colorlist_name,
+	n:int=None,
+	):
 	return colorlist_to_cycled_colorlist(COLORS_DICT[colorlist_name], n)
 
-def colors(n:int=None):
+def colors(
+	n:int=None,
+	):
 	return get_default_colorlist(n)
 	
-def get_default_colorlist(n:int=None):
+def get_default_colorlist(
+	n:int=None,
+	):
 	return colorlist_to_cycled_colorlist(COLORS_DICT[DEFAULT_CMAP], n)
 
-def get_nice_colorlist(n:int=None):
+def get_nice_colorlist(
+	n:int=None,
+	):
 	return colorlist_to_cycled_colorlist([NICE_COLORS_DICT[k] for k in NICE_COLORS_DIC.keys()], n)
 
 def get_cmap(colorlist:list,
@@ -98,7 +110,9 @@ def get_cmap(colorlist:list,
 	cmap = mpl.colors.ListedColormap(colorlist, name=cmap_name)
 	return cmap
 
-def get_default_cmap(n:int=None):
+def get_default_cmap(
+	n:int=None,
+	):
 	colorlist = get_default_colorlist(n)
 	return get_cmap(colorlist, 'default_cpc_cmap')
 
@@ -109,7 +123,7 @@ def palplot(cmap):
 	n = len(cmap.colors)
 	img = np.linspace(0, 1, n)[None,:]
 	
-	fig, ax = plt.subplots(1,1,figsize=(10,1))
+	fig, ax = plt.subplots(1, 1, figsize=(10,1))
 	ax.axis('off')
 	ax.set_title(f'{cmap.name} - n: {n}')
 	ax.imshow(img, cmap=cmap)

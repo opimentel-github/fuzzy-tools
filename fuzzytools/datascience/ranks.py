@@ -6,12 +6,14 @@ import numpy as np
 from ..strings import xstr
 from ..dataframes import DFBuilder
 
+N = 10
+
 ###################################################################################################################################################
 
 class TopRank():
 	def __init__(self,
 		name='???',
-		n=10,
+		n=N,
 		uses_info=True,
 		):
 		self.name = name
