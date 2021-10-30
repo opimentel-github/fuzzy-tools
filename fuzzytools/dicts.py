@@ -14,9 +14,9 @@ def get_random_key(d:dict):
 	key = lists.get_random_item(keys)
 	return key
 
-def update_dicts(*args):
+def update_dicts(dicts):
 	d = {}
-	for _d in args:
+	for _d in dicts:
 		assert isinstance(_d, dict)
 		d.update(_d)
 	return d

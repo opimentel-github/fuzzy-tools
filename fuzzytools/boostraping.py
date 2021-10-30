@@ -8,11 +8,13 @@ from copy import copy, deepcopy
 import random
 import numpy as np
 
+BATCH_PROP = 1
+
 ###################################################################################################################################################
 
 class BalancedCyclicBoostraping():
 	def __init__(self, l_objs, l_classes,
-		batch_prop=1,
+		batch_prop=BATCH_PROP,
 		uses_shuffle=True,
 		uses_counter=False,
 		samples_per_class=None,
@@ -62,7 +64,7 @@ class BalancedCyclicBoostraping():
 	def __len__(self):
 		return self.get_nof_classes()*self.samples_per_class
 
-	def get_n(self):
+	def get_samples_per_class(self):
 		return self.samples_per_class
 
 	def __repr__(self):
