@@ -9,7 +9,7 @@ from ..strings import xstr
 import math
 
 N_DECIMALS = _C.N_DECIMALS
-PM_CHAR = '±'
+PM_CHAR = _C.PM_CHAR
 INITIAL_PERCENTILES = [1, 5, 10, 90, 95, 99]
 
 ###################################################################################################################################################
