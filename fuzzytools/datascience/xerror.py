@@ -70,7 +70,7 @@ class XError():
 	def is_1d(self):
 		return len(self.shape)==1
 
-	def get_rawrepr(self,
+	def get_raw_repr(self,
 		name='x',
 		):
 		return strings.get_raw_numpy_repr(self._x, name=name)

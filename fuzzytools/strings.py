@@ -27,7 +27,14 @@ NAN_CHAR = _C.NAN_CHAR
 def get_raw_numpy_repr(x,
 	name='x',
 	):
-	txt = f'{name} = {x.tolist()}'
+	if type(x)==np.ndarray:
+		txt = f'{name} = {x.tolist()}'
+
+	elif type(x)==list:
+		txt = f'{name} = {x}'
+		
+	else:
+		raise Exception(f'{type(x)}')
 	return txt
 
 def get_string_from_dict(d:str,
