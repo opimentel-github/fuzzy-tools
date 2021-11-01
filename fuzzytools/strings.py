@@ -27,10 +27,7 @@ NAN_CHAR = _C.NAN_CHAR
 def get_raw_numpy_repr(x,
 	name='x',
 	):
-	if type(x)==np.ndarray:
-		txt = f'{name} = {x.tolist()}'
-	else:
-		raise Exception(f'{type(x)}')
+	txt = f'{name} = {x.tolist()}'
 	return txt
 
 def get_string_from_dict(d:str,
@@ -72,7 +69,7 @@ def string_replacement(string:str, replace_dict:dict):
 	----------
 	new_string (str): the new string
 	'''
-	assert isinstance(replace_dict, dict)
+	assert type(replace_dict)==dict
 	new_string = copy(string)
 	for key in replace_dict:
 		new_string = new_string.replace(key,replace_dict[key])
@@ -84,8 +81,8 @@ def query_strings_in_string(query_strings:list, string:str,
 	'''
 	Search if at least one query_string is in a string
 	'''
-	assert isinstance(query_strings, list)
-	assert isinstance(string, str)
+	assert type(query_strings)==list
+	assert type(string)==str
 	values = [int(i in string) for i in query_strings]
 	if mode=='or':
 		return sum(values)>0
@@ -137,7 +134,7 @@ def xstr(x,
 		return pchar+_format_int(x) # int
 	elif type(x)==float:
 		return pchar+_format_float(x, n_decimals, remove_zero) # float
-	elif type(x)==np.ndarray:
+	elif isinstance(x, np.ndarray):
 		t = str(x.dtype)
 		if 'int' in t:
 			return pchar+_format_int(x) # int
