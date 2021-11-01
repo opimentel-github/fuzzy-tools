@@ -73,7 +73,7 @@ class XError():
 	def get_raw_repr(self,
 		name='x',
 		):
-		return strings.get_raw_numpy_repr(self._x, name=name)
+		return strings.get_raw_numpy_repr(self.x, name=name)
 
 	# def __getitem__(self, idx):
 	# 	# avoid this if you want dataframe repr working!

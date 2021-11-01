@@ -29,10 +29,6 @@ def get_raw_numpy_repr(x,
 	):
 	if type(x)==np.ndarray:
 		txt = f'{name} = {x.tolist()}'
-
-	elif type(x)==list:
-		txt = f'{name} = {x}'
-		
 	else:
 		raise Exception(f'{type(x)}')
 	return txt
@@ -135,22 +131,20 @@ def xstr(x,
 	pchar = '+' if add_pos and x>0 else ''
 	if x is None:
 		return NAN_CHAR
-	if isinstance(x, str):
+	elif type(x)==str:
 		return x
-	if isinstance(x, int):
+	elif type(x)==int:
 		return pchar+_format_int(x) # int
-	if isinstance(x, float):
+	elif type(x)==float:
 		return pchar+_format_float(x, n_decimals, remove_zero) # float
-
-	### numpy
-	if isinstance(x, np.ndarray):
+	elif type(x)==np.ndarray:
 		t = str(x.dtype)
 		if 'int' in t:
 			return pchar+_format_int(x) # int
 		if 'float' in t:
 			return pchar+_format_float(x, n_decimals, remove_zero) # float
-
-	raise Exception(f'{type(x)}')
+	else:
+		raise Exception(f'{type(x)}')
 
 ###################################################################################################################################################
 
