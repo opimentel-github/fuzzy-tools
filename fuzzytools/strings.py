@@ -134,12 +134,10 @@ def xstr(x,
 		return pchar+_format_int(x) # int
 	elif type(x)==float:
 		return pchar+_format_float(x, n_decimals, remove_zero) # float
-	elif isinstance(x, np.ndarray):
-		t = str(x.dtype)
-		if 'int' in t:
-			return pchar+_format_int(x) # int
-		if 'float' in t:
-			return pchar+_format_float(x, n_decimals, remove_zero) # float
+	elif type(x)==np.int64:
+		return pchar+_format_int(x) # int
+	elif type(x)==np.float64:
+		return pchar+_format_float(x, n_decimals, remove_zero) # float
 	else:
 		raise Exception(f'{type(x)}')
 
