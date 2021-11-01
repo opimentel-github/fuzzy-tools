@@ -71,6 +71,12 @@ class ConfusionMatrix():
 				stds[i,j] = self.get_values()[i,j].get_std()
 		return stds
 
+	def get_diagonal_dict(self):
+		d = {}
+		for kc,c in enumerate(self.get_class_names()):
+			d[c] = self.get_values()[kc,kc]
+		return d
+
 	def get_values(self):
 		return self.cm_df.values
 

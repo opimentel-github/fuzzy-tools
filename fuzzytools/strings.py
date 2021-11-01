@@ -24,6 +24,12 @@ NAN_CHAR = _C.NAN_CHAR
 
 ###################################################################################################################################################
 
+def get_raw_numpy_repr(x,
+	name='x',
+	):
+	txt = f'{name} = {x.tolist()}'
+	return txt
+
 def get_string_from_dict(d:str,
 	key_key_separator:str=KEY_KEY_SEP_CHAR,
 	key_value_separator:str=KEY_VALUE_SEP_CHAR,

@@ -5,7 +5,7 @@ from . import _C
 import numpy as np
 import math
 from copy import copy, deepcopy
-from ..strings import xstr
+from .. import strings
 import math
 
 N_DECIMALS = _C.N_DECIMALS
@@ -15,10 +15,10 @@ INITIAL_PERCENTILES = [1, 5, 10, 90, 95, 99]
 ###################################################################################################################################################
 
 def mean_std_repr(mean, std, n_decimals):
-	mean_txt = xstr(mean,
+	mean_txt = strings.xstr(mean,
 		n_decimals=n_decimals,
 		)
-	std_txt = xstr(std,
+	std_txt = strings.xstr(std,
 		n_decimals=n_decimals,
 		)
 	txt = f'{mean_txt}{PM_CHAR}{std_txt}'
@@ -69,6 +69,11 @@ class XError():
 
 	def is_1d(self):
 		return len(self.shape)==1
+
+	def get_rawrepr(self,
+		name='x',
+		):
+		return strings.get_raw_numpy_repr(self._x, name=name)
 
 	# def __getitem__(self, idx):
 	# 	# avoid this if you want dataframe repr working!
@@ -128,7 +133,7 @@ class XError():
 
 	def __repr__(self):
 		if self.is_dummy():
-			return f'{xstr(None)}'
+			return f'{strings.xstr(None)}'
 		else:
 			txt = mean_std_repr(self.get_mean(), self.get_std(), self.n_decimals) if self.repr_pm else ''
 			return txt
