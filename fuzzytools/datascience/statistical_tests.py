@@ -74,11 +74,13 @@ def _normalitytest(x,
 
 def _permutation_test(x1, x2,
 	alternative=ALTERNATIVE,
+	num_rounds=NUM_ROUNDS,
+	random_state=RANDOM_STATE,
 	):
 	pvalue = permutation_test(x1, x2,
 		method='approximate',
-		num_rounds=int(NUM_ROUNDS),
-		seed=RANDOM_STATE,
+		num_rounds=int(num_rounds),
+		seed=random_state,
 		)
 	if alternative=='two-sided':
 		pvalue = pvalue
@@ -132,7 +134,8 @@ def welchtest(x1, x2,
 
 def permutationtest(x1, x2,
 	alternative=ALTERNATIVE,
-	shapiro_th_pvalue=SHAPIRO_TH_PVALUE,
+	num_rounds=NUM_ROUNDS,
+	random_state=RANDOM_STATE,
 	):
 	pvalue = None
 	if type(x1)==XError and type(x2)==XError:
@@ -142,6 +145,8 @@ def permutationtest(x1, x2,
 		x2 = x2._x
 		pvalue = _permutation_test(x1, x2,
 			alternative=alternative,
+			num_rounds=num_rounds,
+			random_state=random_state,
 			)
 
 	else:
@@ -155,6 +160,7 @@ def gridtest_greater(values_dict, test,
 	shapiro_th_pvalue=SHAPIRO_TH_PVALUE,
 	include_pvalue_txt=INCLUDE_PVALUE_TXT,
 	n_decimals=N_DECIMALS,
+	test_kwargs={}
 	):
 	print(get_pvalue_symbols())
 	df_builder = DFBuilder()
@@ -164,7 +170,7 @@ def gridtest_greater(values_dict, test,
 		for key2 in values_dict.keys():
 			x2 = values_dict[key2]
 			pvalue, mean_diff = greatertest(x1, x2, test,
-				shapiro_th_pvalue=shapiro_th_pvalue,
+				test_kwargs=test_kwargs,
 				)
 			pvalue_txt = format_pvalue(pvalue, mean_diff,
 				include_pvalue_txt=include_pvalue_txt,
@@ -175,7 +181,7 @@ def gridtest_greater(values_dict, test,
 	return df_builder.get_df()
 
 def greatertest(x1, x2, test,
-	shapiro_th_pvalue=SHAPIRO_TH_PVALUE,
+	test_kwargs={},
 	):
 	'''
 	check if mean(x1)>mean(x2) with statistical significance
@@ -185,6 +191,6 @@ def greatertest(x1, x2, test,
 		return None, None
 	pvalue = test(x1, x2,
 		alternative='greater',
-		shapiro_th_pvalue=shapiro_th_pvalue,
+		**test_kwargs,
 		)
 	return pvalue, mean_diff

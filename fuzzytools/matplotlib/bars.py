@@ -11,7 +11,7 @@ UPPER_PERCENTILE = 95
 
 ###################################################################################################################################################
 
-def plot_norm_percentile_bar(ax, _x, _y, std,
+def plot_std_percentile_bar(ax, _x, _y, std,
 	upper_percentile=UPPER_PERCENTILE,
 	color='k',
 	alpha=1,

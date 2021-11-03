@@ -423,21 +423,21 @@ def gather_files_by_id(rootdir,
 		files = gather_files(rootdir,
 			fext,
 			)
-		files_ids = [f.cfilename for f in files]
-		return files, files_ids
+		file_ids = [f.cfilename for f in files]
+		return files, file_ids
 
 	else:
 		filedirs = get_filedirs(rootdir, fext=fext)
 		files = []
-		files_ids = []
+		file_ids = []
 		for filedir in filedirs:
 			filedict = get_dict_from_filedir(filedir,
 				key_key_separator,
 				key_value_separator,
 				)
 			files += [PFile(filedir)]
-			files_ids += [filedict[id_key]]
-		return files, files_ids
+			file_ids += [filedict[id_key]]
+		return files, file_ids
 
 def get_kfold_rootdirs_dict(rootdir,
 	kf_str=KFOLF_CHAR,
@@ -478,11 +478,11 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 	kf = str(_kf)
 	if kf=='.':
 		all_kf_files = {}
-		all_kf_files_ids = {}
+		all_kf_file_ids = {}
 		kfs = list(kfold_rootdirs_dict[kf_set].keys()) if kfs is None else kfs
 		for _kf in kfs:
 			kfrd = kfold_rootdirs_dict[kf_set][_kf]
-			_files, _files_ids = gather_files_by_id(kfrd,
+			_files, _file_ids = gather_files_by_id(kfrd,
 				id_key,
 				key_key_separator,
 				key_value_separator,
@@ -490,9 +490,9 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 				)
 			assert len(_files)>0, f'no files for kf={_kf}'
 			all_kf_files[_kf] = _files
-			all_kf_files_ids[_kf] = [f'{_kf}{kf_str}{_fid}' for _fid in _files_ids]
+			all_kf_file_ids[_kf] = [f'{_kf}{kf_str}{_fid}' for _fid in _file_ids]
 
-		# print(all_kf_files); print(all_kf_files_ids)
+		# print(all_kf_files); print(all_kf_file_ids)
 		if imbalanced_kf_mode=='error':
 			for _kf in kfs:
 				assert len(all_kf_files[_kf])==[kfs[0]], f'not equal size of kf files in all kf values {[len(all_kf_files[_kf]) for _kf in kfs]}'
@@ -510,21 +510,21 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 					random_state=random_state,
 					)
 				all_kf_files[_kf] += [all_kf_files[_kf][idx] for idx in new_idxs]
-				all_kf_files_ids[_kf] += [all_kf_files_ids[_kf][idx] for idx in new_idxs]
+				all_kf_file_ids[_kf] += [all_kf_file_ids[_kf][idx] for idx in new_idxs]
 		else:
 			raise Exception(f'{imbalanced_kf_mode}')
 
-		# print(all_kf_files); print(all_kf_files_ids)
+		# print(all_kf_files); print(all_kf_file_ids)
 		files = []
-		files_ids = []
+		file_ids = []
 		for _kf in kfs:
 			files += all_kf_files[_kf]
-			files_ids += all_kf_files_ids[_kf]
+			file_ids += all_kf_file_ids[_kf]
 
 		if returns_all_kf_files:
-			return files, files_ids, kfs, all_kf_files
+			return files, file_ids, kfs, all_kf_files
 		else:
-			return files, files_ids, kfs
+			return files, file_ids, kfs
 
 	### gather files from an specific kf value
 	else:
@@ -534,10 +534,10 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 		if not kf in kfold_rootdirs_dict_set.keys():
 			return [], []
 		kfrd = kfold_rootdirs_dict_set[str(kf)]
-		files, files_ids = gather_files_by_id(kfrd,
+		files, file_ids = gather_files_by_id(kfrd,
 			id_key,
 			key_key_separator,
 			key_value_separator,
 			fext,
 			)
-		return files, files_ids, [kf]
+		return files, file_ids, [kf]

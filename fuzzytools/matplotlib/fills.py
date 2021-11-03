@@ -27,10 +27,10 @@ def fill_beetween_percentile(ax, xs, ys,
 	interp_n=INTERP_N,
 	interp_kind=INTERP_KIND,
 	plot_median=True,
-	fill_args=[],
-	fill_kwargs={},
 	median_args=[],
 	median_kwargs={},
+	fill_args=[],
+	fill_kwargs={},
 	returns_extras=False,
 	):
 	assert percentile is None or (percentile>=0 and percentile<=100)
