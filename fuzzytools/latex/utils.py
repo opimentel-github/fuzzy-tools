@@ -23,8 +23,11 @@ def get_slash():
 def get_dslash():
 	return '\\\\'
 
-def get_hline():
-	return get_slash()+'hline'
+def get_hline(n):
+	if n is None:
+		return get_slash()+'hline'
+	else:
+		return get_slash()+'hlineB{'+str(n)+'}'
 
 def get_rule(a, b):
 	return get_slash()+'rule{0pt}{'+str(a)+'ex}'+get_slash()+'rule[-'+str(b)+'ex]{0pt}{0ex}'

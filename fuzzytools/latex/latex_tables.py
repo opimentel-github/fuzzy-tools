@@ -14,6 +14,7 @@ KEY_KEY_SEP_CHAR = _C.KEY_KEY_SEP_CHAR
 KEY_VALUE_SEP_CHAR = _C.KEY_VALUE_SEP_CHAR
 NAN_CHAR = _C.NAN_CHAR
 PM_CHAR = _C.PM_CHAR
+HLINE_N = 4
 
 ###################################################################################################################################################
 
@@ -141,7 +142,7 @@ class SubLatexTable():
 			txt += sub_txt
 			if not self.hline_k is None:
 				if hline_c>=self.hline_k and k<len(self.row_colors)-1:
-					txt += utils.get_hline()+'\n'
+					txt += utils.get_hline(HLINE_N)+'\n'
 					hline_c = 0
 				else:
 					hline_c += 1
@@ -241,10 +242,10 @@ class LatexTable():
 		return txt[:-1]
 
 	def get_top_txt(self):
-		txt = utils.get_hline()+'\n'
+		txt = utils.get_hline(HLINE_N)+'\n'
 		txt += ' & '.join([f'{c}' for c in self.new_model_attrs+self.results_columns])+f' {utils.get_slash()}srule{utils.get_dslash()}'+'\n'
-		# txt += f'{utils.get_hline()+utils.get_hline()}'+'\n'
-		txt += '\\hlineB{4}'+'\n'
+		# txt += f'{utils.get_hline(HLINE_N)+utils.get_hline(HLINE_N)}'+'\n'
+		txt += utils.get_hline(HLINE_N)+'\n'
 		return txt[:-1]
 
 	def __repr__(self):
@@ -253,7 +254,7 @@ class LatexTable():
 		txt += self.get_top_txt()+'\n'
 		for sub_latex_table in self.sub_latex_tables:
 			txt += str(sub_latex_table)
-			txt += utils.get_hline()+'\n'
+			txt += utils.get_hline(HLINE_N)+'\n'
 
 		txt += self.get_end_txt()+'\n'
 		txt = txt.replace(PM_CHAR, f'${utils.get_slash()}pm$')
