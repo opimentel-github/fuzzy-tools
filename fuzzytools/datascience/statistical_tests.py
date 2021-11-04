@@ -187,7 +187,7 @@ def greatertest(x1, x2, test,
 	check if mean(x1)>mean(x2) with statistical significance
 	'''
 	mean_diff = x1.get_mean()-x2.get_mean()
-	if mean_diff<0:
+	if mean_diff<=0:
 		return None, None
 	pvalue = test(x1, x2,
 		alternative='greater',
