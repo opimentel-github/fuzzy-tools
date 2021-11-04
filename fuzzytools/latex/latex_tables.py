@@ -245,7 +245,7 @@ class LatexTable():
 		txt = utils.get_hline(HLINE_N)+'\n'
 		txt += ' & '.join([f'{c}' for c in self.new_model_attrs+self.results_columns])+f' {utils.get_slash()}srule{utils.get_dslash()}'+'\n'
 		# txt += f'{utils.get_hline(HLINE_N)+utils.get_hline(HLINE_N)}'+'\n'
-		txt += utils.get_hline(HLINE_N)+'\n'
+		txt += utils.get_hline()+'\n'
 		return txt[:-1]
 
 	def __repr__(self):

@@ -23,7 +23,9 @@ def get_slash():
 def get_dslash():
 	return '\\\\'
 
-def get_hline(n):
+def get_hline(
+	n=None,
+	):
 	if n is None:
 		return get_slash()+'hline'
 	else:
