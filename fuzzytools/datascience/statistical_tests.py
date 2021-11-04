@@ -10,11 +10,11 @@ from ..dataframes import DFBuilder
 import math
 from mlxtend.evaluate import permutation_test
 
+DEFAULT_TH_PVALUE = .05
 NUM_ROUNDS = 1e4
 RANDOM_STATE = 0
 ALTERNATIVE = 'two-sided' # two-sided less greater
-DEFAULT_TH_PVALUE = .05
-INCLUDE_PVALUE_TXT = False
+TH_PVALUE_TXT = DEFAULT_TH_PVALUE
 SHAPIRO_TH_PVALUE = DEFAULT_TH_PVALUE
 N_DECIMALS = _C.N_DECIMALS
 PVALUE_CHAR = '$p$'
@@ -52,7 +52,7 @@ def get_pvalue_symbols():
 	return {f'<={PVALUE_SYMBOLS[s][-1]}':s for s in symbols}
 
 def format_pvalue(pvalue, mean_diff,
-	include_pvalue_txt=INCLUDE_PVALUE_TXT,
+	th_pvalue_txt=TH_PVALUE_TXT,
 	n_decimals=N_DECIMALS,
 	):
 	if pvalue is None:
@@ -61,7 +61,7 @@ def format_pvalue(pvalue, mean_diff,
 		n_decimals=n_decimals,
 		)
 	txt = f'$\Delta$={mean_diff_txt}{get_pvalue_symbol(pvalue)}'
-	if include_pvalue_txt:
+	if pvalue>th_pvalue_txt:
 		txt = f'{txt}; {PVALUE_CHAR}={xstr(pvalue)}'
 	return txt
 
@@ -158,7 +158,7 @@ def permutationtest(x1, x2,
 
 def gridtest_greater(values_dict, test,
 	shapiro_th_pvalue=SHAPIRO_TH_PVALUE,
-	include_pvalue_txt=INCLUDE_PVALUE_TXT,
+	th_pvalue_txt=TH_PVALUE_TXT,
 	n_decimals=N_DECIMALS,
 	test_kwargs={}
 	):
@@ -173,11 +173,11 @@ def gridtest_greater(values_dict, test,
 				test_kwargs=test_kwargs,
 				)
 			pvalue_txt = format_pvalue(pvalue, mean_diff,
-				include_pvalue_txt=include_pvalue_txt,
+				th_pvalue_txt=th_pvalue_txt,
 				n_decimals=n_decimals,
 				)
-			d[key2] = f'{pvalue_txt}'
-		df_builder.append(key1, d)
+			d[f'{key2}; #samples={len(x2)}'] = f'{pvalue_txt}'
+		df_builder.append(f'{key1}; #samples={len(x1)}', d)
 	return df_builder.get_df()
 
 def greatertest(x1, x2, test,
