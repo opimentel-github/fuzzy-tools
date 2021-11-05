@@ -9,6 +9,7 @@ from .xerror import XError
 from ..dataframes import DFBuilder
 import math
 from mlxtend.evaluate import permutation_test
+from ..progress_bars import ProgressBar
 
 DEFAULT_TH_PVALUE = .05
 NUM_ROUNDS = 1e4
@@ -164,10 +165,14 @@ def gridtest_greater(values_dict, test,
 	):
 	print(get_pvalue_symbols())
 	df_builder = DFBuilder()
-	for key1 in values_dict.keys():
+	n = 10
+	keys = list(values_dict.keys())
+	bar = ProgressBar(len(keys)**2)
+	for key1 in keys:
 		d = {}
 		x1 = values_dict[key1]
-		for key2 in values_dict.keys():
+		for key2 in keys:
+			bar(f'{key1} v/s {key2}')
 			x2 = values_dict[key2]
 			pvalue, mean_diff = greatertest(x1, x2, test,
 				test_kwargs=test_kwargs,
@@ -178,6 +183,7 @@ def gridtest_greater(values_dict, test,
 				)
 			d[f'{key2}; #samples={len(x2)}'] = f'{pvalue_txt}'
 		df_builder.append(f'{key1}; #samples={len(x1)}', d)
+	bar.done()
 	return df_builder.get_df()
 
 def greatertest(x1, x2, test,
