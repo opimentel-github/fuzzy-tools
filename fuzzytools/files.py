@@ -529,10 +529,10 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 	### gather files from an specific kf value
 	else:
 		if not kf_set in kfold_rootdirs_dict.keys():
-			return [], []
+			return [], [], []
 		kfold_rootdirs_dict_set = kfold_rootdirs_dict[kf_set]
 		if not kf in kfold_rootdirs_dict_set.keys():
-			return [], []
+			return [], [], []
 		kfrd = kfold_rootdirs_dict_set[str(kf)]
 		files, file_ids = gather_files_by_id(kfrd,
 			id_key,
