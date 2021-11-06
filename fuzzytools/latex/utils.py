@@ -7,10 +7,13 @@ import numpy as np
 
 ###################################################################################################################################################
 
-def get_bar_latex(new_model_attrs, results_columns):
+def get_bar_latex(new_model_attrs, results_columns,
+	uses_separator=False,
+	):
 	assert len(new_model_attrs)>0
 	assert len(results_columns)>0
-	txt = 'c'*len(new_model_attrs)+'|'+'c'*len(results_columns)
+	separator = '|' if uses_separator else ''
+	txt = 'c'*len(new_model_attrs)+separator+'c'*len(results_columns)
 	txt = 'l'+txt[1:]
 	return txt
 
