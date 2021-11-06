@@ -21,7 +21,10 @@ def get_slash():
 	return '\\'
 
 def get_dslash():
-	return '\\\\'
+	return get_slash()*2
+
+def get_cmidrule(a, b):
+	return get_slash()+'cmidrule{'+str(a)+'-'+str(b)+'}'
 
 def get_hline(
 	n=None,
