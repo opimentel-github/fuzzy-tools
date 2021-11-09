@@ -27,6 +27,7 @@ PVALUE_SYMBOLS = {
 	'+':[.05, .1],
 	'':[.1, np.inf],
 	}
+CHECK_SAMPLES = True
 
 ###################################################################################################################################################
 
@@ -158,12 +159,14 @@ def permutationtest(x1, x2,
 ###################################################################################################################################################
 
 def gridtest_greater(values_dict, test,
-	shapiro_th_pvalue=SHAPIRO_TH_PVALUE,
+	check_samples=CHECK_SAMPLES,
 	th_pvalue_txt=TH_PVALUE_TXT,
 	n_decimals=N_DECIMALS,
 	test_kwargs={}
 	):
-	print(get_pvalue_symbols())
+	pvalue_symbols = get_pvalue_symbols()
+	for pvalue_symbol in pvalue_symbols.keys():
+		print(f'{pvalue_symbols[pvalue_symbol]} pvalue{pvalue_symbol}')
 	df_builder = DFBuilder()
 	n = 10
 	keys = list(values_dict.keys())
@@ -175,6 +178,7 @@ def gridtest_greater(values_dict, test,
 			bar(f'{key1} v/s {key2}')
 			x2 = values_dict[key2]
 			pvalue, mean_diff = greatertest(x1, x2, test,
+				check_samples=check_samples,
 				test_kwargs=test_kwargs,
 				)
 			pvalue_txt = format_pvalue(pvalue, mean_diff,
@@ -187,11 +191,14 @@ def gridtest_greater(values_dict, test,
 	return df_builder.get_df()
 
 def greatertest(x1, x2, test,
+	check_samples=CHECK_SAMPLES,
 	test_kwargs={},
 	):
 	'''
 	check if mean(x1)>mean(x2) with statistical significance
 	'''
+	if check_samples:
+		assert len(x1)==len(x2)
 	mean_diff = x1.get_mean()-x2.get_mean()
 	if mean_diff<=0:
 		return None, None
