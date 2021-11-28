@@ -41,7 +41,7 @@ def get_string_from_dict(d:str,
 def get_formated_method(method_name, method_atributes_dict,
 	inter_str=' ',
 	):
-	txt = get_string_from_dict(method_atributes_dict, ';', '=',
+	txt = get_string_from_dict(method_atributes_dict, '; ', '=',
 		keeps_none=False,
 		)
 	txt = f'{method_name}{inter_str}('+txt+')'
