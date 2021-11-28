@@ -38,6 +38,15 @@ def get_string_from_dict(d:str,
 	ret = key_key_separator.join([f'{key}{key_value_separator}{d[key]}' for key in d.keys() if keeps_none or not d[key] is None])
 	return ret
 
+def get_formated_method(method_name, method_atributes_dict,
+	inter_str=' ',
+	):
+	txt = get_string_from_dict(method_atributes_dict, ';', '=',
+		keeps_none=False,
+		)
+	txt = f'{method_name}{inter_str}('+txt+')'
+	return txt
+
 def get_dict_from_string(string:str,
 	key_key_separator:str=KEY_KEY_SEP_CHAR,
 	key_value_separator:str=KEY_VALUE_SEP_CHAR,

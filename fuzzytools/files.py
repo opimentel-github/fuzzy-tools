@@ -22,7 +22,8 @@ CFILENAME = '_cfilename' # data
 FEXT = '_fext' # txt
 FILESIZE_FACTOR = 1e-6 # in mbs
 VERBOSE = 0
-IMBALANCED_KF_MODE = 'error' # error ignore oversampling 
+IMBALANCED_KF_MODE = 'error' # error ignore oversampling
+RANDOM_STATE = None
 
 ###################################################################################################################################################
 
@@ -461,7 +462,7 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 	fext:str=None,
 	kf_str=KFOLF_CHAR,
 	imbalanced_kf_mode=IMBALANCED_KF_MODE,
-	random_state=None,
+	random_state=RANDOM_STATE,
 	kfs=None,
 	returns_all_kf_files=False,
 	):
