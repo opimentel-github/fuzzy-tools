@@ -4,11 +4,11 @@ from . import _C
 
 import numpy as np
 import random
-from copy import copy, deepcopy
 from .statistics import get_samples_cdict
 from sklearn.model_selection import StratifiedKFold
 from nested_dict import nested_dict
 from .. import lists
+from copy import copy, deepcopy
 
 RANDOM_STATE = None
 KFOLF_CHAR = _C.KFOLF_CHAR
@@ -28,32 +28,50 @@ def split_list(l, prop):
 	first_half, last_half = l[:last_index], l[last_index:]
 	return first_half, last_half
 
+# def get_obj_class(obj_name, obj_names, obj_classes):
+# 	return obj_classes[obj_names.index(obj_name)]	
+
 def stratifiedf_kfold_cyclic_311(_obj_names, _obj_classes,
 	shuffle=False,
 	random_state=RANDOM_STATE,
+	outlier_obj_names=[],
 	prefix_str='',
 	):
-	# print(_obj_names, _obj_classes)
 	obj_names, obj_classes = lists.get_shared_shuffled(_obj_names, _obj_classes,
 		shuffle=shuffle,
 		random_state=random_state,
 		)
-	# print(obj_names, obj_classes)
 	populations_cdict = get_samples_cdict(obj_names, obj_classes)
 	class_names = list(populations_cdict.keys())
+
+	# detele outliers
+	for c in class_names:
+		populations_cdict[c], _ = lists.delete_from_list(populations_cdict[c], outlier_obj_names)
+
+	# create folds
 	kfolds = list(f'{k}' for k in range(0, 5))
 	obj_names_kdict = {}
 	for k,kf in enumerate(kfolds):
 		kf_populations_cdict = shift_dict(populations_cdict, k, 1/5)
-		obj_names_kdict[f'{kf}{KFOLF_CHAR}{prefix_str}train'] = []
+		obj_names_kdict[f'{kf}{KFOLF_CHAR}{prefix_str}training'] = []
 		obj_names_kdict[f'{kf}{KFOLF_CHAR}{prefix_str}val'] = []
 		obj_names_kdict[f'{kf}{KFOLF_CHAR}{prefix_str}test'] = []
 		for c in class_names:
 			last_half = kf_populations_cdict[c]
 			first_half, last_half = split_list(last_half, 3/5)
-			obj_names_kdict[f'{kf}{KFOLF_CHAR}{prefix_str}train'] += first_half
+			obj_names_kdict[f'{kf}{KFOLF_CHAR}{prefix_str}training'] += first_half
 			first_half, last_half = split_list(last_half, 1/2)
 			obj_names_kdict[f'{kf}{KFOLF_CHAR}{prefix_str}val'] += first_half
 			obj_names_kdict[f'{kf}{KFOLF_CHAR}{prefix_str}test'] += last_half
+
+	# for k,kf in enumerate(kfolds):
+	# 	kf_populations_cdict_copy = deepcopy(kf_populations_cdict)
+	# 	for set_name in ['training', 'val', 'test']:
+	# 		new_l, removed_elements = lists.delete_from_list(obj_names_kdict[f'{kf}{KFOLF_CHAR}{prefix_str}{set_name}'], outlier_obj_names)
+	# 		obj_names_kdict[f'{kf}{KFOLF_CHAR}{prefix_str}{set_name}'] = new_l
+	# 		for removed_element in removed_elements:
+	# 			removed_element_c = get_obj_class(removed_element, obj_names, obj_classes)
+	# 			obj_names_kdict[f'{kf}{KFOLF_CHAR}{prefix_str}{set_name}'] += [kf_populations_cdict_copy[removed_element_c].pop(0)]
+	# 			pass
 
 	return obj_names_kdict, class_names, kfolds

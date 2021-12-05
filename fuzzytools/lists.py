@@ -92,20 +92,30 @@ def get_random_item(l):
 
 def get_bootstrap(l:list, n,
 	random_state=RANDOM_STATE,
+	replace=True,
 	):
-	'''
-	with replacement
-	faster than numpy.choice
-	'''
-	random.seed(random_state)
-	return [get_random_item(l) for _ in range(0, n)]
+	if replace:
+		random.seed(random_state)
+		bootstrap = [get_random_item(l) for _ in range(0, n)] # faster than numpy.choice
+		return bootstrap
+	else:
+		np.random.seed(random_state)
+		bootstrap = np.choice(l, size=n, replace=False)
+		return bootstrap
 
 def merge_lists(*args):
 	merged = list(itertools.chain(*args))
 	return merged
 
 def delete_from_list(l:list, elements_to_remove:list):
-	return [e for e in l if not e in elements_to_remove]
+	removed_elements = []
+	new_l = []
+	for e in l:
+		if e in elements_to_remove:
+			removed_elements += [e]
+		else:
+			new_l += [e]
+	return new_l, removed_elements
 
 def all_elements_are_equal(l:list):
 	return l.count(l[0])==len(l)
@@ -116,3 +126,7 @@ def check_unique_lists(l1, l2):
 		if x in l2:
 			return False
 	return uniques
+
+def intersection(l1, l2):
+	intersection = list(set(l1).intersection(set(l2)))
+	return intersection
