@@ -13,7 +13,7 @@ CHECK_DISTRIBUTION = False
 
 ###################################################################################################################################################
 
-def plot_missclassification_map(_y_pred_p, _y_true, class_names,
+def plot_misclassification_map(_y_pred_p, _y_true, class_names,
 	obj_ids=None,
 	check_distribution=CHECK_DISTRIBUTION,
 	figsize=FIGSIZE,
@@ -25,6 +25,7 @@ def plot_missclassification_map(_y_pred_p, _y_true, class_names,
 	verbose=0,
 	dx=.5,
 	dx_miss=2,
+	also_show_correct_objs_txt=False,
 	):
 	### checks
 	assert len(class_names)>2
@@ -52,6 +53,8 @@ def plot_missclassification_map(_y_pred_p, _y_true, class_names,
 			txt = f'{obj_y_pred_c}' if obj_id is None else f'{obj_id} [{obj_y_pred_c}]'
 			if correct_classification:
 				ax.plot(pos_x, obj_y_pred_p, 'o', c='k')
+				if also_show_correct_objs_txt:
+					ax.text(pos_x, obj_y_pred_p, txt, rotation=90, ha='center', va='top', fontsize=fontsize)
 				pos_x += dx
 			else:
 				ax.plot(pos_x, obj_y_pred_p, 'D', c='r')

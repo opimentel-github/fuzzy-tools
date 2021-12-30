@@ -16,7 +16,6 @@ class BalancedCyclicBoostraping():
 	def __init__(self, l_objs, l_classes,
 		batch_prop=BATCH_PROP,
 		uses_shuffle=True,
-		uses_counter=False,
 		samples_per_class=None,
 		class_names=None,
 		):
@@ -26,7 +25,6 @@ class BalancedCyclicBoostraping():
 		self.l_classes = l_classes
 		self.batch_prop = batch_prop
 		self.uses_shuffle = uses_shuffle
-		self.uses_counter = uses_counter
 		self.samples_per_class = samples_per_class
 		self.class_names = class_names
 		self.reset()
@@ -34,14 +32,10 @@ class BalancedCyclicBoostraping():
 	def reset(self):
 		self.class_names = np.unique(self.l_classes) if self.class_names is None else self.class_names
 		self.samples_per_class = int(self.get_majority_class_nof_samples()*self.batch_prop) if self.samples_per_class is None else self.samples_per_class
-		self.reset_counter()
 		self.l_objs_dict = {}
 		for c in self.class_names:
 			self.l_objs_dict[c] = [obj for obj,_c in zip(self.l_objs, self.l_classes) if _c==c]
 		self.reset_cycles()
-
-	def reset_counter(self):
-		self.counter = {obj:0 for obj in self.l_objs}
 
 	def reset_cycles(self):
 		if self.uses_shuffle:
@@ -74,7 +68,7 @@ class BalancedCyclicBoostraping():
 			'samples_per_class':self.samples_per_class,
 			'nof_samples':self.get_nof_samples(),
 			'nof_classes':self.get_nof_classes(),
-			'__len__':len(self),
+			'_len':len(self),
 			}, '; ', '=')
 		txt += ')'
 		return txt
@@ -89,10 +83,9 @@ class BalancedCyclicBoostraping():
 	def get_samples(self):
 		samples = []
 		for c in self.class_names:
-			samples += [next(self.cycles_dict[c]) for _ in range(0, self.samples_per_class)]
-		if self.uses_counter:
-			for s in samples:
-				self.counter[s] += 1
+			for _ in range(0, self.samples_per_class):
+				samples_c = next(self.cycles_dict[c])
+				samples += [samples_c]
 		return samples
 	
 	def __call__(self):
