@@ -19,37 +19,6 @@ FIGSIZE = (8,8)
 
 ###################################################################################################################################################
 
-# def plot_confusion_matrix(y_pred:np.ndarray, y_target:np.ndarray, class_names:list,
-# 	new_order_classes:list=None,
-# 	normalize_mode:str='true', # None, true, pred
-# 	uses_percent:bool=True,
-# 	add_accuracy_in_title:bool=0,
-# 	fig=None,
-# 	ax=None,
-# 	figsize=PLOT_FIGSIZE_CMAP,
-# 	title='plot_custom_confusion_matrix',
-# 	cmap=CMAP,
-# 	fontsize=11,
-# 	):
-# 	assert isinstance(class_names, list)
-# 	assert y_pred.shape==y_target.shape
-# 	assert y_pred.max()<=len(class_names)
-# 	assert y_target.max()<=len(class_names)
-
-# 	cms = confusion_matrix(y_target, y_pred)
-# 	return plot_custom_confusion_matrix(cms, class_names,
-# 		new_order_classes=new_order_classes,
-# 		normalize_mode=normalize_mode,
-# 		uses_percent=uses_percent,
-# 		add_accuracy_in_title=add_accuracy_in_title,
-# 		fig=fig,
-# 		ax=ax,
-# 		figsize=figsize,
-# 		title=title,
-# 		cmap=cmap,
-# 		fontsize=fontsize,
-# 		)
-
 def plot_custom_confusion_matrix(cm,
 	fig=None,
 	ax=None,
@@ -61,6 +30,7 @@ def plot_custom_confusion_matrix(cm,
 	cbar_labelsize=7,
 	adds_cbar=False,
 	true_label_d={},
+	lambda_c=lambda x:x,
 	):
 	fig, ax = plt.subplots(1, 1, figsize=figsize, dpi=dpi) if fig is None else (fig, ax)
 	class_names = cm.get_class_names()
@@ -81,7 +51,7 @@ def plot_custom_confusion_matrix(cm,
 		cbar.ax.tick_params(labelsize=cbar_labelsize)
 	ax.set(xlabel='predicted label')
 	ax.set(ylabel='true label')
-	ax.set(xticklabels=class_names, yticklabels=[f'{c}\n{true_label_d.get(c, "")}' for c in class_names])
+	ax.set(xticklabels=class_names, yticklabels=[f'{lambda_c(c)}\n{true_label_d.get(c, "")}' for c in class_names])
 	plt.setp(ax.get_xticklabels(), rotation=45, ha='right', rotation_mode='anchor')
 
 	### set titles
