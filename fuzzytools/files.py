@@ -494,26 +494,27 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 			all_kf_file_ids[_kf] = [f'{_kf}{kf_str}{_fid}' for _fid in _file_ids]
 
 		# print(all_kf_files); print(all_kf_file_ids)
-		if imbalanced_kf_mode=='error':
-			for _kf in kfs:
-				assert len(all_kf_files[_kf])==[kfs[0]], f'not equal size of kf files in all kf values {[len(all_kf_files[_kf]) for _kf in kfs]}'
-
-		elif imbalanced_kf_mode=='ignore':
+		max_len = max([len(all_kf_files[_kf]) for _kf in kfs])
+		if imbalanced_kf_mode=='ignore':
 			pass
 
+		elif imbalanced_kf_mode=='error':
+			for _kf in kfs:
+				assert len(all_kf_files[_kf])==max_len, f'not equal size of kf files in all kf values {[len(all_kf_files[_kf]) for _kf in kfs]}'
+
 		elif imbalanced_kf_mode=='oversampling':
-			max_len = max([len(all_kf_files[_kf]) for _kf in kfs])
 			for _kf in kfs:
 				_len = len(all_kf_files[_kf])
 				k_repeat = max_len-_len
-				idxs = list(range(0, _len))
-				new_idxs = lists.get_bootstrap(idxs, k_repeat,
-					random_state=random_state,
-					)
-				all_kf_files[_kf] += [all_kf_files[_kf][idx] for idx in new_idxs]
-				all_kf_file_ids[_kf] += [all_kf_file_ids[_kf][idx] for idx in new_idxs]
+				if k_repeat>0:
+					idxs = list(range(0, _len))
+					new_idxs = lists.get_bootstrap(idxs, k_repeat,
+						random_state=random_state,
+						)
+					all_kf_files[_kf] += [all_kf_files[_kf][idx] for idx in new_idxs]
+					all_kf_file_ids[_kf] += [all_kf_file_ids[_kf][idx] for idx in new_idxs]
 		else:
-			raise Exception(f'{imbalanced_kf_mode}')
+			raise Exception(f'imbalanced_kf_mode={imbalanced_kf_mode}')
 
 		# print(all_kf_files); print(all_kf_file_ids)
 		files = []
