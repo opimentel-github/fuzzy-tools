@@ -51,7 +51,7 @@ def plot_custom_confusion_matrix(cm,
 		cbar.ax.tick_params(labelsize=cbar_labelsize)
 	ax.set(xlabel='predicted label')
 	ax.set(ylabel='true label')
-	ax.set(xticklabels=class_names, yticklabels=[f'{lambda_c(c)}\n{true_label_d.get(c, "")}' for c in class_names])
+	ax.set(xticklabels=[f'{lambda_c(c)}' for c in class_names], yticklabels=[f'{lambda_c(c)}\n{true_label_d.get(c, "")}' for c in class_names])
 	plt.setp(ax.get_xticklabels(), rotation=45, ha='right', rotation_mode='anchor')
 
 	### set titles

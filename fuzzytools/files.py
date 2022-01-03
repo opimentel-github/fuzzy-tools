@@ -473,11 +473,10 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 	the normal case is when all k-fold has the same amount of files!
 	'''
 	kfold_rootdirs_dict = get_kfold_rootdirs_dict(rootdir,
-		kf_str,
+		kf_str=kf_str,
 	)
-	### gather files from all kf values
 	kf = str(_kf)
-	if kf=='.':
+	if kf=='.': # gather files from all kf values
 		all_kf_files = {}
 		all_kf_file_ids = {}
 		kfs = list(kfold_rootdirs_dict[kf_set].keys()) if kfs is None else kfs
@@ -528,8 +527,7 @@ def gather_files_by_kfold(rootdir, _kf, kf_set,
 		else:
 			return files, file_ids, kfs
 
-	### gather files from an specific kf value
-	else:
+	else: # gather files from an specific kf value
 		if not kf_set in kfold_rootdirs_dict.keys():
 			return [], [], []
 		kfold_rootdirs_dict_set = kfold_rootdirs_dict[kf_set]
