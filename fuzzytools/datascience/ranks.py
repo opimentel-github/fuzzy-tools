@@ -74,8 +74,9 @@ class TopRank():
 		info_df = DFBuilder()
 		for k in range(0, len(self)):
 			idx = self.idxs[k]
-			d = {self.name:self.values[idx]}
+			d = {}
 			if include_position:
 				d.update({'_k':k+1})
+			d[self.name] = self.values[idx]
 			info_df.append(self.names[idx], d)
 		return info_df.get_df()
