@@ -14,7 +14,10 @@ KEY_KEY_SEP_CHAR = _C.KEY_KEY_SEP_CHAR
 KEY_VALUE_SEP_CHAR = _C.KEY_VALUE_SEP_CHAR
 NAN_CHAR = _C.NAN_CHAR
 PM_CHAR = _C.PM_CHAR
-HLINE_N = 4
+USES_TABULARX = False
+VRULE_PT = 10
+BLINE_PT = 1.5
+
 
 ###################################################################################################################################################
 
@@ -35,21 +38,23 @@ class SubLatexTable():
 	'''
 	def __init__(self, info_df,
 		bold_axis:list=None,
-		rule_ab:tuple=(2, 1),
 		split_index_names=True,
 		key_key_separator:str=KEY_KEY_SEP_CHAR,
 		key_value_separator:str=KEY_VALUE_SEP_CHAR,
-		hline_k=None,
+		uses_tabularx=USES_TABULARX,
+		vrule_pt=VRULE_PT,
+		bline_pt=BLINE_PT,
 		bold_function=get_max_elements,
 		repr_replace_dict={},
 		):
 		self.info_df = info_df.copy()
 		self.bold_axis = bold_axis
-		self.rule_ab = rule_ab
 		self.split_index_names = split_index_names
 		self.key_key_separator = key_key_separator
 		self.key_value_separator = key_value_separator
-		self.hline_k = hline_k
+		self.uses_tabularx = uses_tabularx
+		self.vrule_pt = vrule_pt
+		self.bline_pt = bline_pt
 		self.bold_function = bold_function
 		self.repr_replace_dict = repr_replace_dict
 		self.reset()
@@ -62,7 +67,6 @@ class SubLatexTable():
 	def set_bold_df(self):
 		columns = list(self.info_df.columns)
 		indexs = self.info_df.index
-		#print('info_df',self.info_df)
 		if self.bold_axis is None:
 			bold_df = None
 
@@ -138,14 +142,9 @@ class SubLatexTable():
 				sub_txt += '\\textbf{'+v_str+'}' if is_bold else v_str
 				sub_txt += ' & '
 
-			sub_txt = sub_txt[:-2] + f' {utils.get_slash()}srule{utils.get_dslash()}'+'\n'
+			sub_txt = sub_txt[:-2] + ' \\tabsrule\\\\'+'\n'
 			txt += sub_txt
-			if not self.hline_k is None:
-				if hline_c>=self.hline_k and k<len(self.row_colors)-1:
-					txt += utils.get_hline(HLINE_N)+'\n'
-					hline_c = 0
-				else:
-					hline_c += 1
+			hline_c += 1
 
 		txt = strings.string_replacement(txt, self.repr_replace_dict)
 		return txt
@@ -174,16 +173,17 @@ class LatexTable():
 	'''
 	def __init__(self, info_dfs:list,
 		bold_axis:list=None,
-		rule_ab:tuple=(2, 1),
 		split_index_names=True,
-		key_key_separator:str=_C.KEY_KEY_SEP_CHAR,
-		key_value_separator:str=_C.KEY_VALUE_SEP_CHAR,
+		key_key_separator:str=KEY_KEY_SEP_CHAR,
+		key_value_separator:str=KEY_VALUE_SEP_CHAR,
 		delete_redundant_model_keys:bool=True,
 		caption:str='',
 		label:str='tab:',
 		centered:bool=False,
-		custom_tabular_align:str=None, # 'ccc|llll'
-		hline_k=None,
+		custom_tabular_align:str=None,
+		uses_tabularx=USES_TABULARX,
+		vrule_pt=VRULE_PT,
+		bline_pt=BLINE_PT,
 		bold_function=get_max_elements,
 		repr_replace_dict={},
 		):
@@ -194,11 +194,9 @@ class LatexTable():
 
 		self.sub_latex_tables = [SubLatexTable(info_df,
 			bold_axis,
-			rule_ab,
 			split_index_names,
 			key_key_separator,
 			key_value_separator,
-			hline_k,
 			bold_function,
 			repr_replace_dict,
 			) for info_df in self.info_dfs]
@@ -211,7 +209,6 @@ class LatexTable():
 			self.new_model_attrs += list([x for x in sub_latex_table.model_attrs if not x in self.new_model_attrs])
 
 		for sub_latex_table in self.sub_latex_tables:
-			#print(self.new_model_attrs)
 			sub_latex_table.split_model_key_value_dfs(self.new_model_attrs)
 
 		self.delete_redundant_model_keys = delete_redundant_model_keys
@@ -219,11 +216,12 @@ class LatexTable():
 		self.label = label
 		self.centered = centered
 		self.custom_tabular_align = custom_tabular_align
-		self.hline_k = hline_k
+		self.uses_tabularx = uses_tabularx
+		self.vrule_pt = vrule_pt
+		self.bline_pt = bline_pt
 		self.bold_function = bold_function
 		self.repr_replace_dict = repr_replace_dict
 
-		self.rule_ab = rule_ab
 		self.split_index_names = split_index_names
 
 	def reset(self):
@@ -231,21 +229,22 @@ class LatexTable():
 
 	def get_init_txt(self):
 		txt = ''
-		txt += f'{utils.get_slash()}def{utils.get_slash()}srule'+'{'+utils.get_rule(*self.rule_ab)+'}\n'
-		txt += utils.get_slash()+'begin{table*}[!t]'+'\n' if self.centered else utils.get_slash()+'begin{table}[H]'+'\n'
-		txt += utils.get_slash()+'centering'+'\n'
-		txt += utils.get_slash()+'caption{'+'\n'+self.caption+'\n'+'}'+'\n'
-		txt += utils.get_slash()+'label{'+self.label+'}'+utils.get_slash()+'vspace{.1cm}'+'\n'
+		txt += '\\def\\tabsrule'+'{\\rule{0pt}{'+str(self.vrule_pt)+'pt}\\rule[0pt]{0pt}{0pt}'+'}\n'
+		txt += '\\def\\tabbline'+'{'+utils.get_cmidrule(1, len(self.new_model_attrs)+len(self.results_columns), self.bline_pt)+'\\tabsrule}\n'
+		txt += '\\begin{table*}[!t]'+'\n' if self.centered else '\\begin{table}[H]'+'\n'
+		txt += '\\centering'+'\n'
+		txt += '\\caption{'+'\n'+self.caption+'\n'+'}'+'\n'
+		txt += '\\label{'+self.label+'}\\vspace{.1cm}'+'\n'
 		txt += '\\tiny\\scriptsize\\footnotesize\\small\\normalsize'+'\n'
+		txt += '\\normalsize'+'\n'
 		tabular_align = utils.get_bar_latex(self.new_model_attrs, self.results_columns) if self.custom_tabular_align is None else self.custom_tabular_align
-		txt += utils.get_slash()+'begin{tabularx}{\\textwidth}{'+tabular_align+'}'+'\n'
+		txt += '\\begin{tabularx}{\\textwidth}{'+tabular_align+'}'+'\n' if self.uses_tabularx else '\\begin{tabular}{'+tabular_align+'}'+'\n'
 		return txt[:-1]
 
 	def get_top_txt(self):
-		txt = utils.get_hline(HLINE_N)+'\n'
-		txt += ' & '.join([f'{c}' for c in self.new_model_attrs+self.results_columns])+f' {utils.get_slash()}srule{utils.get_dslash()}'+'\n'
-		# txt += f'{utils.get_hline(HLINE_N)+utils.get_hline(HLINE_N)}'+'\n'
-		# txt += utils.get_hline()+'\n'
+		txt = ''
+		txt += '\\tabbline'+'\n'
+		txt += ' & '.join([f'{c}' for c in self.new_model_attrs+self.results_columns])+' \\tabsrule\\\\'+'\n'
 		txt += utils.get_cmidrule(1, len(self.new_model_attrs))+utils.get_cmidrule(len(self.new_model_attrs)+1, len(self.new_model_attrs)+len(self.results_columns))+'\n'
 		return txt[:-1]
 
@@ -255,18 +254,18 @@ class LatexTable():
 		txt += self.get_top_txt()+'\n'
 		for sub_latex_table in self.sub_latex_tables:
 			txt += str(sub_latex_table)
-			txt += utils.get_hline(HLINE_N)+'\n'
+			txt += '\\tabbline'+'\n'
 
 		txt += self.get_end_txt()+'\n'
-		txt = txt.replace(PM_CHAR, f'${utils.get_slash()}pm$')
-		txt = txt.replace(NAN_CHAR, '$-$')
-		txt = txt.replace('%', utils.get_slash()+'%')
+		txt = txt.replace(PM_CHAR, '$\\pm$')
+		txt = txt.replace(NAN_CHAR, '--')
+		txt = txt.replace('%', '\\%')
 		txt = strings.get_bar(char='v', init_string='%')+'\n'+txt+strings.get_bar(char='^', init_string='%')+'\n'
 		txt = strings.color_str(txt, 'red')
 		return txt
 
 	def get_end_txt(self):
 		txt = ''
-		txt += '\\end{tabularx}'+'\n'
+		txt += '\\end{tabularx}'+'\n' if self.uses_tabularx else '\\end{tabular}'+'\n'
 		txt += '\\end{table*}'+'\n' if self.centered else '\\end{table}'+'\n'
 		return txt[:-1]
