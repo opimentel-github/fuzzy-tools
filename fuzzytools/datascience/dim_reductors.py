@@ -35,10 +35,14 @@ class DimReductor():
 		drop_duplicates=False,
 		normal_std=0,
 		):
-		new_x = np.concatenate(x, axis=0) if isinstance(x, list) else copy(x)
+		new_x = np.concatenate(x, axis=0) if type(x)==list else copy(x)
 		_check(new_x)
-		
-		new_x = np.unique(new_x, axis=0) if drop_duplicates else new_x
+			
+		if drop_duplicates:
+			print('deleting duplicates', new_x.shape)
+			new_x = np.unique(new_x, axis=0)
+			print(new_x.shape)
+
 		new_x = new_x+np.random.normal(0, normal_std, size=new_x.shape) if normal_std>0 else new_x
 		new_x = self.scaler.fit_transform(new_x)
 		if not self.inter_pca_dims is None:
