@@ -67,12 +67,13 @@ class DimReductor():
 		return new_x
 
 	def fit_transform(self, x,
-		reduction_map_kwargs={},
+		reduction_map_fit_kwargs={},
+		reduction_map_transform_kwargs={},
 		):
 		self.fit(x,
-			reduction_map_kwargs=reduction_map_kwargs,
+			reduction_map_kwargs=reduction_map_fit_kwargs,
 			)
 		new_x = self.transform(x,
-			reduction_map_kwargs=reduction_map_kwargs,
+			reduction_map_kwargs=reduction_map_transform_kwargs,
 			)
 		return new_x
