@@ -12,6 +12,7 @@ from ..datascience import labels as ds_labels
 def scatter(ax, x, _y_true, class_names, scatter_kwargs,
 	sort_by_count=True,
 	add_class_label=True,
+	label_f=lambda x:x,
 	):
 	### checks
 	assert len(x.shape)==2
@@ -35,8 +36,9 @@ def scatter(ax, x, _y_true, class_names, scatter_kwargs,
 		_scatter_kwargs = deepcopy(scatter_kwargs[class_name])
 		if add_class_label:
 			label = _scatter_kwargs.get('label', None)
+			new_label = f'{class_name}' if label is None else f'{label} [{class_name}]'
 			_scatter_kwargs.update({
-				'label':f'{class_name}' if label is None else f'{label} [{class_name}]',
+				'label':label_f(new_label),
 				})
 		ax.scatter(_x[:,0], _x[:,1], **_scatter_kwargs)
 	return ax
