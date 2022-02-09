@@ -31,9 +31,6 @@ PLOT_FIGSIZE_BOX = (6,4)
 PLOT_FIGSIZE_CMAP = (10,8)
 DPI = 200
 
-AN_LOAD_IMAGE_FEXT = 'jpg'
-AN_SAVE_IMAGE_FEXT = 'png'
-
 ###################################################################################################################################################
 CM_FORMAT = np.uint32
 STD_LATEXCHAR = '$\sigma$'

@@ -6,34 +6,35 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 import numpy as np
 import imageio
 from ..files import create_dir, get_filedirs, delete_filedirs
-from .utils import _fig2img, save_fig
+from .utils import fig2img, save_fig
 import os
 import math
 import matplotlib.pyplot as plt
 
 VERBOSE = 0
 AN_SEGS_OFFSET = 1
-AN_SAVE_IMAGE_FEXT = _C.AN_SAVE_IMAGE_FEXT
+AN_SAVE_IMAGE_FEXT = 'pdf'
 VIDEO_DURATION = 10
 
 ###################################################################################################################################################
 
 class PlotAnimator():
-	def __init__(self,
+	def __init__(self, save_filedir,
 		video_duration=VIDEO_DURATION,
 		is_dummy:bool=False,
 		init_offset:float=AN_SEGS_OFFSET,
 		end_offset:float=AN_SEGS_OFFSET,
-		save_init_frame:bool=False,
-		save_end_frame:bool=False,
+		save_frames:bool=False,
+		saved_frames_fext=AN_SAVE_IMAGE_FEXT,
 		verbose=VERBOSE,
 		):
+		self.save_filedir = save_filedir
 		self.video_duration = video_duration
 		self.is_dummy = is_dummy
 		self.init_offset = init_offset
 		self.end_offset = end_offset
-		self.save_init_frame = save_init_frame
-		self.save_end_frame = save_end_frame
+		self.save_frames = save_frames
+		self.saved_frames_fext = saved_frames_fext
 		self.verbose = verbose
 		self.reset()
 
@@ -49,10 +50,10 @@ class PlotAnimator():
 	def get_fps(self):
 		return len(self)/self.video_duration
 
-	def create_video_from_images(self, save_filedir:str):
+	def create_video_from_images(self):
 		imgs = [i for i in self.frames]
 		fps = self.get_fps()
-		create_dir('/'.join(save_filedir.split('/')[:-1]))
+		create_dir('/'.join(self.save_filedir.split('/')[:-1]))
 
 		if self.init_offset>0:
 			imgs = [imgs[0]]*math.ceil(self.init_offset*fps) + imgs
@@ -60,51 +61,43 @@ class PlotAnimator():
 		if self.end_offset>0:
 			imgs = imgs + [imgs[-1]]*math.ceil(self.end_offset*fps)
 
-		fext = save_filedir.split('.')[-1]
+		fext = self.save_filedir.split('.')[-1]
 		mimsave_kwargs = {
 			'fps':fps,
 			}
 		if fext=='mp4':
 			mimsave_kwargs.update({
 				'quality':10,
-				#'codec':'mjpeg', # libx264 mjpeg
 				'pixelformat':'yuv444p', # yuvj444p yuv444p
 				'macro_block_size':1, # risking incompatibility
 				})
 		elif fext=='gif':
 			mimsave_kwargs.update({
 				'fps':fps,
-				#'codec':'mjpeg', # libx264 mjpeg
 				})
+		else:
+			raise Exception(f'fext={fext}')
+
+		### save animation
 		img_sizes = [img.size for img in imgs]
 		assert all([img_size==img_sizes[0] for img_size in img_sizes]), img_sizes
-		imageio.mimsave(save_filedir, imgs, **mimsave_kwargs)
-
-		save_filename = '.'.join(save_filedir.split('.')[:-1])
-		if self.save_init_frame:
-			save_fig(f'{save_filename}.first.{AN_SAVE_IMAGE_FEXT}', imgs[0],
-				uses_close_fig=None,
-				verbose=self.verbose,
-				fig_is_img=True,
-				)
-
-		if self.save_end_frame:
-			save_fig(f'{save_filename}.last.{AN_SAVE_IMAGE_FEXT}', imgs[-1],
-				uses_close_fig=None,
-				verbose=self.verbose,
-				fig_is_img=True,
-				)
+		imageio.mimsave(self.save_filedir, imgs, **mimsave_kwargs)
+		print(f'saved in {self.save_filedir}')
 
 	def append(self, fig,
 		uses_close_fig=True,
 		):
 		if self.not_dummy():
-			img = _fig2img(fig, uses_close_fig)
+			k = len(self)
+			new_save_filedir = '.'.join(self.save_filedir.split('.')[:-1])+f'/{k}.{self.saved_frames_fext}'
+			save_fig(new_save_filedir, fig,
+				uses_close_fig=uses_close_fig,
+				)
+			img = fig2img(fig)
 			self.frames.append(img)
-			return
 		return
 
-	def save(self, save_filedir:str,
+	def save(self,
 		reverse:bool=False,
 		clean_buffer:bool=True,
 		):
@@ -112,13 +105,12 @@ class PlotAnimator():
 			if reverse:
 				self.reverse_frames()
 
-			self.create_video_from_images(save_filedir)
+			self.create_video_from_images()
 			if clean_buffer:
 				self.clean()
 
 	def clean(self):
 		self.reset()
-		#delete_filedirs([f'{self.temp_filedir}.png'], verbose=0)
 
 	def reverse_frames(self):
 		self.frames.reverse()

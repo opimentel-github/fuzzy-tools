@@ -10,6 +10,8 @@ from PIL import Image
 import io
 
 VERBOSE = 0
+USES_CLOSE_FIG = True
+BBOX_INCHES = 'tight'
 
 ###################################################################################################################################################
 
@@ -22,35 +24,39 @@ def close_fig(fig):
 	plt.close(fig)
 	return
 
-def _fig2img(fig,
-	uses_close_fig=True,
-	):
+def fig2img(fig):
 	if fig is None:
 		return None
 	buf = io.BytesIO()
-	fig.savefig(buf, bbox_inches='tight', dpi=fig.dpi)
+	fig.savefig(buf, bbox_inches=BBOX_INCHES, dpi=fig.dpi)
 	buf.seek(0)
 	img = Image.open(buf)
-	if uses_close_fig:
-		close_fig(fig)
 	return img
 
 def save_fig(save_filedirs, fig,
-	uses_close_fig=True,
+	uses_close_fig=USES_CLOSE_FIG,
+	fig_is_pil_img=False,
 	verbose=VERBOSE,
-	fig_is_img=False,
 	):
 	save_filedirs = [None] if save_filedirs is None else save_filedirs
-	if isinstance(save_filedirs, str):
+	if type(save_filedirs)==str:
 		save_filedirs = [save_filedirs]
 
-	img = fig if fig_is_img else _fig2img(fig, uses_close_fig)
-
 	for k,save_filedir in enumerate(save_filedirs):
-		assert isinstance(save_filedir, str)
+		assert type(save_filedir)==str
 		save_rootdir = '/'.join(save_filedir.split('/')[:-1])
 		create_dir(save_rootdir, verbose=verbose)
-		img.save(save_filedir, format='png')
+		fext = save_filedir.split('.')[-1]
+
+		if fext=='pdf':
+			plt.savefig(save_filedir, bbox_inches=BBOX_INCHES)
+		elif fext=='png':
+			img = fig if fig_is_pil_img else fig2img(fig)
+			img.save(save_filedir, format='png')
+		else:
+			raise Exception(f'fext={fext}')
+		if uses_close_fig:
+			close_fig(fig)
 	return
 
 ###################################################################################################################################################
@@ -59,12 +65,14 @@ def override(func): return func # tricky
 class IFile(PFile):
 	def __init__(self, filedir,
 		fig=None,
-		uses_close_fig=True,
+		uses_close_fig=USES_CLOSE_FIG,
+		fig_is_pil_img=False,
 		):
-		img = _fig2img(fig, uses_close_fig)
 		super().__init__(filedir,
-			img,
+			fig,
 			)
+		self.uses_close_fig = uses_close_fig
+		self.fig_is_pil_img = fig_is_pil_img
 
 	@override
 	def _save(self,
@@ -72,9 +80,9 @@ class IFile(PFile):
 		):
 		filedirs = [self.filedir]+copy_filedirs
 		save_fig(filedirs, self.file,
-			None,
-			self.verbose,
-			True,
+			uses_close_fig=self.uses_close_fig,
+			fig_is_pil_img=self.fig_is_pil_img,
+			verbose=self.verbose,
 			)
 		self.last_state = 'saved'
 		return
