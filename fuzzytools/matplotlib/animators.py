@@ -11,6 +11,9 @@ import os
 import math
 import matplotlib.pyplot as plt
 
+import matplotlib
+assert matplotlib.__version__=='3.1.3', f'{matplotlib.__version__}'
+
 VERBOSE = 0
 AN_SEGS_OFFSET = 1
 AN_SAVE_IMAGE_FEXT = 'pdf'
@@ -48,23 +51,22 @@ class PlotAnimator():
 	def not_dummy(self):
 		return not self.is_dummy
 
-	def get_fps(self):
-		return len(self)/self.video_duration
-
 	def create_video_from_images(self):
-		imgs = [frame for frame in self.frames]
-		fps = self.get_fps()
 		create_dir('/'.join(self.save_filedir.split('/')[:-1]))
+		imgs = [frame for frame in self.frames]
+		frame_durations = [self.video_duration/len(self)]*len(self)
 
 		if self.init_offset>0:
-			imgs = [imgs[0]]*math.ceil(self.init_offset*fps) + imgs
+			imgs = [imgs[0]]+imgs
+			frame_durations = [self.init_offset]+frame_durations
 		
 		if self.end_offset>0:
-			imgs = imgs + [imgs[-1]]*math.ceil(self.end_offset*fps)
+			imgs = imgs+[imgs[-1]]
+			frame_durations = frame_durations+[self.end_offset]
 
 		fext = self.save_filedir.split('.')[-1]
 		mimsave_kwargs = {
-			'fps':fps,
+			'duration':frame_durations,
 			}
 		if fext=='mp4':
 			mimsave_kwargs.update({
@@ -73,9 +75,7 @@ class PlotAnimator():
 				'macro_block_size':1, # risking incompatibility
 				})
 		elif fext=='gif':
-			mimsave_kwargs.update({
-				'fps':fps,
-				})
+			pass
 		else:
 			raise Exception(f'fext={fext}')
 

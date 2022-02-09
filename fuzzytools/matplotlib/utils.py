@@ -71,6 +71,7 @@ class IFile(PFile):
 		super().__init__(filedir,
 			fig,
 			)
+		assert 0, 'fix me?'
 		self.closes_fig = closes_fig
 		self.fig_is_pil_img = fig_is_pil_img
 
