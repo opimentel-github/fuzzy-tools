@@ -33,7 +33,7 @@ def fig2img(fig):
 	img = Image.open(buf)
 	return img
 
-def save_fig(save_filedirs, fig,
+def save_fig(fig, save_filedirs,
 	uses_close_fig=USES_CLOSE_FIG,
 	fig_is_pil_img=False,
 	verbose=VERBOSE,
@@ -79,7 +79,7 @@ class IFile(PFile):
 		copy_filedirs=[],
 		):
 		filedirs = [self.filedir]+copy_filedirs
-		save_fig(filedirs, self.file,
+		save_fig(self.file, filedirs,
 			uses_close_fig=self.uses_close_fig,
 			fig_is_pil_img=self.fig_is_pil_img,
 			verbose=self.verbose,

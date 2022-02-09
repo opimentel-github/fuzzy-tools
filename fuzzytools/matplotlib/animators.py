@@ -15,6 +15,7 @@ VERBOSE = 0
 AN_SEGS_OFFSET = 1
 AN_SAVE_IMAGE_FEXT = 'pdf'
 VIDEO_DURATION = 10
+USES_CLOSE_FIG = True
 
 ###################################################################################################################################################
 
@@ -51,7 +52,7 @@ class PlotAnimator():
 		return len(self)/self.video_duration
 
 	def create_video_from_images(self):
-		imgs = [i for i in self.frames]
+		imgs = [frame for frame in self.frames]
 		fps = self.get_fps()
 		create_dir('/'.join(self.save_filedir.split('/')[:-1]))
 
@@ -85,12 +86,12 @@ class PlotAnimator():
 		print(f'saved in {self.save_filedir}')
 
 	def append(self, fig,
-		uses_close_fig=True,
+		uses_close_fig=USES_CLOSE_FIG,
 		):
 		if self.not_dummy():
 			k = len(self)
 			new_save_filedir = '.'.join(self.save_filedir.split('.')[:-1])+f'/{k}.{self.saved_frames_fext}'
-			save_fig(new_save_filedir, fig,
+			save_fig(fig, new_save_filedir,
 				uses_close_fig=uses_close_fig,
 				)
 			img = fig2img(fig)
