@@ -10,7 +10,7 @@ from PIL import Image
 import io
 
 VERBOSE = 0
-USES_CLOSE_FIG = True
+CLOSES_FIG = True
 BBOX_INCHES = 'tight'
 
 ###################################################################################################################################################
@@ -34,7 +34,7 @@ def fig2img(fig):
 	return img
 
 def save_fig(fig, save_filedirs,
-	uses_close_fig=USES_CLOSE_FIG,
+	closes_fig=CLOSES_FIG,
 	fig_is_pil_img=False,
 	verbose=VERBOSE,
 	):
@@ -55,7 +55,7 @@ def save_fig(fig, save_filedirs,
 			img.save(save_filedir, format='png')
 		else:
 			raise Exception(f'fext={fext}')
-		if uses_close_fig:
+		if closes_fig:
 			close_fig(fig)
 	return
 
@@ -65,13 +65,13 @@ def override(func): return func # tricky
 class IFile(PFile):
 	def __init__(self, filedir,
 		fig=None,
-		uses_close_fig=USES_CLOSE_FIG,
+		closes_fig=CLOSES_FIG,
 		fig_is_pil_img=False,
 		):
 		super().__init__(filedir,
 			fig,
 			)
-		self.uses_close_fig = uses_close_fig
+		self.closes_fig = closes_fig
 		self.fig_is_pil_img = fig_is_pil_img
 
 	@override
@@ -80,7 +80,7 @@ class IFile(PFile):
 		):
 		filedirs = [self.filedir]+copy_filedirs
 		save_fig(self.file, filedirs,
-			uses_close_fig=self.uses_close_fig,
+			closes_fig=self.closes_fig,
 			fig_is_pil_img=self.fig_is_pil_img,
 			verbose=self.verbose,
 			)
