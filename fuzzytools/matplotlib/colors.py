@@ -7,6 +7,17 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 DEFAULT_CMAP = 'cc_favs2'
+NOF_DECIMALS = 10
+
+###################################################################################################################################################
+
+def hexcolor2rbg(hexcolor:str,
+	nof_decimals=NOF_DECIMALS,
+	):
+	assert type(hexcolor)==str
+	assert hexcolor[0]=='#'
+	rgb = [round(int(hexcolor[i:i + 2], 16) / 255., nof_decimals) for i in (1, 3, 5)]
+	return tuple(rgb)
 
 ###################################################################################################################################################
 
@@ -68,21 +79,13 @@ def colorlist_to_cycled_colorlist(colorlist:list, n:int=None):
 		cycler = ColorCycler(colorlist)
 		cycler = iter(cycler)
 		new_colorlist = [next(cycler) for _ in range(n)]
-	return [hextofloats(c) for c in new_colorlist]
+	return [hexcolor2rbg(c) for c in new_colorlist]
 
 def colorlist_to_cmap(colorlist:list,
 	name='default',
 	):
 	cmap = mpl.colors.ListedColormap(colorlist, name=name)
 	return cmap
-
-def hextofloats(_hex:str,
-	decimals:int=4,
-	):
-	assert type(_hex)==str
-	assert _hex[0]=='#'
-	c = [round(int(_hex[i:i + 2], 16) / 255., decimals) for i in (1, 3, 5)]
-	return tuple(c)
 
 def get_colorlist(colorlist_name,
 	n:int=None,
