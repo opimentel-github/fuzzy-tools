@@ -2,7 +2,7 @@ from __future__ import print_function
 from __future__ import division
 from . import _C
 
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import matplotlib
 import numpy as np
 import imageio
 from ..files import create_dir, get_filedirs, delete_filedirs
@@ -10,9 +10,6 @@ from .utils import fig2img, save_fig
 import os
 import math
 import matplotlib.pyplot as plt
-
-import matplotlib
-assert matplotlib.__version__=='3.1.3', f'{matplotlib.__version__}'
 
 VERBOSE = 0
 AN_SEGS_OFFSET = 1
@@ -84,6 +81,8 @@ class PlotAnimator():
 		assert all([img_size==img_sizes[0] for img_size in img_sizes]), img_sizes
 		imageio.mimsave(self.save_filedir, imgs, **mimsave_kwargs)
 		print(f'saved in {self.save_filedir}')
+		if not matplotlib.__version__=='3.1.3':
+			print(f'using {matplotlib.__version__}')
 
 	def append(self, fig,
 		closes_fig=CLOSES_FIG,

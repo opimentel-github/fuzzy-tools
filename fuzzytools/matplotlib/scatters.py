@@ -11,8 +11,7 @@ from ..datascience import labels as ds_labels
 
 def scatter(ax, x, _y_true, class_names, scatter_kwargs,
 	sort_by_count=True,
-	add_class_label=True,
-	label_f=lambda x:x,
+	label_format='{label}{c} ({count})',
 	):
 	### checks
 	assert len(x.shape)==2
@@ -34,7 +33,10 @@ def scatter(ax, x, _y_true, class_names, scatter_kwargs,
 		_x = x[valid_idxs]
 		_y_true = [valid_idxs]
 		_scatter_kwargs = deepcopy(scatter_kwargs[class_name])
-		if add_class_label:
-			_scatter_kwargs['label'] = _scatter_kwargs.get('label', class_name)
+		new_label = label_format
+		new_label = new_label.replace('{label}', _scatter_kwargs.get('label', ''))
+		new_label = new_label.replace('{c}', class_name)
+		new_label = new_label.replace('{count}', f'{count:,}')
+		_scatter_kwargs['label'] = new_label
 		ax.scatter(_x[:,0], _x[:,1], **_scatter_kwargs)
 	return ax
