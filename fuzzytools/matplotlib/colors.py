@@ -22,11 +22,11 @@ def is_rgbcolor(color):
 	return True
 
 def is_hexcolor(color):
-	if not type(hexcolor)==str:
+	if not type(color)==str:
 		return False
-	if not hexcolor[0]=='#':
+	if not color[0]=='#':
 		return False
-	if not len(hexcolor)==7:
+	if not len(color)==7:
 		return False
 	return True
 
