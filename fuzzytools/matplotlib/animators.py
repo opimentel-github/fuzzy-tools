@@ -14,14 +14,14 @@ import matplotlib.pyplot as plt
 VERBOSE = 0
 AN_SEGS_OFFSET = 1
 AN_SAVE_IMAGE_FEXT = 'pdf'
-VIDEO_DURATION = 10
+ANIMATION_DURATION = 10
 CLOSES_FIG = True
 
 ###################################################################################################################################################
 
 class PlotAnimator():
 	def __init__(self, save_filedir,
-		video_duration=VIDEO_DURATION,
+		animation_duration=ANIMATION_DURATION,
 		is_dummy:bool=False,
 		init_offset:float=AN_SEGS_OFFSET,
 		end_offset:float=AN_SEGS_OFFSET,
@@ -30,7 +30,7 @@ class PlotAnimator():
 		verbose=VERBOSE,
 		):
 		self.save_filedir = save_filedir
-		self.video_duration = video_duration
+		self.animation_duration = animation_duration
 		self.is_dummy = is_dummy
 		self.init_offset = init_offset
 		self.end_offset = end_offset
@@ -51,7 +51,7 @@ class PlotAnimator():
 	def create_video_from_images(self):
 		create_dir('/'.join(self.save_filedir.split('/')[:-1]))
 		imgs = [frame for frame in self.frames]
-		frame_durations = [self.video_duration/len(self)]*len(self)
+		frame_durations = [self.animation_duration/len(self)]*len(self)
 
 		if self.init_offset>0:
 			imgs = [imgs[0]]+imgs

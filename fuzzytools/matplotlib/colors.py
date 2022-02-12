@@ -11,7 +11,7 @@ NOF_DECIMALS = 10
 
 ###################################################################################################################################################
 
-def is_rgb(color):
+def is_rgbcolor(color):
 	if not type(color)==list:
 		return False
 	if not len(color)==3:
@@ -21,16 +21,24 @@ def is_rgb(color):
 			return False
 	return True
 
+def is_hexcolor(color):
+	if not type(hexcolor)==str:
+		return False
+	if not hexcolor[0]=='#':
+		return False
+	if not len(hexcolor)==7:
+		return False
+	return True
+
 def hexcolor2rbg(hexcolor:str,
 	nof_decimals=NOF_DECIMALS,
 	):
-	assert type(hexcolor)==str
-	assert hexcolor[0]=='#'
-	assert len(hexcolor)==7
+	assert is_hexcolor(hexcolor)
 	rgbcolor = [round(int(hexcolor[i:i + 2], 16) / 255., nof_decimals) for i in (1, 3, 5)]
 	return rgbcolor
 
 def rgb2hexcolor(rgbcolor):
+	assert is_rgbcolor(hexcolor)
 	assert 0, 'to implement'
 	return hexcolor
 
@@ -40,7 +48,7 @@ def get_scaled_rgbcolor(rgbcolor, scale):
 
 def get_scaled_color(color, scale):
 	assert scale>=0
-	if is_rgb(color):
+	if is_rgbcolor(color):
 		return get_scaled_rgbcolor(color, scale)
 	else:
 		return rgb2hexcolor(get_scaled_rgbcolor(hexcolor2rbg(color), scale))
