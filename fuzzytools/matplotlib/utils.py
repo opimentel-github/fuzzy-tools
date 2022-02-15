@@ -35,7 +35,6 @@ def fig2img(fig):
 
 def save_fig(fig, save_filedirs,
 	closes_fig=CLOSES_FIG,
-	fig_is_pil_img=False,
 	verbose=VERBOSE,
 	):
 	save_filedirs = [None] if save_filedirs is None else save_filedirs
@@ -51,44 +50,10 @@ def save_fig(fig, save_filedirs,
 		if fext=='pdf':
 			plt.savefig(save_filedir, bbox_inches=BBOX_INCHES)
 		elif fext=='png':
-			img = fig if fig_is_pil_img else fig2img(fig)
+			img = fig if type(fig)==Image else fig2img(fig)
 			img.save(save_filedir, format='png')
 		else:
 			raise Exception(f'fext={fext}')
 		if closes_fig:
 			close_fig(fig)
 	return
-
-###################################################################################################################################################
-
-def override(func): return func # tricky
-class IFile(PFile):
-	def __init__(self, filedir,
-		fig=None,
-		closes_fig=CLOSES_FIG,
-		fig_is_pil_img=False,
-		):
-		super().__init__(filedir,
-			fig,
-			)
-		assert 0, 'fix me?'
-		self.closes_fig = closes_fig
-		self.fig_is_pil_img = fig_is_pil_img
-
-	@override
-	def _save(self,
-		copy_filedirs=[],
-		):
-		filedirs = [self.filedir]+copy_filedirs
-		save_fig(self.file, filedirs,
-			closes_fig=self.closes_fig,
-			fig_is_pil_img=self.fig_is_pil_img,
-			verbose=self.verbose,
-			)
-		self.last_state = 'saved'
-		return
-
-	@override
-	def _load(self):
-		raise Exception('not supported')
-		return
