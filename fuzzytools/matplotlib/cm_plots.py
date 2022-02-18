@@ -30,7 +30,7 @@ def plot_custom_confusion_matrix(cm,
 	cbar_labelsize=7,
 	adds_cbar=False,
 	true_label_d={},
-	lambda_c=lambda x:x,
+	lambda_c=lambda c:c,
 	):
 	fig, ax = plt.subplots(1, 1, figsize=figsize, dpi=dpi) if fig is None else (fig, ax)
 	class_names = cm.get_class_names()

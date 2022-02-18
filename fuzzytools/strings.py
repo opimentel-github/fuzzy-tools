@@ -153,24 +153,29 @@ def xstr(x,
 ###################################################################################################################################################
 
 def latex_bf(s):
-	return '$\\bf{('+str(s)+')}$'
+	if s is None:
+		return ''
+	else:
+		return '$\\bf{('+str(s)+')}$'
 
 def latex_bf_alphabet_count(k,
 	extra_string=None,
 	string_length=1,
+	adds_space=True,
 	):
 	if k is None:
 		return ''
 	c = alphabet_count(k, string_length)
 	s = '' if extra_string is None else f'.{extra_string}'
 	txt = latex_bf(f'{c}{s}')
+	txt = txt+' ' if adds_space else txt
 	return txt
 
 def alphabet_count(k,
 	string_length=None,
 	):
 	if k is None:
-		return ''
+		return None
 	assert k>=0
 	base = ALPHABET
 	base_first = base[0]

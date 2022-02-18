@@ -17,7 +17,7 @@ PM_CHAR = _C.PM_CHAR
 USES_TABULARX = False
 VRULE_PT = 10
 BLINE_PT = 1.5
-
+CENTERED = False
 
 ###################################################################################################################################################
 
@@ -179,7 +179,7 @@ class LatexTable():
 		delete_redundant_model_keys:bool=True,
 		caption:str='?',
 		label:str='tab:?',
-		centered:bool=False,
+		centered=CENTERED,
 		custom_tabular_align:str=None,
 		uses_tabularx=USES_TABULARX,
 		vrule_pt=VRULE_PT,
