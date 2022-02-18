@@ -152,6 +152,12 @@ def xstr(x,
 
 ###################################################################################################################################################
 
+def latex_sub_superscript(s,
+	subscript=' ',
+	superscript=' ',
+	):
+	return '${'+s+'}_{'+subscript+'}^{'+superscript+'}$'
+
 def latex_bf(s):
 	if s is None:
 		return ''
