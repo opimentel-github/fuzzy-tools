@@ -121,12 +121,22 @@ def all_elements_are_equal(l:list):
 	return l.count(l[0])==len(l)
 
 def check_lists_are_different(l1, l2):
-	uniques = True
+	are_different = True
 	for x in l1:
 		if x in l2:
 			return False
-	return uniques
+	return are_different
 
-def intersection(l1, l2):
+def get_lists_intersection(l1, l2):
 	intersection = list(set(l1).intersection(set(l2)))
 	return intersection
+
+def check_lists_are_equal(l1, l2,
+	checks_len=True,
+	):
+	intersection = get_lists_intersection(l1, l2)
+	l1_len = len(list(set(l1)))
+	c = l1_len==len(list(set(l2))) and l1_len==len(intersection)
+	if checks_len:
+		c = c and len(l1)==len(l2)
+	return c
