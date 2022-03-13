@@ -41,9 +41,6 @@ class SubLatexTable():
 		split_index_names=True,
 		key_key_separator:str=KEY_KEY_SEP_CHAR,
 		key_value_separator:str=KEY_VALUE_SEP_CHAR,
-		uses_tabularx=USES_TABULARX,
-		vrule_pt=VRULE_PT,
-		bline_pt=BLINE_PT,
 		bold_function=get_max_elements,
 		repr_replace_dict={},
 		):
@@ -52,9 +49,6 @@ class SubLatexTable():
 		self.split_index_names = split_index_names
 		self.key_key_separator = key_key_separator
 		self.key_value_separator = key_value_separator
-		self.uses_tabularx = uses_tabularx
-		self.vrule_pt = vrule_pt
-		self.bline_pt = bline_pt
 		self.bold_function = bold_function
 		self.repr_replace_dict = repr_replace_dict
 		self.reset()
@@ -93,7 +87,7 @@ class SubLatexTable():
 			bold_df = bold_df()
 
 		else:
-			raise Exception(f'No mode {bold_axis}')
+			raise Exception(f'bold_axis={bold_axis}')
 
 		#print('bold_df',bold_df)
 		self.bold_df = bold_df
@@ -193,12 +187,12 @@ class LatexTable():
 		assert isinstance(self.info_dfs, list)
 
 		self.sub_latex_tables = [SubLatexTable(info_df,
-			bold_axis,
-			split_index_names,
-			key_key_separator,
-			key_value_separator,
-			bold_function,
-			repr_replace_dict,
+			bold_axis=bold_axis,
+			split_index_names=split_index_names,
+			key_key_separator=key_key_separator,
+			key_value_separator=key_value_separator,
+			bold_function=bold_function,
+			repr_replace_dict=repr_replace_dict,
 			) for info_df in self.info_dfs]
 
 		### checks

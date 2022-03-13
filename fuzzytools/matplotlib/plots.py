@@ -10,8 +10,13 @@ import numpy as np
 import math
 import pandas as pd
 
+PLOT_FIGSIZE = None
 DPI = _C.DPI
 PERCENTILE = 95
+PLOT_GRID_ALPHA = _C.PLOT_GRID_ALPHA
+SAMPLES_TEXT = '#'
+USES_LOG_SCALE = False
+FONTSIZE = 9
 
 ###################################################################################################################################################
 
@@ -19,33 +24,30 @@ def plot_bar(plot_df,
 	annotations_dict:dict=None,
 	bar_width:float=0.7,
 	rotate_xlabel:bool=False,
-	uses_log_scale:bool=False,
+	uses_log_scale:bool=USES_LOG_SCALE,
 	uses_legend:bool=True,
 	uses_bottom_legend:bool=False, # change for mode
 	legend_ncol:int=None,
 	add_poblation_annotations:bool=True,
 	add_percent_annotations:bool=True,
-	offset_factor=0.35,
-	fontsize=10,
+	xlim_offset_factor=0.2,
+	fontsize=FONTSIZE,
 
 	fig=None,
 	ax=None,
-	figsize:tuple=None,
+	figsize:tuple=PLOT_FIGSIZE,
 	dpi=DPI,
 	xlabel:str='population',
 	title:str='plot_bar',
-	axis_lim:tuple=[None, None],
-	grid:bool=True,
-	grid_alpha:float=_C.PLOT_GRID_ALPHA,
+	grid_alpha:float=PLOT_GRID_ALPHA,
 	legend_loc:str='upper center',
 	cmap=None,
 	alpha:float=1,
-	verbose:int=0,
 	**kwargs):
 	indexs = list(plot_df.index)
 	columns = list(plot_df.columns)
 	cmap = cc.get_default_cmap(len(indexs)) if cmap is None else cmap
-	fig, ax = plt.subplots(1,1, figsize=figsize, dpi=dpi) if fig is None else (fig, ax)
+	fig, ax = plt.subplots(1, 1, figsize=figsize, dpi=dpi) if fig is None else (fig, ax)
 
 	### anotations
 	if add_poblation_annotations or add_percent_annotations:
@@ -112,11 +114,8 @@ def plot_bar(plot_df,
 		ax.set_xticks(new_x)
 		ax.set_xticklabels(['$10^{'+str(int(x))+'}$' for x in new_x])
 
-	ax.set_xlim([ax.get_xlim()[0], ax.get_xlim()[1] + ax.get_xlim()[1]*offset_factor])
-	#### OTHER FORMATS
-	if grid:
-		xax = ax.set_axisbelow(True); ax.xaxis.grid(True, alpha=grid_alpha)
-		#yax = ax.set_axisbelow(True); ax.yaxis.grid(True, alpha=grid_alpha)
+	ax.set_xlim([ax.get_xlim()[0], ax.get_xlim()[1] + ax.get_xlim()[1]*xlim_offset_factor])
+	ax.set_axisbelow(True); ax.xaxis.grid(True, alpha=grid_alpha)
 
 	ax.set_xlabel(xlabel)
 	ax.set_title(title)
@@ -126,7 +125,7 @@ def plot_hist_labels(values_dict_raw:dict, classes_names:list,
 	bar_width:float=0.5,
 	add_percent_annotations:bool=True,
 	rotate_xlabel:bool=False,
-	uses_log_scale:bool=False,
+	uses_log_scale:bool=USES_LOG_SCALE,
 	count_scale=1,
 	**kwargs):
 	'''
@@ -162,7 +161,7 @@ def plot_hist_discrete(data_dict:dict,
 
 	fig=None,
 	ax=None,
-	figsize:tuple=_C.PLOT_FIGSIZE,
+	figsize:tuple=PLOT_FIGSIZE,
 	dpi=DPI,
 	xlabel:str='values',
 	ylabel:str='population',
@@ -170,7 +169,7 @@ def plot_hist_discrete(data_dict:dict,
 	xlim:tuple=[None, None],
 	ylim:tuple=[None, None],
 	grid:bool=True,
-	grid_alpha:float=_C.PLOT_GRID_ALPHA,
+	grid_alpha:float=PLOT_GRID_ALPHA,
 	legend_loc:str='upper center',
 	cmap=None,
 	alpha:float=1,
@@ -233,7 +232,7 @@ def plot_hist_bins(data_dict:dict,
 
 	fig=None,
 	ax=None,
-	figsize:tuple=None,
+	figsize:tuple=PLOT_FIGSIZE,
 	dpi=DPI,
 	xlabel:str='values',
 	ylabel:str='population',
@@ -241,7 +240,7 @@ def plot_hist_bins(data_dict:dict,
 	xlim:tuple=None,
 	ylim:tuple=None,
 	grid:bool=True,
-	grid_alpha:float=_C.PLOT_GRID_ALPHA,
+	grid_alpha:float=PLOT_GRID_ALPHA,
 	legend_loc:str='upper right',
 	cmap=None,
 	alpha:float=0.5,
@@ -260,7 +259,7 @@ def plot_hist_bins(data_dict:dict,
 		x = np.array(data_dict[key].copy())
 		if verbose>0:
 			x_samples, x_mean, x_std, x_min, x_max = len(x), np.mean(x), np.std(x), np.min(x), np.max(x)
-			print(f'key: {key}; {_C.SAMPLES_TEXT}: {x_samples:,}; x_mean: {x_mean:.5f}; x_std: {x_std:.5f}; x_min: {x_min:.5f}; x_max: {x_max:.5f}')
+			print(f'key: {key}; {SAMPLES_TEXT}: {x_samples:,}; x_mean: {x_mean:.5f}; x_std: {x_std:.5f}; x_min: {x_min:.5f}; x_max: {x_max:.5f}')
 
 		c = cmap.colors[k]
 		bins = 'auto' if bins is None else bins

@@ -120,7 +120,7 @@ def delete_from_list(l:list, elements_to_remove:list):
 def all_elements_are_equal(l:list):
 	return l.count(l[0])==len(l)
 
-def check_unique_lists(l1, l2):
+def check_lists_are_different(l1, l2):
 	uniques = True
 	for x in l1:
 		if x in l2:
