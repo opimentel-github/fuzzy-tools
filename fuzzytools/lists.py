@@ -120,6 +120,10 @@ def delete_from_list(l:list, elements_to_remove:list):
 def all_elements_are_equal(l:list):
 	return l.count(l[0])==len(l)
 
+def get_lists_intersection(l1, l2):
+	intersection = list(set(l1).intersection(set(l2)))
+	return intersection
+
 def check_lists_are_different(l1, l2):
 	are_different = True
 	for x in l1:
@@ -127,16 +131,13 @@ def check_lists_are_different(l1, l2):
 			return False
 	return are_different
 
-def get_lists_intersection(l1, l2):
-	intersection = list(set(l1).intersection(set(l2)))
-	return intersection
-
 def check_lists_are_equal(l1, l2,
 	checks_len=True,
 	):
 	intersection = get_lists_intersection(l1, l2)
 	l1_len = len(list(set(l1)))
-	c = l1_len==len(list(set(l2))) and l1_len==len(intersection)
+	l2_len = len(list(set(l2)))
+	c = l1_len==l2_len and l1_len==len(intersection) and l2_len==len(intersection)
 	if checks_len:
 		c = c and len(l1)==len(l2)
 	return c
