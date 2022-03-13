@@ -134,10 +134,7 @@ def check_lists_are_different(l1, l2):
 def check_lists_are_equal(l1, l2,
 	checks_len=True,
 	):
-	intersection = get_lists_intersection(l1, l2)
-	l1_len = len(list(set(l1)))
-	l2_len = len(list(set(l2)))
-	c = l1_len==l2_len and l1_len==len(intersection) and l2_len==len(intersection)
+	c = set(l1)==set(l2)
 	if checks_len:
 		c = c and len(l1)==len(l2)
 	return c
