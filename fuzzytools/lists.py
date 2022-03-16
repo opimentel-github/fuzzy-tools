@@ -125,11 +125,10 @@ def get_lists_intersection(l1, l2):
 	return intersection
 
 def check_lists_are_different(l1, l2):
-	are_different = True
 	for x in l1:
 		if x in l2:
 			return False
-	return are_different
+	return True
 
 def check_lists_are_equal(l1, l2,
 	checks_len=True,
