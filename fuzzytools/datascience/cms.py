@@ -7,7 +7,6 @@ import math
 from copy import copy, deepcopy
 from ..strings import xstr
 import math
-import uncertainties
 import pandas as pd
 from nested_dict import nested_dict
 from .xerror import XError

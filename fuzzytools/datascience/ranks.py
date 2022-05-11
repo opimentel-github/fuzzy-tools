@@ -57,7 +57,7 @@ class TopRank():
 		return self.names[k], self.values[k], self.infos[k]
 
 	def __len__(self):
-		return self.n if len(self.values) is None else self.n
+		return len(self.values) if self.n is None else self.n
 
 	def __repr__(self):
 		self.calcule() # just in case
