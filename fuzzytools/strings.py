@@ -11,7 +11,8 @@ from copy import copy, deepcopy
 REMOVE_ZERO = True
 
 N_DECIMALS = _C.N_DECIMALS
-ALPHABET = _C.ALPHABET
+ALPHABET_CHARS = _C.ALPHABET_CHARS
+NUMBER_CHARS = _C.NUMBER_CHARS
 BAR_SIZE = _C.BAR_SIZE
 JUPYTER_NOTEBOOK_BAR_SIZE = _C.JUPYTER_NOTEBOOK_BAR_SIZE
 
@@ -20,9 +21,34 @@ KEY_KEY_SEP_CHAR = _C.KEY_KEY_SEP_CHAR
 KEY_VALUE_SEP_CHAR = _C.KEY_VALUE_SEP_CHAR
 NAN_CHAR = _C.NAN_CHAR
 
-# https://stackoverflow.com/questions/2267362/how-to-convert-an-integer-to-a-string-in-any-base
-
 ###################################################################################################################################################
+
+def get_nof_chars(string, chars):
+	count = 0
+	for char in chars:
+		count += string.count(char)
+	return count
+
+def get_nof_alphabet_chars(string,
+	alphabet_chars=ALPHABET_CHARS,
+	uses_lower=True,
+	):
+	new_string = string.lower() if uses_lower else string 
+	return get_nof_chars(new_string, alphabet_chars)
+
+def get_nof_number_chars(string,
+	number_chars=NUMBER_CHARS,
+	):
+	return get_nof_chars(string, number_chars)
+
+def clean_string_by_chars(string, chars):
+	new_string = deepcopy(string)
+	count_d = {}
+	for char in chars:
+		count = new_string.count(char)
+		count_d[f'{char}'] = count
+		new_string = new_string.replace(char, '')
+	return new_string, count_d
 
 def get_raw_numpy_repr(x,
 	name='x',
@@ -179,11 +205,11 @@ def latex_bf_alphabet_count(k,
 
 def alphabet_count(k,
 	string_length=None,
+	base=ALPHABET_CHARS,
 	):
 	if k is None:
 		return None
 	assert k>=0
-	base = ALPHABET
 	base_first = base[0]
 	string_length = len(base) if string_length is None else string_length
 	assert k<len(base)**string_length

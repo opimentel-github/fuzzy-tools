@@ -11,7 +11,7 @@ from ..datascience import labels as ds_labels
 
 def scatter(ax, x, _y_true, class_names, scatter_kwargs,
 	sort_by_count=True,
-	label_format='{label}{c} ({count})',
+	label_format='{label}{c} ({count}#)',
 	):
 	### checks
 	assert len(x.shape)==2

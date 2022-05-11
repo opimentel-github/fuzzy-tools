@@ -6,13 +6,13 @@ import numpy as np
 from ..strings import xstr
 from ..dataframes import DFBuilder
 
-N = 10
+N = None
 
 ###################################################################################################################################################
 
 class TopRank():
 	def __init__(self,
-		name='???',
+		name='',
 		n=N,
 		uses_info=True,
 		):
@@ -57,7 +57,7 @@ class TopRank():
 		return self.names[k], self.values[k], self.infos[k]
 
 	def __len__(self):
-		return self.n
+		return self.n if len(self.values) is None else self.n
 
 	def __repr__(self):
 		self.calcule() # just in case

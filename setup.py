@@ -8,7 +8,7 @@ with open('requirements.txt') as f:
 	
 setuptools.setup(
 	name='fuzzytools',
-	version='0.0.1',
+	version='0.0.2',
 	description='Library with basic and general python methods',
 	url='https://github.com/opimentel-github/fuzzy-tools',
 	python_requires='>=3.7',

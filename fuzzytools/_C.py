@@ -9,7 +9,8 @@ BAR_SIZE = None
 JUPYTER_NOTEBOOK_BAR_SIZE = 100
 
 ###################################################################################################################################################
-ALPHABET = 'abcdefghijklmnopqrstuvwxyz'
+ALPHABET_CHARS = 'abcdefghijklmnopqrstuvwxyz'
+NUMBER_CHARS = '0123456789'
 MIDDLE_LINE_CHAR = '─'
 BAR_LAST_CHAR = '>'
 BOT_SQUARE_CHAR ='▄'

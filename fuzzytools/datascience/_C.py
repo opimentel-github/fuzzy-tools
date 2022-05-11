@@ -1,0 +1,6 @@
+from .. import _C
+
+N_DECIMALS = _C.N_DECIMALS
+PM_CHAR = _C.PM_CHAR
+EPS = _C.EPS
+KFOLF_CHAR = _C.KFOLF_CHAR

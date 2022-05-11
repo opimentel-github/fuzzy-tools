@@ -27,13 +27,16 @@ fuzzytools.egg-info/dependency_links.txt
 fuzzytools.egg-info/requires.txt
 fuzzytools.egg-info/top_level.txt
 fuzzytools/datascience/__init__.py
+fuzzytools/datascience/cms.py
 fuzzytools/datascience/dim_reductors.py
 fuzzytools/datascience/distributions.py
 fuzzytools/datascience/grid_search.py
 fuzzytools/datascience/labels.py
 fuzzytools/datascience/metrics.py
-fuzzytools/datascience/missclassifications.py
+fuzzytools/datascience/misclassifications.py
 fuzzytools/datascience/ranks.py
+fuzzytools/datascience/splits.py
+fuzzytools/datascience/statistical_tests.py
 fuzzytools/datascience/statistics.py
 fuzzytools/datascience/xerror.py
 fuzzytools/latex/__init__.py
@@ -45,8 +48,8 @@ fuzzytools/matplotlib/ax_styles.py
 fuzzytools/matplotlib/bars.py
 fuzzytools/matplotlib/cm_plots.py
 fuzzytools/matplotlib/colors.py
+fuzzytools/matplotlib/fills.py
 fuzzytools/matplotlib/lims.py
-fuzzytools/matplotlib/lines.py
 fuzzytools/matplotlib/plots.py
 fuzzytools/matplotlib/scatters.py
 fuzzytools/matplotlib/utils.py

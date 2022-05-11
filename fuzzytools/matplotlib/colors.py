@@ -157,7 +157,7 @@ def get_default_cmap(
 	colorlist = get_default_colorlist(
 		n=n,
 		)
-	default_cmap = get_cmap(colorlist,
+	default_cmap = colorlist2cmap(colorlist,
 		cmap_name='default_cpc_cmap',
 		)
 	return default_cmap

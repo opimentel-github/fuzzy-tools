@@ -52,7 +52,6 @@ def plot_bar(plot_df,
 	### anotations
 	if add_poblation_annotations or add_percent_annotations:
 		total_sum = {i:sum([plot_df[c][i] for c in columns]) for i in indexs}
-		#ann_df = pd.DataFrame.from_dict({c:{i:f' {100*plot_df[c][i]/total_sum[i]:.2f}%' for i in indexs} for c in columns}, orient='columns')
 		ann_df = pd.DataFrame.from_dict({c:{i:
 			(' '+f'{plot_df[c][i]:,}' if add_poblation_annotations else '')+(f' ({100*plot_df[c][i]/total_sum[i]:.2f}%)' if add_percent_annotations else '')
 			 for i in indexs} for c in columns}, orient='columns')
@@ -78,7 +77,6 @@ def plot_bar(plot_df,
 			if not ann_df is None:
 				ann_x = list_values[kc]
 				ann_y = new_y[kc] + bar_width/float(len(indexs))/2
-				#ax.axhline(ann_y)
 				ann = ax.annotate(
 						ann_df[column][index],
 						xy=(ann_x, ann_y),
@@ -88,11 +86,7 @@ def plot_bar(plot_df,
 						textcoords='offset points',
 						size=fontsize,
 						va='center', # center_baseline, baseline, bottom, center, top
-						#color='w',
 						color=c,
-						#weight='bold',
-						#bbox=dict(boxstyle='round', fc=c, ec='none', alpha=alpha),
-						#arrowprops=dict(arrowstyle='wedge,tail_width=1.0', fc=c, ec='none', patchA=None, patchB=None, relpos=(0.5, 0.5)),
 					)
 
 		ax.barh(new_y, list_values, height=new_bar_width, align='edge', color=c, alpha=alpha)
