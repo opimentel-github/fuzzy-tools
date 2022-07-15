@@ -1,7 +1,6 @@
-# fuzzy-tools
+![](https://img.shields.io/badge/python-3.7-orange) ![](https://img.shields.io/badge/status-cleaning-green)
 
-<img src="img.png" width="400">
-
+# Fuzzy Tools 🔧
 This is repository full of python functions, classes, methods, etc, that I've used along my adventure with Machine Learning, Data Science and programming in general.
 Some of the uses are:
 - strings, list, dicts, console prints methods

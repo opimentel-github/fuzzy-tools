@@ -7,8 +7,8 @@ import numpy as np
 ###################################################################################################################################################
 
 def softmax(_x,
-	axis=0,
-	):
-	x = np.exp(np.array(_x))
-	x /= np.sum(x, axis=axis)
-	return x
+    axis=0,
+    ):
+    x = np.exp(np.array(_x))
+    x /= np.sum(x, axis=axis)
+    return x

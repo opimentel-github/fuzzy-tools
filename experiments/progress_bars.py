@@ -18,11 +18,11 @@ from fuzzytools.progress_bars import ProgressBar, ProgressBarMultiColor
 
 bar = ProgressBarMultiColor(main_args.n, ['a', 'b', 'c'], [None, 'red', 'blue'])
 for k in range(0, main_args.n):
-	tdict = {
-		'a':str(k)*10,
-		'b':str(k)*20,
-	}
-	bar(tdict)
-	time.sleep(0.00001)
+    tdict = {
+        'a':str(k)*10,
+        'b':str(k)*20,
+    }
+    bar(tdict)
+    time.sleep(0.00001)
 
 bar.done()

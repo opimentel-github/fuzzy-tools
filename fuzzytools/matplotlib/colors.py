@@ -33,147 +33,142 @@ CC_THE_GUARDIAN = ['#4E2973','#4ACAD9','#F2E749','#F24535','#F2F2F2']
 DEFAULT_CMAP = CC_FAVS2
 NOF_DECIMALS = 10
 
-###################################################################################################################################################
 
 def plt_color(color,
-	figsize=(1,1),
-	dpi=200,
-	n=10,
-	):
-	img = np.linspace(0, 1, n)[None,:]
-	fig, ax = plt.subplots(1, 1, figsize=figsize, dpi=dpi)
-	ax.axis('off')
-	hexcolor = get_hexcolor(color)
-	rbgcolor = get_rgbcolor(color)
-	ax.set_title(f'hexcolor={hexcolor}; rbgcolor={rbgcolor}')
-	cmap = colorlist2cmap([color])
-	ax.imshow(img, cmap=cmap)
-	plt.show()
+    figsize=(1,1),
+    dpi=200,
+    n=10,
+    ):
+    img = np.linspace(0, 1, n)[None,:]
+    fig, ax = plt.subplots(1, 1, figsize=figsize, dpi=dpi)
+    ax.axis('off')
+    hexcolor = get_hexcolor(color)
+    rbgcolor = get_rgbcolor(color)
+    ax.set_title(f'hexcolor={hexcolor}; rbgcolor={rbgcolor}')
+    cmap = colorlist2cmap([color])
+    ax.imshow(img, cmap=cmap)
+    plt.show()
 
-###################################################################################################################################################
 
 def get_color_format(color):
-	if (
-		type(color)==list and
-		len(color)==3 and
-		all([(c>=0 and c<=1) for c in color])
-		):
-		return 'rgb'
-	elif (
-		type(color)==str and
-		color[0]=='#' and
-		len(color)==7
-		):
-		return 'hex'
-	else:
-		raise Exception(f'color={color}')
+    if (
+        type(color)==list and
+        len(color)==3 and
+        all([(c>=0 and c<=1) for c in color])
+        ):
+        return 'rgb'
+    elif (
+        type(color)==str and
+        color[0]=='#' and
+        len(color)==7
+        ):
+        return 'hex'
+    else:
+        raise Exception(f'color={color}')
 
 def get_rgbcolor(color):
-	color_format = get_color_format(color)
-	if color_format=='rgb':
-		return color
-	elif color_format=='hex':
-		rgbcolor = [round(int(color[i:i + 2], 16) / 255., NOF_DECIMALS) for i in (1, 3, 5)]
-		return rgbcolor
-	else:
-		raise Exception(f'color_format={color_format}')
+    color_format = get_color_format(color)
+    if color_format=='rgb':
+        return color
+    elif color_format=='hex':
+        rgbcolor = [round(int(color[i:i + 2], 16) / 255., NOF_DECIMALS) for i in (1, 3, 5)]
+        return rgbcolor
+    else:
+        raise Exception(f'color_format={color_format}')
 
 def get_hexcolor(color):
-	color_format = get_color_format(color)
-	if color_format=='rgb':
-		tuple_color = tuple([int(c*255) for c in color])
-		hexcolor = '#%02x%02x%02x'%tuple_color
-		return hexcolor
-	elif color_format=='hex':
-		return color
-	else:
-		raise Exception(f'color_format={color_format}')
+    color_format = get_color_format(color)
+    if color_format=='rgb':
+        tuple_color = tuple([int(c*255) for c in color])
+        hexcolor = '#%02x%02x%02x'%tuple_color
+        return hexcolor
+    elif color_format=='hex':
+        return color
+    else:
+        raise Exception(f'color_format={color_format}')
 
 def get_scaled_rgbcolor(rgbcolor, scale):
-	new_rgbcolor = [min(1, x*scale) for x in rgbcolor]
-	return new_rgbcolor
+    new_rgbcolor = [min(1, x*scale) for x in rgbcolor]
+    return new_rgbcolor
 
 def get_scaled_color(color, scale):
-	assert scale>=0
-	color_format = get_color_format(color)
-	rgbcolor = get_rgbcolor(color)
-	new_rgbcolor = get_scaled_rgbcolor(rgbcolor, scale)
-	new_color = globals()[f'get_{color_format}color'](new_rgbcolor) # convert to original color format
-	return new_color
+    assert scale>=0
+    color_format = get_color_format(color)
+    rgbcolor = get_rgbcolor(color)
+    new_rgbcolor = get_scaled_rgbcolor(rgbcolor, scale)
+    new_color = globals()[f'get_{color_format}color'](new_rgbcolor) # convert to original color format
+    return new_color
 
-###################################################################################################################################################
 
 class ColorCycler:
-	def __init__(self, colors):
-		self.colors = colors
-		self.index = 0
-		
-	def __iter__(self):
-		self.index = 0
-		return self
+    def __init__(self, colors):
+        self.colors = colors
+        self.index = 0
+        
+    def __iter__(self):
+        self.index = 0
+        return self
 
-	def __next__(self):
-		if self.index < len(self.colors):
-			x = self.colors[self.index]
-			self.index += 1
-			return x
-		else:
-			self.index = 0
-			return next(self)
+    def __next__(self):
+        if self.index < len(self.colors):
+            x = self.colors[self.index]
+            self.index += 1
+            return x
+        else:
+            self.index = 0
+            return next(self)
 
 def colorlist_to_cycled_colorlist(colorlist:list,
-	n:int=None,
-	):
-	assert n is None or n>0
-	assert type(colorlist)==list
-	if n is None:
-		new_colorlist = colorlist.copy()
-	else:
-		cycler = ColorCycler(colorlist)
-		cycler = iter(cycler)
-		new_colorlist = [next(cycler) for _ in range(n)]
-	return new_colorlist
+    n:int=None,
+    ):
+    assert n is None or n>0
+    assert type(colorlist)==list
+    if n is None:
+        new_colorlist = colorlist.copy()
+    else:
+        cycler = ColorCycler(colorlist)
+        cycler = iter(cycler)
+        new_colorlist = [next(cycler) for _ in range(n)]
+    return new_colorlist
 
-###################################################################################################################################################
 
 def colorlist2cmap(colorlist:list,
-	cmap_name='cmap_name',
-	):
-	cmap = mpl.colors.ListedColormap(colorlist, name=cmap_name)
-	return cmap
+    cmap_name='cmap_name',
+    ):
+    cmap = mpl.colors.ListedColormap(colorlist, name=cmap_name)
+    return cmap
 
 def get_default_colorlist(
-	n:int=None,
-	):
-	default_colorlist = colorlist_to_cycled_colorlist(DEFAULT_CMAP,
-		n=n,
-		)
-	return default_colorlist
+    n:int=None,
+    ):
+    default_colorlist = colorlist_to_cycled_colorlist(DEFAULT_CMAP,
+        n=n,
+        )
+    return default_colorlist
 
 def get_default_cmap(
-	n:int=None,
-	cmap_name='cmap_name',
-	):
-	colorlist = get_default_colorlist(
-		n=n,
-		)
-	default_cmap = colorlist2cmap(colorlist,
-		cmap_name='default_cpc_cmap',
-		)
-	return default_cmap
+    n:int=None,
+    cmap_name='cmap_name',
+    ):
+    colorlist = get_default_colorlist(
+        n=n,
+        )
+    default_cmap = colorlist2cmap(colorlist,
+        cmap_name='default_cpc_cmap',
+        )
+    return default_cmap
 
-###################################################################################################################################################
 
 def get_color_dict(_obj_names,
-	colorlist=DEFAULT_CMAP,
-	sorts=True,
-	):
-	obj_names = deepcopy(_obj_names)
-	if sorts:
-		obj_names.sort()
-	new_colorlist = colorlist_to_cycled_colorlist(colorlist, len(obj_names))
-	d = {}
-	for k,obj_name in enumerate(obj_names):
-		assert type(obj_name)==str
-		d[obj_name] = new_colorlist[k]
-	return d
+    colorlist=DEFAULT_CMAP,
+    sorts=True,
+    ):
+    obj_names = deepcopy(_obj_names)
+    if sorts:
+        obj_names.sort()
+    new_colorlist = colorlist_to_cycled_colorlist(colorlist, len(obj_names))
+    d = {}
+    for k,obj_name in enumerate(obj_names):
+        assert type(obj_name)==str
+        d[obj_name] = new_colorlist[k]
+    return d
